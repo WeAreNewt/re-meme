@@ -1,0 +1,10 @@
+.redcircle {
+    box-sizing: border-box;
+    width: 16px;
+    height: 16px;
+    background: #FF0000;
+    border: 2px solid #000000;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}

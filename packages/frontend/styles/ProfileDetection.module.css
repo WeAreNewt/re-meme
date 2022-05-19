@@ -1,0 +1,12 @@
+.beforeconnect {
+    box-sizing: border-box;
+    position: absolute;
+    width: 1110px;
+    height: 85px;
+    left: 0px;
+    top: 0px;
+    background: #D2A6FF;
+    border: 3px solid #000000;
+    box-shadow: 8px 8px 0px #101112;
+    border-radius: 100px;
+}

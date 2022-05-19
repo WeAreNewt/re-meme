@@ -1,9 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: 'JetBrains Mono' !important;
 }
 
 a {
@@ -13,4 +16,38 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.home-bg {
+  background-image: url("/assets/layout/background-1.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.profile-bg {
+  background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.comic-border {
+  border: 3px solid #101112;
+  box-shadow: 8px 8px 0px #101112;
+}
+
+.comic-border-mini {
+  border: 3px solid #101112;
+  box-shadow: 3px 3px 0px #101112;
+}
+
+.create-btn-gradient {
+  background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
+}
+
+.bg-lime {
+  background-color: #ABFE2C;
+}
+
+.bg-purple {
+  background-color: #D2A6FF;
 }
