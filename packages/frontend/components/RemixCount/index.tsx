@@ -1,11 +1,12 @@
 type RemixCountProps = {
-    count: number;
+    count: number,
+    disabled: boolean
 }
 
-export const RemixCount = ({count}: RemixCountProps) => {
+export const RemixCount = ({count, disabled}: RemixCountProps) => {
     return (
-        <div className="flex items-center bg-white rounded-full p-3 border-gray-200 border-2 border-solid min-w-fit max-h-6">
-            <span className="text-gray-200 text-base">{`${count} remixses`}</span>
+        <div className={"flex items-center bg-white rounded-full p-3 border-black border-2 border-solid min-w-fit max-h-6 " + (disabled ? "opacity-30" : "comic-border-mini")}>
+            <span>{`${count} remixses`}</span>
         </div>
     )
 }

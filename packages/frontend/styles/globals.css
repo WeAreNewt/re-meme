@@ -44,10 +44,26 @@ a {
   background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
 }
 
+.create-btn-gradient-transparent {
+  background: linear-gradient(135deg, #D2A6FFE6 0%, #D8F968E6 100%);
+}
+
 .bg-lime {
   background-color: #ABFE2C;
 }
 
+.bg-lime-transparent {
+  background-color: #ABFE2CE6;
+}
+
 .bg-purple {
   background-color: #D2A6FF;
+}
+
+.bg-light-green {
+  background-color: #A6E5B4;
+}
+
+.bg-share-gradient {
+  background: linear-gradient(90deg, rgba(100, 203, 172, 0.8) 0%, rgba(239, 185, 105, 0.8) 22.92%, rgba(235, 116, 156, 0.8) 49.48%, rgba(102, 167, 228, 0.8) 76.56%, rgba(157, 122, 201, 0.8) 100%), #FFFFFF;
 }

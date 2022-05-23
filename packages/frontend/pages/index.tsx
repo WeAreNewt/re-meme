@@ -1,29 +1,38 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import PageLayout from '../components/Layout'
 import { ConnectionBox } from '../components/Layout/ConnectionBox'
 import { MemeDetail } from '../components/MemeDetail'
+import { SelectProfile } from '../components/Modals/SelectProfile'
 import { RemixBtnBox } from '../components/Remix/RemixBtnBox'
 import { RemixShareBox } from '../components/Remix/RemixShareBox'
 import { LoginStatus } from '../models/Connection/connection.model'
 
+type HomePageProps = {
+  exampleMeme: any; //Meme
+}
 
-const Home: NextPage = () => {
+const Home: NextPage = (props: any) => {
   const [loginStatus, setLoginStatus] = useState(LoginStatus.DISCONNECTED);
+  const router = useRouter();
 
   const mockMeme = {
+    id: 1,
     src: "/assets/imgs/distracted boyfriend.png",
     mockProfile: {
-      username: "cryptopunk",
+      name: "cryptopunk",
       profilePic: "/assets/imgs/punk.png"
     },
     remixCount: 210,
     publicationDate: new Date()
   }
 
-  const user = {};
+  const handleRemixMeme = () => {
+    router.push(`/meme/edit/${mockMeme.id}`)
+  }
 
   return (
     <div className='home-bg min-h-screen'>
@@ -49,15 +58,15 @@ const Home: NextPage = () => {
                         </header>
                       </Col>
                     </Row>
-                  : null
+                    : null
                 }
                 <Row>
                   <Col>
                     <section className='flex flex-col sm:flex-col lg:flex-row gap-6'>
                       <MemeDetail meme={mockMeme} />
                       <div className='flex flex-col space-y-10 w-full h-auto'>
-                        <RemixBtnBox />
-                        <RemixShareBox />
+                        <RemixBtnBox onRemixBtnClicked={handleRemixMeme} />
+                        <RemixShareBox meme={props.meme} />
                       </div>
                     </section>
                   </Col>
@@ -70,6 +79,29 @@ const Home: NextPage = () => {
       </PageLayout>
     </div>
   )
+}
+
+export const getStaticProps = async ({ params }: any): Promise<{ props: HomePageProps }> => {
+  //TODO retrieve random meme with apollo
+
+  const meme = {
+      id: 1,
+      src: "/assets/imgs/meme.png",
+      mockProfile: {
+          id: 1,
+          name: "cryptopunk",
+          profilePic: "/assets/imgs/punk.png"
+      },
+      remixCount: 210,
+      publicationDate: new Date().getTime()
+  }
+
+  return {
+      props: {
+          exampleMeme: meme,
+      }
+  }
+
 }
 
 export default Home

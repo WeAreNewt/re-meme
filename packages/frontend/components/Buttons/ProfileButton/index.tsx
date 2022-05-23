@@ -1,55 +1,35 @@
-import { useAccount } from 'wagmi'
-import { useApolloClient } from '@apollo/client';
-import { GET_PROFILES } from '../../../queries/getProfiles';
-import styles from '../../../styles/btns.module.css';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { User } from '../../../models/User/user.model';
 
 
 type ProfileButtonProps = {
-    profiles?: any[]
+    disabled: boolean
 }
 
-export const ProfileButton = ({profiles}: ProfileButtonProps) => {
+export const ProfileButton = ({disabled}: ProfileButtonProps) => {
+    const user: User = useSelector((state: any) => state.user.selectedUser);
     const router = useRouter();
-    const { data } = useAccount();
-    const client = useApolloClient();
-
-    function getProfiles(address?: string) {
-        const request = { ownedBy: address };
-        return client.query({
-            query: GET_PROFILES,
-            variables: {
-              request,
-            },
-        })
-    }
-
-    async function testeando() {
-        if(data) {
-            const profiles = (await getProfiles(data.address)).data.profiles   
-            if(profiles.items.length === 0) {
-                console.log('nohay')
-            }  else {
-                // GUARDAR PERFIL EN REDUX
-                console.log('hay')
-            }
-        }
-    }
 
     const handleClick = () => {
-        router.push("/profile");
+        router.push(`/profile/${user.id}`);
     }
 
-    /* if (data)
-        return (
-            <button className={styles.afterconnect} onClick={testeando} type="button">
-            </button>
-        ) */
+    useEffect(() => {
+        console.log(user)
+    }, [user])
+    
         
     return (
-        <button onClick={handleClick} disabled={!data} className={"flex items-center p-2 bg-lime border-4 border-black border-solid rounded-full " + (data ? "" : "opacity-30") } type="button">
-            <Image src="/assets/icons/profile.svg" width="24" height="24" />
+        <button onClick={handleClick} disabled={disabled} className={"flex items-center bg-lime border-4 border-black border-solid rounded-full " + (disabled ? "opacity-30 " : "comic-border-mini ") + (user.name ? "" : "p-2") } type="button">
+            {
+                user?.coverPicture?.uri ?
+                <Image src={user?.coverPicture?.uri || "/assets/icons/profile.svg"} width="48" height="48" />
+                :
+                <Image src={user?.coverPicture?.uri || "/assets/icons/profile.svg"} width="24" height="24" />
+            }
         </button>
     )
 }

@@ -33,19 +33,26 @@ import {
   InMemoryCache,
   ApolloProvider
 } from "@apollo/client";
+import { Provider } from 'react-redux';
+import { store, persistor } from '../store/store';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const client = new ApolloClient({
   uri: 'https://api.lens.dev/',
   cache: new InMemoryCache()
 });
 
-function MyApp({ Component, pageProps }) { //: AppProps
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
       <WagmiProvider client={wagmiClient}>
         <RainbowKitProvider coolMode chains={chains}>
-          <Component {...pageProps} />
-          </RainbowKitProvider>
+          <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <Component {...pageProps} />
+            </PersistGate> 
+          </Provider>
+        </RainbowKitProvider>
       </WagmiProvider>
     </ApolloProvider>
   )
