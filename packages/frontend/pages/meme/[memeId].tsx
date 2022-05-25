@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { Col, Container, Row } from "react-bootstrap";
 import { GoBackButton } from "../../components/Buttons/GoBackBtn";
 import PageLayout from "../../components/Layout";
-import { MemeDetail } from "../../components/MemeDetail";
+import { MemeDetail } from "../../components/Meme/MemeDetail";
 import { RemixBtnBox } from "../../components/Remix/RemixBtnBox";
 import { RemixCreatedBox } from "../../components/Remix/RemixCreatedBox";
 import { RemixShareBox } from "../../components/Remix/RemixShareBox";

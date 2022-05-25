@@ -5,10 +5,11 @@ import { useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import PageLayout from '../components/Layout'
 import { ConnectionBox } from '../components/Layout/ConnectionBox'
-import { MemeDetail } from '../components/MemeDetail'
+import { MemeDetail } from '../components/Meme/MemeDetail'
 import { SelectProfile } from '../components/Modals/SelectProfile'
 import { RemixBtnBox } from '../components/Remix/RemixBtnBox'
 import { RemixShareBox } from '../components/Remix/RemixShareBox'
+import useWindowDimensions from '../hooks/window-dimensions.hook'
 import { LoginStatus } from '../models/Connection/connection.model'
 
 type HomePageProps = {
@@ -16,6 +17,7 @@ type HomePageProps = {
 }
 
 const Home: NextPage = (props: any) => {
+  const { height, width } = useWindowDimensions();
   const [loginStatus, setLoginStatus] = useState(LoginStatus.DISCONNECTED);
   const router = useRouter();
 
@@ -50,7 +52,7 @@ const Home: NextPage = (props: any) => {
             <Col>
               <article className='space-y-10'>
                 {
-                  loginStatus !== LoginStatus.CONNECTED ?
+                  width > 850 && loginStatus !== LoginStatus.CONNECTED ?
                     <Row>
                       <Col>
                         <header>

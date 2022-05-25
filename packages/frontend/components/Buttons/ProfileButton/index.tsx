@@ -23,7 +23,7 @@ export const ProfileButton = ({disabled}: ProfileButtonProps) => {
     
         
     return (
-        <button onClick={handleClick} disabled={disabled} className={"flex items-center bg-lime border-4 border-black border-solid rounded-full " + (disabled ? "opacity-30 " : "comic-border-mini ") + (user.name ? "" : "p-2") } type="button">
+        <button onClick={handleClick} disabled={disabled} className={"flex items-center bg-lime border-3 border-black border-solid rounded-full " + (disabled ? "opacity-30 " : "comic-border-mini ") + (user.name ? "" : "p-2") } type="button">
             {
                 user?.coverPicture?.uri ?
                 <Image src={user?.coverPicture?.uri || "/assets/icons/profile.svg"} width="48" height="48" />

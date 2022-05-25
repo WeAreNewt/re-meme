@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useAccount } from 'wagmi'
 import { GoBackButton } from '../../components/Buttons/GoBackBtn'
 import PageLayout from '../../components/Layout'
-import { MemePreview } from '../../components/MemePreview'
+import { MemePreview } from '../../components/Meme/MemePreview'
 import { User } from '../../models/User/user.model'
 import { removeUser } from '../../store/reducers/user.reducer'
 import { getSimplifiedAddress } from '../../utils/text'
@@ -66,7 +66,7 @@ const Profile: NextPage = (props: any) => {
                         <Col>
                             <article className='space-y-10 comic-border rounded-4xl p-20 bg-white relative'>
                                 <header className='border-b-2 border-gray-200 border-solid pb-6'>
-                                    <div className="flex items-center comic-border-mini border-4 bg-white border-black border-solid rounded-full comic-border-mini max-w-max absolute -top-16">
+                                    <div className="flex items-center comic-border-mini border-3 bg-white border-black border-solid rounded-full comic-border-mini max-w-max absolute -top-16">
                                         <Image src={user?.coverPicture?.uri || "/assets/icons/profile.svg"} width="115" height="115" />
                                     </div>
                                     <div className='flex items-center justify-between'>

@@ -42,7 +42,7 @@ export const RemixShareBox = ({ meme }: RemixShareBoxProps) => {
     ]
 
     return (
-        <div className="flex flex-col space-y-6 comic-border bg-white p-10 rounded-4xl text-center">
+        <div className="flex flex-col space-y-6 comic-border bg-white n:p-4 lg:p-10 rounded-4xl text-center">
             <button onClick={handleShareBean} className="comic-border-mini rounded-full bg-white px-20 py-2">Share on Bean</button>
             <div className="flex justify-center space-x-4 mb-4">
                 {

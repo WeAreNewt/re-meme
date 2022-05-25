@@ -6,8 +6,13 @@ import { Col, Container, Image, Row } from "react-bootstrap";
 import { useAccount } from "wagmi";
 import { GoBackButton } from "../../../components/Buttons/GoBackBtn";
 import PageLayout from "../../../components/Layout";
+import { MemeDetail } from "../../../components/Meme/MemeDetail";
+import { MemeEditBtns } from "../../../components/Meme/MemeEditBtns";
+import { MemeEditControls } from "../../../components/Meme/MemeEditControls";
+import { MemeEditPreview } from "../../../components/Meme/MemeEditPreview";
 import { ConfirmModal } from "../../../components/Modals/Confirm";
 import { FeedbackModal } from "../../../components/Modals/Feedback";
+import useWindowDimensions from "../../../hooks/window-dimensions.hook";
 import { delay } from "../../../utils/time";
 
 type CreateMemePageProps = {
@@ -15,65 +20,14 @@ type CreateMemePageProps = {
 }
 
 const CreateMemePage: NextPage = (props: any) => {
-    const { data } = useAccount();
-    const [disabled, setDisabled] = useState(false);
-    const [show, setShow] = useState(false);
+    const { height, width } = useWindowDimensions();
+    const [memeBuffer, setMemeBuffer] = useState();
     const [showConfirm, setShowConfirm] = useState(false);
     const [showFeedback, setShowFeedback] = useState(false);
     const router = useRouter();
 
-    useEffect(() => {
-        setDisabled(!data ? true : false)
-    }, [data])
+    const handleCreateBlankCanvas = () => {
 
-    const imageControllBtns = [
-        {
-            src: "",
-            handleClick: () => {
-
-            }
-        },
-        {
-            src: "",
-            handleClick: () => {
-
-            }
-        }
-    ]
-
-    const memeControllBtns = [
-        {
-            src: "/assets/icons/edit-meme-1.svg",
-            handleClick: () => {
-
-            }
-        },
-        {
-            src: "/assets/icons/edit-meme-2.svg",
-            handleClick: () => {
-
-            }
-        },
-        {
-            src: "/assets/icons/edit-meme-3.svg",
-            handleClick: () => {
-
-            }
-        },
-        {
-            src: "/assets/icons/edit-meme-4.svg",
-            handleClick: () => {
-
-            }
-        }
-    ]
-
-    const handleMemeText = (event) => {
-        
-    }
-
-    const handleRemixMeme = () => {
-        setShowConfirm(true);
     }
 
     const handleConfirmation = (status: boolean) => {
@@ -92,6 +46,24 @@ const CreateMemePage: NextPage = (props: any) => {
 
         setShowFeedback(true);
         createMemeService();
+    }
+
+    const uploadMeme = () => {
+        document.getElementById("select-meme")!.click()
+    }
+
+    const fileSelectHandler = (input) => {
+        if (input.target.files && input.target.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                if (!e.target) return;
+
+                setMemeBuffer(e.target.result as any);
+            };
+
+            reader.readAsDataURL(input.target.files[0]);
+        }
     }
 
     return (
@@ -118,38 +90,36 @@ const CreateMemePage: NextPage = (props: any) => {
                                     <Col>
                                         <Row className='gap-6'>
                                             <Col sm="12" lg="7">
-                                                <div className="comic-border bg-white p-10 rounded-4xl relative" onMouseEnter={() => { setShow(true) }} onMouseLeave={() => { setShow(false) }}>
-                                                    {
-                                                        show ?
-                                                            <div className="flex absolute right-14 top-14 space-x-3">
-                                                                {
-                                                                    imageControllBtns.map((btn, i) => (
-                                                                        <div key={"ibicon-" + i} onClick={btn.handleClick} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
-                                                                            <Image src={btn.src} width="25" height="25" />
-                                                                        </div>
-                                                                    ))
-                                                                }
+                                                {
+                                                    memeBuffer ?
+                                                        <MemeEditPreview meme={{ src: memeBuffer }} />
+                                                        :
+                                                        width > 850 ?
+                                                            <MemeDetail meme={props.exampleMeme} inspired />
+                                                            :
+                                                            <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-full h-full lg:h-1/2">
+                                                                <p className="text-3xl font-bold mb-8">Create new meme</p>
+                                                                <button onClick={uploadMeme} className="comic-border-mini rounded-full bg-purple py-1 font-medium w-full lg:w-4/5 mb-3">Upload image</button>
+                                                                <button onClick={handleCreateBlankCanvas} className="comic-border-mini rounded-full bg-white py-1 font-medium w-full lg:w-4/5">Start from blank canvas</button>
+                                                                <input id='select-meme' hidden type="file" onChange={fileSelectHandler} />
                                                             </div>
-                                                            : null
-                                                    }
-                                                    <Image src={props.meme.src} className="w-full h-auto rounded-xl" width="1600" height="1000" />
-                                                </div>
+                                                }
                                             </Col>
-                                            <Col sm="12" lg="4" className="comic-border bg-white p-10 rounded-4xl relative flex flex-col items-center w-full h-1/2">
-                                                <p className="text-lg font-bold">MEMIXER CONTROLS</p>
-                                                <input onChange={handleMemeText} className="border-2 border-black border-solid rounded-xl p-2 w-4/5 mb-4" placeholder="Text #1" type="text" />
-                                                <div className="flex space-x-3 mb-4">
-                                                    {
-                                                        memeControllBtns.map((btn, i) => (
-                                                            <div key={"mbicon-" + i} onClick={btn.handleClick} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
-                                                                <Image src={btn.src} width="30" height="30" />
+                                            <Col sm="12" lg="4">
+                                                {
+                                                    memeBuffer ?
+                                                        <MemeEditControls onRemixClicked={() => { }} />
+                                                        :
+                                                        width > 850 ?
+                                                            <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-full h-full lg:h-1/2">
+                                                                <p className="text-3xl font-bold mb-8">Create new meme</p>
+                                                                <button onClick={uploadMeme} className="comic-border-mini rounded-full bg-purple py-1 font-medium w-full lg:w-4/5 mb-3">Upload image</button>
+                                                                <button onClick={handleCreateBlankCanvas} className="comic-border-mini rounded-full bg-white py-1 font-medium w-full lg:w-4/5">Start from blank canvas</button>
+                                                                <input id='select-meme' hidden type="file" onChange={fileSelectHandler} />
                                                             </div>
-                                                        ))
-                                                    }
-                                                </div>
-                                                <button onClick={handleRemixMeme} disabled={disabled} className={"create-btn-gradient rounded-full border-black border-solid border-4 px-16 sm:px-16 lg:px-20 py-3 text-lg font-bold absolute -bottom-10 " + (disabled ? "opacity-30" : "comic-border-mini")}>
-                                                    REMIX
-                                                </button>
+                                                            :
+                                                            <MemeDetail meme={props.exampleMeme} inspired />
+                                                }
                                             </Col>
                                         </Row>
                                     </Col>
