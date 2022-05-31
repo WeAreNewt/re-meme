@@ -1,9 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html,
 body {
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: 'JetBrains Mono' !important;
 }
 
 a {
@@ -13,4 +16,54 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+.home-bg {
+  background-image: url("/assets/layout/background-1.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.profile-bg {
+  background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.comic-border {
+  border: 3px solid #101112;
+  box-shadow: 8px 8px 0px #101112;
+}
+
+.comic-border-mini {
+  border: 3px solid #101112;
+  box-shadow: 3px 3px 0px #101112;
+}
+
+.create-btn-gradient {
+  background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
+}
+
+.create-btn-gradient-transparent {
+  background: linear-gradient(135deg, #D2A6FFE6 0%, #D8F968E6 100%);
+}
+
+.bg-lime {
+  background-color: #ABFE2C;
+}
+
+.bg-lime-transparent {
+  background-color: #ABFE2CE6;
+}
+
+.bg-purple {
+  background-color: #D2A6FF;
+}
+
+.bg-light-green {
+  background-color: #A6E5B4;
+}
+
+.bg-share-gradient {
+  background: linear-gradient(90deg, rgba(100, 203, 172, 0.8) 0%, rgba(239, 185, 105, 0.8) 22.92%, rgba(235, 116, 156, 0.8) 49.48%, rgba(102, 167, 228, 0.8) 76.56%, rgba(157, 122, 201, 0.8) 100%), #FFFFFF;
 }
