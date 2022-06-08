@@ -38,7 +38,7 @@ import { store, persistor } from '../store/store';
 import { PersistGate } from 'redux-persist/integration/react';
 
 const client = new ApolloClient({
-  uri: 'https://api-mumbai.lens.dev/',
+  uri: 'https://api.lens.dev/',
   cache: new InMemoryCache()
 });
 
