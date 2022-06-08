@@ -1,14 +1,16 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import { Col, Container, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAccount } from 'wagmi'
 import { GoBackButton } from '../../components/Buttons/GoBackBtn'
 import PageLayout from '../../components/Layout'
 import { MemePreview } from '../../components/Meme/MemePreview'
-import { User } from '../../models/User/user.model'
+import { isNftImage, User } from '../../models/User/user.model'
 import { removeUser } from '../../store/reducers/user.reducer'
+import { RootState } from '../../store/store'
 import { getSimplifiedAddress } from '../../utils/text'
 
 type ProfileProps = {
@@ -17,8 +19,10 @@ type ProfileProps = {
 
 const Profile: NextPage = (props: any) => {
     const { data } = useAccount();
-    const user: User = useSelector((state: any) => state.user.selectedUser);
+    const user = useSelector((state: RootState) => state.user.selectedUser);
     const dispatch = useDispatch();
+    const router = useRouter();
+    const profilePicture = user?.picture && !isNftImage(user.picture) ? user.picture.original.url : "/assets/icons/profile.svg"
 
     const mockMemes = [
         {
@@ -43,6 +47,7 @@ const Profile: NextPage = (props: any) => {
 
     const handleLogout = () => {
         dispatch(removeUser());
+        router.push('/')
     }
 
     return (
@@ -66,14 +71,14 @@ const Profile: NextPage = (props: any) => {
                         <Col>
                             <article className='space-y-10 comic-border rounded-4xl p-20 bg-white relative'>
                                 <header className='border-b-2 border-gray-200 border-solid pb-6'>
-                                    <div className="flex items-center comic-border-mini border-3 bg-white border-black border-solid rounded-full comic-border-mini max-w-max absolute -top-16">
-                                        <Image src={user?.coverPicture?.uri || "/assets/icons/profile.svg"} width="115" height="115" />
+                                    <div className="flex items-center comic-border-mini border-3 bg-white border-black border-solid rounded-full comic-border-mini max-w-max absolute -top-16 overflow-hidden">
+                                        <img src={profilePicture} width="115" height="115" />
                                     </div>
                                     <div className='flex items-center justify-between'>
                                         <Row>
                                             <Col>
-                                                <h2 className='font-medium text-4xl'>{user.name}</h2>
-                                                <p className='font-medium text-xs'>{getSimplifiedAddress(data?.address || "")} • {user.posts?.length || 0} memes created</p>
+                                                <h2 className='font-medium text-4xl'>{user?.name}</h2>
+                                                <p className='font-medium text-xs'>{getSimplifiedAddress(data?.address || "")} • {user?.posts?.length || 0} memes created</p>
                                             </Col>
                                         </Row>
                                         <Row>

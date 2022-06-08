@@ -16,7 +16,7 @@ export const ProfileButton = ({disabled}: ProfileButtonProps) => {
     const profilePicture = user?.picture && !isNftImage(user.picture) ? user.picture.original.url : "/assets/icons/profile.svg"
 
     const handleClick = () => {
-        router.push(`/profile/1`);
+        router.push(`/profile`);
     }
         
     return (
