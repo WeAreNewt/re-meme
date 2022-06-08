@@ -1,9 +1,24 @@
-interface Picture {
-    contractAddress?: string;
-    tokenId?: string;
-    uri?: string;
-    verified?: boolean;
+interface NftImage {
+    contractAddress: string;
+    tokenId: String;
+    uri: string;
+    chainId: number;
+    verified: boolean
 }
+
+interface Media {
+    url: string;
+    mimeType?: string;
+}
+
+interface MediaSet {
+    original: Media
+}
+
+type ProfileMedia = NftImage | MediaSet
+
+export const isNftImage = (picture: ProfileMedia): picture is NftImage =>
+    (picture as NftImage).contractAddress !== undefined
 
 interface MemixerStats {
     totalFollowers?: number;
@@ -19,8 +34,9 @@ export interface User {
     id?: string;
     address: string;
     name?: string;
-    picture?: Picture;
-    coverPicture?: Picture;
+    picture?: ProfileMedia;
+    coverPicture?: ProfileMedia;
     stats: MemixerStats;
     posts: any[];
+    handle: string
 }

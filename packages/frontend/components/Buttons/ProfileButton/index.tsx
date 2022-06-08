@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { User } from '../../../models/User/user.model';
+import { isNftImage } from '../../../models/User/user.model';
+import { RootState } from '../../../store/store';
 
 
 type ProfileButtonProps = {
@@ -10,26 +10,18 @@ type ProfileButtonProps = {
 }
 
 export const ProfileButton = ({disabled}: ProfileButtonProps) => {
-    const user: User = useSelector((state: any) => state.user.selectedUser);
+    const user = useSelector((state: RootState) => state.user.selectedUser);
     const router = useRouter();
 
-    const handleClick = () => {
-        router.push(`/profile/${user.id}`);
-    }
+    const profilePicture = user?.picture && !isNftImage(user.picture) ? user.picture.original.url : "/assets/icons/profile.svg"
 
-    useEffect(() => {
-        console.log(user)
-    }, [user])
-    
+    const handleClick = () => {
+        router.push(`/profile/1`);
+    }
         
     return (
-        <button onClick={handleClick} disabled={disabled} className={"flex items-center bg-lime border-3 border-black border-solid rounded-full " + (disabled ? "opacity-30 " : "comic-border-mini ") + (user.name ? "" : "p-2") } type="button">
-            {
-                user?.coverPicture?.uri ?
-                <Image src={user?.coverPicture?.uri || "/assets/icons/profile.svg"} width="48" height="48" />
-                :
-                <Image src={user?.coverPicture?.uri || "/assets/icons/profile.svg"} width="24" height="24" />
-            }
+        <button onClick={handleClick} disabled={disabled} className={`overflow-hidden flex items-center justify-center bg-lime border-3 border-black border-solid rounded-full w-12 h-12 ${disabled ? 'opacity-30' : 'comic-border-mini'}`} type="button">
+            <img src={profilePicture} alt="avatar" />
         </button>
     )
 }

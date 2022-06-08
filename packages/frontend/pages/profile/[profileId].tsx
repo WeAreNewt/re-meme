@@ -45,10 +45,10 @@ const Profile: NextPage = (props: any) => {
                     <Row className='mb-4 mt-4 lg:mt-0'>
                         <Col>
                             {
-                                width > 850 && user.name ?
+                                width > 850 && user ?
                                     <GoBackButton route="/" />
                                     :
-                                    width > 850 ? <ConnectionBox status={LoginStatus.DISCONNECTED} /> : null
+                                    width > 850 && !user ? <ConnectionBox /> : null
                             }
                         </Col>
                     </Row>
@@ -123,12 +123,13 @@ export const getStaticProps = async ({ params }: any): Promise<{ props: ProfileP
     const user: User = {
         name: "cryptopunk",
         address: "0xE0Aff1C05dA6aF0e6779fB04AbB872c511CA6332",
+        handle: 'test.lens',
         posts: [
             {
                 id: 1,
                 src: "/assets/imgs/meme.png",
                 remixCount: 210,
-                publicationDate: new Date().getTime()
+                publicationDate: new Date().getTime(),
             },
             {
                 id: 2,

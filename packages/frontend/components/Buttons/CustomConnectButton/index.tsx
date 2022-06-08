@@ -1,22 +1,10 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
-import { useEffect } from 'react';
-import { useAccount } from 'wagmi';
 import useWindowDimensions from '../../../hooks/window-dimensions.hook';
 
-type CustomConnectButtonProps = {
-  onSuccessfullyConnected: () => void
-}
 
-export const CustomConnectButton/* : React.FC<{}> */ = ({ onSuccessfullyConnected }: CustomConnectButtonProps) => {
-  const { height, width } = useWindowDimensions();
-  const data = useAccount();
-
-  useEffect(() => {
-    if (data.data != null) {
-      onSuccessfullyConnected();
-    }
-  }, [])
+export const CustomConnectButton : React.FC = () => {
+  const { width } = useWindowDimensions();
 
   return (
     <ConnectButton.Custom>
