@@ -6,9 +6,26 @@ type MemeEditControlsProps = {
     onRemixClicked: () => void;
 }
 
+interface MemixerText {
+    value: string
+    font: string
+    fontColor: string
+    shadowColor: string
+    size: number
+}
+
+const defaultMemixerText = {
+    value: '',
+    font: '',
+    fontColor: '#FFFFFF',
+    shadowColor: '#000000',
+    size: 20
+}
+
 export const MemeEditControls = ({onRemixClicked}: MemeEditControlsProps) => {
     const { data } = useAccount();
     const [disabled, setDisabled] = useState(false);
+    const [ texts, setTexts ] = useState<MemixerText[]>([defaultMemixerText])
 
     useEffect(() => {
         setDisabled(!data ? true : false)
@@ -18,7 +35,7 @@ export const MemeEditControls = ({onRemixClicked}: MemeEditControlsProps) => {
         {
             src: "/assets/icons/edit-meme-1.svg",
             handleClick: () => {
-
+                setTexts(texts => texts.concat([defaultMemixerText]))
             }
         },
         {
@@ -41,14 +58,27 @@ export const MemeEditControls = ({onRemixClicked}: MemeEditControlsProps) => {
         }
     ]
 
-    const handleMemeText = (event) => {
-
+    const handleMemeText = (e, index) => {
+        const selectedMemixerText = texts[index]
+        const newMemixerText = { ...selectedMemixerText, value: e.target.value}
+        const newTexts = texts.slice()
+        newTexts[index] = newMemixerText
+        setTexts(newTexts)
     }
 
     return (
-        <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-full h-full lg:h-1/2">
+        <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-full">
             <p className="text-lg font-bold">MEMIXER CONTROLS</p>
-            <input onChange={handleMemeText} className="border-2 border-black border-solid rounded-xl p-2 w-4/5 mb-4" placeholder="Text #1" type="text" />
+            {
+                texts.map((text, index) =>
+                    <input
+                        onChange={e => handleMemeText(e, index)}
+                        className="border-2 border-black border-solid rounded-xl p-2 w-4/5 mb-4"
+                        placeholder={`Text #${index + 1}`}
+                        key={`memixer_text_${index}`}
+                        value={text.value}
+                    />)
+            }
             <div className="flex space-x-3 mb-4">
                 {
                     memeControllBtns.map((btn, i) => (
