@@ -1,17 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { User } from '../../models/User/user.model'
 
+export interface UserSlice {
+  selectedUser: User | null
+}
+
+const initialState : UserSlice = {
+  selectedUser: null
+}
+
 export const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    selectedUser: {} as User
-  },
+  initialState: initialState,
   reducers: {
     setUser: (state, action: PayloadAction<User>) => {
       state.selectedUser = action.payload;
     },
     removeUser: (state) => {
-      state.selectedUser = {} as User
+      state.selectedUser = null
     }
   },
 })

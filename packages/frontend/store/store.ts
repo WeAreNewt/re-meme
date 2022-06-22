@@ -1,4 +1,4 @@
-import userReducer from './reducers/user.reducer';
+import userReducer, { UserSlice } from './reducers/user.reducer';
 import { configureStore } from '@reduxjs/toolkit';
 import logger from 'redux-logger'
 import thunk from 'redux-thunk'
@@ -17,6 +17,10 @@ export const persistConfig = {
   //blacklist: ['extras'],
   //transforms: [transformCircular],
 };
+
+export interface RootState {
+  user: UserSlice
+}
 
 const rootReducer = combineReducers({ user: userReducer})
 const persistedReducer = persistReducer(persistConfig, rootReducer)

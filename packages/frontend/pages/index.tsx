@@ -3,6 +3,7 @@ import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
+import { useSelector } from 'react-redux'
 import PageLayout from '../components/Layout'
 import { ConnectionBox } from '../components/Layout/ConnectionBox'
 import { MemeDetail } from '../components/Meme/MemeDetail'
@@ -11,15 +12,16 @@ import { RemixBtnBox } from '../components/Remix/RemixBtnBox'
 import { RemixShareBox } from '../components/Remix/RemixShareBox'
 import useWindowDimensions from '../hooks/window-dimensions.hook'
 import { LoginStatus } from '../models/Connection/connection.model'
+import { User } from '../models/User/user.model'
 
 type HomePageProps = {
   exampleMeme: any; //Meme
 }
 
 const Home: NextPage = (props: any) => {
-  const { height, width } = useWindowDimensions();
-  const [loginStatus, setLoginStatus] = useState(LoginStatus.DISCONNECTED);
+  const { width } = useWindowDimensions();
   const router = useRouter();
+  const user: User = useSelector((state: any) => state.user.selectedUser);
 
   const mockMeme = {
     id: 1,
@@ -52,11 +54,11 @@ const Home: NextPage = (props: any) => {
             <Col>
               <article className='space-y-10'>
                 {
-                  width > 850 && loginStatus !== LoginStatus.CONNECTED ?
+                  width > 850 && !user ?
                     <Row>
                       <Col>
                         <header>
-                          <ConnectionBox status={loginStatus} />
+                          <ConnectionBox />
                         </header>
                       </Col>
                     </Row>
