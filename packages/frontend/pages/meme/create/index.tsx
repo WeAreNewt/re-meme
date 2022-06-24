@@ -92,7 +92,7 @@ const CreateMemePage: NextPage = (props: any) => {
         index: 0
     })
     const [ texts, setTexts ] = useState<MemixerText[]>([defaultMemixerText])
-    const [memeBuffer, setMemeBuffer] = useState();
+    const [images, setImages] = useState([]);
     const [showConfirm, setShowConfirm] = useState(false);
     const [showFeedback, setShowFeedback] = useState(false);
     const router = useRouter();
