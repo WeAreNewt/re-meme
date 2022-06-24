@@ -1,3 +1,4 @@
+import { is } from "immer/dist/internal";
 import { NextPage } from "next"
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -69,16 +70,18 @@ const DraggableText : React.FC<SVGProps<SVGTextElement>> = ({ children, ...rest 
     }
 
     return (
-        <text
-            className="select-none"
+        <span
+            style={{
+                top: `${pos.y}px`,
+                left: `${pos.x}px`
+            }}
+            className={ `select-none absolute` }
             ref={ref}
             {...rest}
-            y={pos.y}
-            x={pos.x}
             onMouseDown={handleMouseDown}
         >
             {children}
-        </text>
+        </span>
     )
 }
 
@@ -186,7 +189,7 @@ const CreateMemePage: NextPage = (props: any) => {
                 <link rel="icon" href="/favicon.ico" />
                 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
             </Head>
-            <EditTextModal index={openTextModal.index} open={openTextModal.open} />
+            <EditTextModal setOpen={setOpenTextModal} index={openTextModal.index} open={openTextModal.open} />
             <FeedbackModal show={showFeedback} />
             <ConfirmModal show={showConfirm} onConfirm={handleConfirmation} />
             <PageLayout>
@@ -199,38 +202,33 @@ const CreateMemePage: NextPage = (props: any) => {
                     <Row className='mt-auto'>
                         <Col>
                             <article className='space-y-10'>
-                                <div className={`flex flex-${isSmallScreen ? 'col' : 'row'} gap-10`}>
+                                <div className={`flex flex-${isSmallScreen ? 'col' : 'row'} gap-10 items-start`}>
                                     {
                                         memeBuffer ? (
                                             <>
                                                 <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative w-full">
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        height="100%"
-                                                        width="100%"
+                                                    <div
+                                                        className="relative overflow-hidden"
                                                     >
-                                                            <image href={memeBuffer} width="100%" />
+                                                            <img src={memeBuffer} width="100%" />
                                                             {
                                                                 texts.map((text, index) => 
                                                                     <DraggableText
                                                                         key={`svg_text_${index}`}
                                                                         color={text.fontColor}
                                                                         fontSize={text.size}
-                                                                        x={text.x}
-                                                                        y={text.y}
-            
                                                                     >
                                                                         {text.value}
                                                                     </DraggableText>
                                                                 )
                                                             }
-                                                    </svg>
+                                                    </div>
                                                 </div>
-                                                <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-2/3">
+                                                <div className={`comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center ${isSmallScreen ? 'w-full' : 'w-2/3'}`}>
                                                     <p className="text-lg font-bold">MEMIXER CONTROLS</p>
                                                     {
                                                         texts.map((text, index) =>
-                                                            <div key={`memixer_text_${index}`} className="border-2 border-black border-solid rounded-xl mb-4 flex p-2 gap-2">
+                                                            <div key={`memixer_text_${index}`} className="border-2 border-black border-solid rounded-xl mb-4 flex p-2 gap-2 w-full">
                                                                 <input
                                                                     onChange={e => handleMemeText(e, index)}
                                                                     className="w-full focus:outline-none"
