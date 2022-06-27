@@ -21,6 +21,7 @@ export const GET_PROFILES = gql`
             tokenId
             uri
             verified
+            chainId
           }
           ... on MediaSet {
             original {
@@ -37,6 +38,7 @@ export const GET_PROFILES = gql`
             tokenId
             uri
             verified
+            chainId
           }
           ... on MediaSet {
             original {

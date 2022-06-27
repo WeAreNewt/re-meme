@@ -1,6 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import useLensProfiles from "../../../hooks/useLensProfiles";
 import { User } from "../../../models/User/user.model";
 import { GET_PROFILES } from "../../../queries/getProfiles";
 import { ProfileCard } from "../../ProfileCard";
@@ -11,58 +12,12 @@ type SelectProfileProps = {
     onProfileSelected: (profile: User) => void
 }
 
-const mockedProfiles = [
-    {
-        name: "cryptopunk",
-        coverPicture: {
-            uri: "/assets/imgs/punk.png",
-        },
-        stats: {
-            totalPosts: 3
-        }
-    },
-    {
-        name: "crazycrypto",
-        coverPicture: {
-            uri: "/assets/imgs/crazy.png",
-        },
-        stats: {
-            totalPosts: 9
-        }
-    },
-] as User[];
-
 export const SelectProfile = ({ show, onClose, onProfileSelected }: SelectProfileProps) => {
-    const client = useApolloClient();
-    const { data } = useAccount();
-    const [selectedProfile, setSelectedProfile] = useState({} as User);
-    const [profiles, setProfiles] = useState(mockedProfiles);
-
-    useEffect(() => {
-        const getProfiles = async (address: string) => {
-            const request = { ownedBy: address };
-            return client.query({
-                query: GET_PROFILES,
-                variables: {
-                    request,
-                },
-            })
-        }
-
-        if (data) {
-            getProfiles(data.address!)
-                .then(res => {
-                    if (res.error) {
-                        //TODO Add feedback
-                        return;
-                    }
-                    //setProfiles(res.data.profiles.items);
-                });
-        }
-    }, [])
+    const [selectedProfile, setSelectedProfile] = useState<User>();
+    const { data } = useLensProfiles()
 
     const handleSelected = () => {
-        onProfileSelected(selectedProfile);
+        if(selectedProfile) onProfileSelected(selectedProfile);
     }
 
     const handleProfileSelected = (profile) => {
@@ -75,7 +30,7 @@ export const SelectProfile = ({ show, onClose, onProfileSelected }: SelectProfil
                 <div className="comic-border rounded-4xl bg-white n:p-4 lg:p-10">
                     <p className="text-2xl text-center font-bold whitespace-pre lg:whitespace-pre-line px-0 lg:px-8">{"Which Lens profile do\n you want to connect?"}</p>
                     {
-                        profiles?.map((prof, index) => (
+                        data?.profiles.items.map((prof, index) => (
                             <div key={"profile-select-" + index} onClick={() => {handleProfileSelected(prof)}} className="border-b-2 border-gray-200 border-solid pb-2 mb-2 cursor-pointer">
                                 <ProfileCard profile={prof} subText={`${prof.stats.totalPosts} memes created`} selected={selectedProfile === prof} />
                             </div>
