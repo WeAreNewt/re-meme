@@ -21,6 +21,9 @@ module.exports = {
         '3': '3px',
       }
     },
+    colors: {
+      'alert-red': '#D91A1A'
+    }
   },
   plugins: [],
 }

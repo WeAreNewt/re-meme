@@ -54,11 +54,8 @@ export const SelectProfile = ({ show, onClose, onProfileSelected }: SelectProfil
                 .then(res => {
                     if (res.error) {
                         //TODO Add feedback
-                        console.log(res.error)
                         return;
                     }
-
-                    console.log(res.data.profiles)
                     //setProfiles(res.data.profiles.items);
                 });
         }

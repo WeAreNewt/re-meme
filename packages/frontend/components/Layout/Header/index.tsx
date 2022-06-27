@@ -19,7 +19,6 @@ export const Header: React.FC<{}> = ({ }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        //console.log(data)
         setDisabled(!data ? true : false)
         if (!data) {
             dispatch(removeUser());

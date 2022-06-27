@@ -1,3 +1,5 @@
+import useWindowDimensions from "../../../hooks/window-dimensions.hook"
+
 interface State {
     index: number,
     open: boolean
@@ -7,39 +9,79 @@ interface EditTextModalProps {
     index: number
     open: boolean
     setOpen: ({index, open}: State) => void
+    deleteText: (index: number) => void
 }
 
-const EditTextModal : React.FC<EditTextModalProps> = ({ index, open, setOpen }) => {
+const EditTextModal : React.FC<EditTextModalProps> = ({ index, open, setOpen, deleteText }) => {
 
-    return (
-            <div className={open ? "block" : "hidden"}>
-                <div onMouseDown={() => setOpen({ index: 0, open: false})} className="absolute h-screen w-screen z-20 flex items-center justify-center create-btn-gradient-transparent px-4 lg:px-0">
-                    <div onMouseDown={(e) => e.stopPropagation()} className="comic-border rounded-4xl bg-white n:p-4 lg:p-10 flex flex-col">
-                        <h3 className="text-lg font-bold">{`Edit Text #${index + 1}`}</h3>
-                        <span>Choose font</span>
-                        <select className="border-2 border-black border-solid rounded-xl p-2 mb-2">
-                            <option>Mock 1</option>
-                            <option>Mock 2</option>
-                        </select>
-                        <div className="flex gap-10 mb-2">
-                            <div>
-                                <span>Font color</span>
-                                <div className="border-2 border-black border-solid rounded-xl flex">
-                                    <div className="w-8 border-r-2 border-black border-solid rounded-xl bg-black" />
-                                    <input />
-                                </div>
-                            </div>
-                            <div>
-                                <span>Shadow color</span>
-                            </div>
-                        </div>
-                        <div className="flex">
-                            <span>Size</span>
-                            <span className="ml-auto">20px</span>
-                        </div>
-                        <input id="small-range" type="range" value="50" className="mb-6 w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700"></input>
+    const { width } = useWindowDimensions()
+    const isSmallScreen = width < 850
+
+    const onDelete = () => {
+        deleteText(index)
+        setOpen({ index: 0, open: false})
+    }
+
+    const Modal = () => (
+        <div
+            onMouseDown={(e) => e.stopPropagation()}
+            className={`comic-border rounded-4xl bg-white p-4 flex flex-col`}
+        >
+            <div className="flex items-center justify-between">
+                <h3 className="text-lg font-bold mb-0">{`Edit Text #${index + 1}`}</h3>
+                {
+                    isSmallScreen ? (
+                        <button onClick={() => setOpen({ index: 0, open: false})}>
+                            <img src="/assets/icons/x.png"/>
+                        </button>
+                    ) : (
+                        <button className="rounded-4xl bg-alert-red comic-border-mini p-2 border-2" onClick={onDelete}>
+                            <img src="/assets/icons/trash-can.svg"/>
+                        </button>
+                    )
+                }
+            </div>
+            <span>Choose font</span>
+            <select className="border-2 border-black border-solid rounded-xl p-2 mb-2 h-12">
+                <option>Mock 1</option>
+                <option>Mock 2</option>
+            </select>
+            <div className="flex mb-2 gap-2">
+                <div className="w-1/2">
+                    <span>Font color</span>
+                    <div className="border-2 border-black border-solid rounded-xl flex h-12 overflow-hidden">
+                        <div className="w-12 border-black border-solid border-r-2 rounded-r-xl bg-white" />
+                        <input className="text-center focus:outline-none" />
                     </div>
                 </div>
+                <div className="w-1/2">
+                    <span>Shadow color</span>
+                    <div className="border-2 border-black border-solid rounded-xl flex h-12 overflow-hidden">
+                        <div className="w-12 border-black border-solid border-r-2 rounded-r-xl bg-white" />
+                        <input className="text-center focus:outline-none" />
+                    </div>
+                </div>
+            </div>
+            { isSmallScreen && (
+                <button className="rounded-4xl bg-alert-red comic-border-mini p-2 border-2 self-center mt-3" onClick={onDelete}>
+                    <img src="/assets/icons/trash-can.svg"/>
+                </button>
+            )}
+        </div>
+    )
+
+    return (
+            <div className={`${open ? "block" : "hidden"} ${isSmallScreen ? 'w-full' : ''}`}>
+                {
+                    isSmallScreen ? <Modal /> :
+                    (
+                        <div onMouseDown={() => setOpen({ index: 0, open: false})}
+                            className={`${isSmallScreen ? 'static' :  'fixed'} h-screen w-screen z-20 flex items-center justify-center create-btn-gradient-transparent top-0 left-0`}
+                        >
+                            <Modal />
+                        </div>
+                    )
+                }
             </div>
     );
 }

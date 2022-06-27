@@ -16,11 +16,6 @@ export const ProfileButton = ({disabled}: ProfileButtonProps) => {
     const handleClick = () => {
         router.push(`/profile/${user.id}`);
     }
-
-    useEffect(() => {
-        console.log(user)
-    }, [user])
-    
         
     return (
         <button onClick={handleClick} disabled={disabled} className={"flex items-center bg-lime border-3 border-black border-solid rounded-full " + (disabled ? "opacity-30 " : "comic-border-mini ") + (user.name ? "" : "p-2") } type="button">
