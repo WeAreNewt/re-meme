@@ -99,7 +99,7 @@ const MemeGenerator : React.FC<MemeGeneratorProps> = ({ initialImage }) => {
             handleClick: () => {
                 const newText = new fabric.IText('')
                 console.log(canvas)
-                canvas.add(newText)
+                canvas?.add(newText)
                 setTexts(texts => texts.concat(newText))
                 canvas?.renderAll()
             }
