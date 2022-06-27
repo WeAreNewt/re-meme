@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react"
+import { ChangeEventHandler, useEffect, useLayoutEffect, useRef, useState } from "react"
 import useWindowDimensions from "../../hooks/window-dimensions.hook"
 import EditTextModal from "../Modals/EditTextModal"
 import { fabric } from 'fabric';
@@ -54,6 +54,46 @@ const MemeGenerator : React.FC<MemeGeneratorProps> = ({ initialImage }) => {
         document.body.removeChild(anchor)
     }
 
+    const uploadFileHandler = () => {
+        document.getElementById("upload-file")!.click()
+    }
+
+    const addImage: ChangeEventHandler<HTMLInputElement> = (input) => {
+        if (input.target.files && input.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if (!e.target?.result) return;
+                const img = new Image()
+                img.src = e.target.result?.toString()
+                img.onload = () => {
+                    if(containerRef.current && canvas) {
+                        const currentHeight = images.reduce((acum, image) => acum + image.getScaledHeight(), 0)
+                        console.log(currentHeight)
+                        const fabricImage = new fabric.Image(img, {
+                            top: currentHeight,
+                            left: 0,
+                            selectable: false,
+                            evented: false
+                        })
+                        console.log(fabricImage)
+                        setImages(images => images.concat(fabricImage))
+                        fabricImage.scaleToWidth(containerRef.current.clientWidth)
+                        canvas.setHeight(fabricImage.getScaledHeight() + currentHeight)
+                        canvas.add(fabricImage)
+                        canvas.renderAll()
+                    }
+                }
+            };
+            reader.readAsDataURL(input.target.files[0]);
+        }
+    }
+
+    const clearFileCache =  ( event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+        const element = event.target as HTMLInputElement
+        element.value = ''
+    }
+    
+
     useLayoutEffect(() => {
         if(initialImage && containerRef.current) {
             const canvasCreation = new fabric.Canvas('meme-editor')
@@ -74,7 +114,6 @@ const MemeGenerator : React.FC<MemeGeneratorProps> = ({ initialImage }) => {
                     canvasCreation.setHeight(fabricImage.getScaledHeight())
                     canvasCreation.add(fabricImage)
                     canvasCreation.add(texts[0])
-                    canvasCreation.renderAll()
                 }
             }
         }
@@ -83,12 +122,15 @@ const MemeGenerator : React.FC<MemeGeneratorProps> = ({ initialImage }) => {
     useEffect(() => {
         if(containerRef.current && canvas) {
             canvas.setWidth(containerRef.current.clientWidth)
+            let totalHeight = 0
             images.map(image => {
                 if(containerRef.current) {
                     image.scaleToWidth(containerRef.current.clientWidth)
-                    canvas.setHeight(image.getScaledHeight())
+                    image.top = totalHeight
+                    totalHeight += image.getScaledHeight()
                 }
             })
+            canvas.setHeight(totalHeight)
             canvas.renderAll()
         }
     }, [width, canvas, images])
@@ -101,13 +143,12 @@ const MemeGenerator : React.FC<MemeGeneratorProps> = ({ initialImage }) => {
                 console.log(canvas)
                 canvas?.add(newText)
                 setTexts(texts => texts.concat(newText))
-                canvas?.renderAll()
             }
         },
         {
             src: "/assets/icons/edit-meme-2.svg",
             handleClick: () => {
-    
+                uploadFileHandler()
             }
         },
         {
@@ -154,6 +195,7 @@ const MemeGenerator : React.FC<MemeGeneratorProps> = ({ initialImage }) => {
                     )
                 }
                 <div className="flex space-x-3 mb-4">
+                    <input id='upload-file' accept="image/*" hidden type="file" onChange={addImage} onClick={clearFileCache} />
                     {
                         memeControllBtns.map((btn, i) => (
                             <div key={"mbicon-" + i} onClick={btn.handleClick} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
