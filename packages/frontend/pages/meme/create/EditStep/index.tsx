@@ -1,18 +1,18 @@
 import { ChangeEventHandler, useEffect, useLayoutEffect, useRef, useState } from "react"
-import useWindowDimensions from "../../hooks/window-dimensions.hook"
-import EditTextModal from "../Modals/EditTextModal"
 import { fabric } from 'fabric';
+import useWindowDimensions from "../../../../hooks/window-dimensions.hook";
+import EditTextModal, { EditText } from "../../../../components/Modals/EditTextModal";
 
-interface MemeGeneratorProps {
-    initialImage: string
+interface EditStepProps {
+    initialImage?: string
 }
 
-const MemeGenerator : React.FC<MemeGeneratorProps> = ({ initialImage }) => {
+const EditStep : React.FC<EditStepProps> = ({ initialImage }) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const { width } = useWindowDimensions();
-    const isSmallScreen = width < 850
+    const isSmallScreen = width < 1024
     const [ canvas, setCanvas ] = useState<fabric.Canvas>();
-    const [ texts, setTexts ] = useState<fabric.IText[]>([new fabric.IText('', {
+    const [ texts, setTexts ] = useState<fabric.Text[]>([new fabric.Text('', {
         top: 0,
         left: 0,
     })])
@@ -68,14 +68,12 @@ const MemeGenerator : React.FC<MemeGeneratorProps> = ({ initialImage }) => {
                 img.onload = () => {
                     if(containerRef.current && canvas) {
                         const currentHeight = images.reduce((acum, image) => acum + image.getScaledHeight(), 0)
-                        console.log(currentHeight)
                         const fabricImage = new fabric.Image(img, {
                             top: currentHeight,
                             left: 0,
                             selectable: false,
                             evented: false
                         })
-                        console.log(fabricImage)
                         setImages(images => images.concat(fabricImage))
                         fabricImage.scaleToWidth(containerRef.current.clientWidth)
                         canvas.setHeight(fabricImage.getScaledHeight() + currentHeight)
@@ -88,7 +86,7 @@ const MemeGenerator : React.FC<MemeGeneratorProps> = ({ initialImage }) => {
         }
     }
 
-    const clearFileCache =  ( event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+    const clearFileCache =  (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
         const element = event.target as HTMLInputElement
         element.value = ''
     }
@@ -134,13 +132,12 @@ const MemeGenerator : React.FC<MemeGeneratorProps> = ({ initialImage }) => {
             canvas.renderAll()
         }
     }, [width, canvas, images])
-
+    
     const memeControllBtns = [
         {
             src: "/assets/icons/edit-meme-1.svg",
             handleClick: () => {
-                const newText = new fabric.IText('')
-                console.log(canvas)
+                const newText = new fabric.Text('')
                 canvas?.add(newText)
                 setTexts(texts => texts.concat(newText))
             }
@@ -165,51 +162,71 @@ const MemeGenerator : React.FC<MemeGeneratorProps> = ({ initialImage }) => {
         }
     ]
 
-
     return (
         <>
-            <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative w-full">
-                <div
-                    className="relative overflow-hidden"
-                    ref={containerRef}
-                >
-                    <canvas id="meme-editor" />
+            {
+                !isSmallScreen && openTextModal.open && (
+                    <EditTextModal
+                        deleteText={deleteText}
+                        setOpen={setOpenTextModal}
+                        index={openTextModal.index}
+                        open={openTextModal.open}
+                    />
+                )
+            }
+            <div className="flex flex-col lg:flex-row gap-10 items-start">
+                <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative w-full lg:w-2/3'>
+                    <div
+                        className="relative overflow-hidden"
+                        ref={containerRef}
+                    >
+                        <canvas id="meme-editor" />
+                    </div>
                 </div>
-            </div>
-            <EditTextModal deleteText={deleteText} setOpen={setOpenTextModal} index={openTextModal.index} open={openTextModal.open} />
-            <div className={`comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center ${isSmallScreen ? 'w-full' : 'w-2/3'}`}>
-                <p className="text-lg font-bold">MEMIXER CONTROLS</p>
                 {
-                    texts.map((text, index) =>
-                        <div key={`memixer_text_${index}`} className="border-2 border-black border-solid rounded-xl mb-4 flex p-2 gap-2 w-full">
-                            <input
-                                onChange={e => handleMemeText(e, index)}
-                                className="w-full focus:outline-none"
-                                placeholder={`Text #${index + 1}`}
-                                value={text.text}
-                            />
-                            <button className="w-4 flex items-center" onClick={() => openEditTextModal(index)}>
-                                <img src="/assets/icons/pencil.svg" />
-                            </button>
-                        </div>
+                    isSmallScreen && openTextModal.open && (
+                        <EditText 
+                            deleteText={deleteText}
+                            setOpen={setOpenTextModal}
+                            index={openTextModal.index}
+                            open={openTextModal.open}
+                        />
                     )
                 }
-                <div className="flex space-x-3 mb-4">
-                    <input id='upload-file' accept="image/*" hidden type="file" onChange={addImage} onClick={clearFileCache} />
+                <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-full lg:w-1/3'>
+                    <p className="text-lg font-bold">MEMIXER CONTROLS</p>
                     {
-                        memeControllBtns.map((btn, i) => (
-                            <div key={"mbicon-" + i} onClick={btn.handleClick} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
-                                <img src={btn.src} width="30" height="30" />
+                        texts.map((text, index) =>
+                            <div key={`memixer_text_${index}`} className="border-2 border-black border-solid rounded-xl mb-4 flex p-2 gap-2 w-full">
+                                <input
+                                    onChange={e => handleMemeText(e, index)}
+                                    className="w-full focus:outline-none"
+                                    placeholder={`Text #${index + 1}`}
+                                    value={text.text}
+                                />
+                                <button className="w-4 flex items-center" onClick={() => openEditTextModal(index)}>
+                                    <img src="/assets/icons/pencil.svg" />
+                                </button>
                             </div>
-                        ))
+                        )
                     }
+                    <div className="flex space-x-3 mb-4">
+                        <input id='upload-file' accept="image/*" hidden type="file" onChange={addImage} onClick={clearFileCache} />
+                        {
+                            memeControllBtns.map((btn, i) => (
+                                <div key={"mbicon-" + i} onClick={btn.handleClick} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
+                                    <img src={btn.src} width="30" height="30" />
+                                </div>
+                            ))
+                        }
+                    </div>
+                    <button onClick={remix} className={"create-btn-gradient rounded-full border-black border-solid border-3 px-16 sm:px-16 lg:px-20 py-3 text-lg font-bold absolute -bottom-10 " + (false ? "opacity-30" : "comic-border-mini")}>
+                        REMIX
+                    </button>
                 </div>
-                <button onClick={remix} className={"create-btn-gradient rounded-full border-black border-solid border-3 px-16 sm:px-16 lg:px-20 py-3 text-lg font-bold absolute -bottom-10 " + (false ? "opacity-30" : "comic-border-mini")}>
-                    REMIX
-                </button>
             </div>
         </>
-    )
+    );
 }
 
-export default MemeGenerator;
+export default EditStep;
