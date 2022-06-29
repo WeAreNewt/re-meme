@@ -1,10 +1,17 @@
 import { ChangeEventHandler, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { fabric } from 'fabric';
 import useWindowDimensions from "../../../../hooks/window-dimensions.hook";
-import EditTextModal, { EditText } from "../../../../components/Modals/EditTextModal";
+import EditTextModal, { EditText, TextConfig } from "../../../../components/Modals/EditTextModal";
 
 interface EditStepProps {
     initialImage?: string
+}
+
+const DEFAULT_TEXT_CONFIG = {
+    top: 0,
+    left: 0,
+    fontFamily: 'Helvetica',
+    fill: '#000000'
 }
 
 const EditStep : React.FC<EditStepProps> = ({ initialImage }) => {
@@ -12,10 +19,7 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage }) => {
     const { width } = useWindowDimensions();
     const isSmallScreen = width < 1024
     const [ canvas, setCanvas ] = useState<fabric.Canvas>();
-    const [ texts, setTexts ] = useState<fabric.Text[]>([new fabric.Text('', {
-        top: 0,
-        left: 0,
-    })])
+    const [ texts, setTexts ] = useState<fabric.Text[]>([new fabric.Text('', DEFAULT_TEXT_CONFIG)])
     const [ images, setImages ] = useState<fabric.Image[]>([]);
     const [ openTextModal, setOpenTextModal ] = useState({
         open: false,
@@ -56,6 +60,17 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage }) => {
 
     const uploadFileHandler = () => {
         document.getElementById("upload-file")!.click()
+    }
+
+    const setConfig = (newConfig: TextConfig, index: number) => {
+        console.log(newConfig)
+        const selectedText = texts[index]
+        selectedText.set({
+            fontFamily: newConfig.font,
+            fill: newConfig.textColor
+        })
+        canvas?.renderAll()
+        setTexts(texts => [...texts])
     }
 
     const addImage: ChangeEventHandler<HTMLInputElement> = (input) => {
@@ -137,7 +152,7 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage }) => {
         {
             src: "/assets/icons/edit-meme-1.svg",
             handleClick: () => {
-                const newText = new fabric.Text('')
+                const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
                 canvas?.add(newText)
                 setTexts(texts => texts.concat(newText))
             }
@@ -171,6 +186,8 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage }) => {
                         setOpen={setOpenTextModal}
                         index={openTextModal.index}
                         open={openTextModal.open}
+                        text={texts[openTextModal.index]}
+                        setConfig={setConfig}
                     />
                 )
             }
@@ -190,6 +207,8 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage }) => {
                             setOpen={setOpenTextModal}
                             index={openTextModal.index}
                             open={openTextModal.open}
+                            text={texts[openTextModal.index]}
+                            setConfig={setConfig}
                         />
                     )
                 }

@@ -59,7 +59,10 @@ const CreateMemePage: NextPage<CreateMemePageProps> = ({ exampleMeme }) => {
 
     const onBackClick = () => {
         if(step === 0) router.push('/')
-        else setStep(step => step-1)
+        else {
+            setInitialImage(undefined)
+            setStep(step => step-1)
+        }
     }
 
     return (
