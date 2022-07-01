@@ -82,16 +82,11 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage }) => {
                 img.src = e.target.result?.toString()
                 img.onload = () => {
                     if(containerRef.current && canvas) {
-                        const currentHeight = images.reduce((acum, image) => acum + image.getScaledHeight(), 0)
                         const fabricImage = new fabric.Image(img, {
-                            top: currentHeight,
-                            left: 0,
-                            selectable: false,
-                            evented: false
+                            top: 0,
+                            left: 0
                         })
                         setImages(images => images.concat(fabricImage))
-                        fabricImage.scaleToWidth(containerRef.current.clientWidth)
-                        canvas.setHeight(fabricImage.getScaledHeight() + currentHeight)
                         canvas.add(fabricImage)
                         canvas.renderAll()
                     }
@@ -117,34 +112,27 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage }) => {
                 if(containerRef.current) {
                     const fabricImage = new fabric.Image(img, {
                         top: 0,
-                        left: 0,
-                        selectable: false,
-                        evented: false
+                        left: 0
                     })
                     setImages(images => images.concat(fabricImage))
                     canvasCreation.setWidth(containerRef.current.clientWidth)
-                    fabricImage.scaleToWidth(containerRef.current.clientWidth)
-                    canvasCreation.setHeight(fabricImage.getScaledHeight())
+                    canvasCreation.setHeight(containerRef.current.clientWidth)
                     canvasCreation.add(fabricImage)
                     canvasCreation.add(texts[0])
                 }
             }
+        }
+        if(!initialImage && containerRef.current) {
+            const canvasCreation = new fabric.Canvas('meme-editor', { width: containerRef.current.clientWidth, height: containerRef.current.clientWidth})
+            canvasCreation.add(texts[0])
+            setCanvas(canvasCreation)
         }
     }, [initialImage])
 
     useEffect(() => {
         if(containerRef.current && canvas) {
             canvas.setWidth(containerRef.current.clientWidth)
-            let totalHeight = 0
-            images.map(image => {
-                if(containerRef.current) {
-                    image.scaleToWidth(containerRef.current.clientWidth)
-                    image.top = totalHeight
-                    totalHeight += image.getScaledHeight()
-                }
-            })
-            canvas.setHeight(totalHeight)
-            canvas.renderAll()
+            canvas.setHeight(containerRef.current.clientWidth)
         }
     }, [width, canvas, images])
     
