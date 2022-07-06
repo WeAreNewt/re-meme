@@ -13,12 +13,12 @@ export const userSlice = createSlice({
   name: 'user',
   initialState: initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User>) => {
+    setUser: (state: UserSlice, action: PayloadAction<User>) => {
       state.selectedUser = action.payload;
     },
-    removeUser: (state) => {
+    removeUser: (state: UserSlice) => {
       state.selectedUser = null
-    }
+    },
   },
 })
 

@@ -1,9 +1,6 @@
-import { useApolloClient } from "@apollo/client";
-import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useState } from "react";
 import useLensProfiles from "../../../hooks/useLensProfiles";
 import { User } from "../../../models/User/user.model";
-import { GET_PROFILES } from "../../../queries/getProfiles";
 import { ProfileCard } from "../../ProfileCard";
 
 type SelectProfileProps = {

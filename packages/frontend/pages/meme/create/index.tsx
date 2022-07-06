@@ -10,6 +10,7 @@ import { FeedbackModal } from "../../../components/Modals/Feedback";
 import { delay } from "../../../utils/time";
 import CreateStep from "./CreateStep";
 import EditStep from "./EditStep";
+import FeedbackStep from "./FeedbackStep";
 
 interface Profile {
     id: number
@@ -33,29 +34,11 @@ type CreateMemePageProps = {
 const CreateMemePage: NextPage<CreateMemePageProps> = ({ exampleMeme }) => {
     const [ step, setStep ] = useState(0);
     const [initialImage, setInitialImage] = useState<string>();
-    const [showConfirm, setShowConfirm] = useState(false);
+    const [ uploadedImage, setUploadedImage ] = useState<string>();
     const [showFeedback, setShowFeedback] = useState(false);
     const router = useRouter();
 
     const goNext = () => setStep(step => step + 1)
-
-    const handleConfirmation = (status: boolean) => {
-        setShowConfirm(false);
-
-        if (!status) return;
-
-        //TOOD Create meme here
-
-        const createMemeService = async () => {
-            await delay(1500);
-            setShowFeedback(false);
-            const createdMeme = { id: 2 }
-            router.push(`/meme/${createdMeme.id}?created=true`);
-        }
-
-        setShowFeedback(true);
-        createMemeService();
-    }
 
     const onBackClick = () => {
         if(step === 0) router.push('/')
@@ -63,6 +46,11 @@ const CreateMemePage: NextPage<CreateMemePageProps> = ({ exampleMeme }) => {
             setInitialImage(undefined)
             setStep(step => step-1)
         }
+    }
+
+    const handleUpload = (svg: string) => {
+        setUploadedImage(svg)
+        goNext()
     }
 
     return (
@@ -74,7 +62,6 @@ const CreateMemePage: NextPage<CreateMemePageProps> = ({ exampleMeme }) => {
                 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
             </Head>
             <FeedbackModal show={showFeedback} />
-            <ConfirmModal show={showConfirm} onConfirm={handleConfirmation} />
             <PageLayout>
                 <Container fluid="md" className='h-full'>
                     <Row className='mb-4'>
@@ -82,9 +69,10 @@ const CreateMemePage: NextPage<CreateMemePageProps> = ({ exampleMeme }) => {
                             <GoBackButton onClick={onBackClick} />
                         </Col>
                     </Row>
-                    <Row className="relative">
+                    <Row>
                         { step === 0 && <CreateStep meme={exampleMeme} setInitialImage={setInitialImage} goNext={goNext} /> }
-                        { step === 1 && <EditStep initialImage={initialImage} /> }
+                        { step === 1 && <EditStep initialImage={initialImage} onUpload={handleUpload} /> }
+                        { step === 2 && uploadedImage && <FeedbackStep image={uploadedImage} />}
                     </Row>
                 </Container>
 

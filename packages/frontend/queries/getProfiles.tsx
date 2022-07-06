@@ -1,4 +1,4 @@
-import { gql, useApolloClient } from '@apollo/client';
+import { gql } from '@apollo/client';
 
 export const GET_PROFILES = gql`
   query($request: ProfileQueryRequest!) {

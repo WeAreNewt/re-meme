@@ -3,10 +3,13 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useAccount } from 'wagmi'
+import useLensAuth from '../../../hooks/useLensAuth'
 import useLensProfiles from '../../../hooks/useLensProfiles'
 import useWindowDimensions from '../../../hooks/window-dimensions.hook'
 import { User } from '../../../models/User/user.model'
+import { AuthSlice } from '../../../store/reducers/auth.reducer'
 import { removeUser, setUser } from '../../../store/reducers/user.reducer'
+import { RootState } from '../../../store/store'
 import { CreateNewMemeBtn } from '../../Buttons/CreateNewMemeButton'
 import { CustomConnectButton } from '../../Buttons/CustomConnectButton/index'
 import { ProfileButton } from '../../Buttons/ProfileButton'
@@ -14,9 +17,11 @@ import { SelectProfile } from '../../Modals/SelectProfile'
 
 export const Header: React.FC<{}> = () => {
     const { width } = useWindowDimensions();
-    const { data } = useAccount();
+    const { data: account } = useAccount();
     const [show, setShow] = useState(false);
-    const user: User = useSelector((state: any) => state.user.selectedUser);
+    const user: User | null = useSelector((state: RootState) => state.user.selectedUser);
+    const auth: AuthSlice = useSelector((state: RootState) => state.auth)
+    const { haveAuth } = useLensAuth(account?.address)
     const dispatch = useDispatch();
 
     const { data: profilesData } = useLensProfiles()
@@ -27,14 +32,10 @@ export const Header: React.FC<{}> = () => {
     }
 
     useEffect(() => {
-        if(data && profilesData && !user) {
+        if(haveAuth && !user && profilesData) {
             setShow(true)
         }
-    }, [profilesData, user, data])
-
-    useEffect(() => {
-        if(!data) dispatch(removeUser())
-    }, [data, dispatch])
+    }, [ haveAuth, profilesData, user])
 
     return (
         <>

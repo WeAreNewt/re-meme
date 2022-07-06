@@ -27,8 +27,6 @@ export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, delete
         setOpen({ index: 0, open: false})
     }
 
-    console.log((text.fill))
-
     const setFont: ChangeEventHandler<HTMLSelectElement> = e => {
         setConfig({
             textColor: (text.fill as string),
@@ -106,7 +104,7 @@ const EditTextModal : React.FC<EditTextModalProps> = (props) => {
                 className={`${open ? "block" : "hidden"} absolute h-full w-full z-20 top-0 left-0`}
             >
                 <div onMouseDown={() => setOpen({ index: 0, open: false})}
-                    className='static flex justify-end mr-20 mt-10'
+                    className='static flex justify-end mr-20 mt-60'
                 >
                     <EditText {...props} />
                 </div>
