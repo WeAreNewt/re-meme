@@ -144,7 +144,7 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage, onUpload }) => {
                             followerOnlyReferenceModule: false
                         }
                     }
-                    postTypedData({ variables: { request: mutationPostParams }, context: { headers: { 'x-access-token': accessToken ? `Bearer ${accessToken }` : '' }}}).then(postResult => {
+                    postTypedData({ variables: { request: mutationPostParams } }).then(postResult => {
                         const typedData = postResult.data?.createPostTypedData.typedData
                         if(typedData) {
                             signTypedDataAsync({ domain: typedData.domain, value: typedData.value, types: typedData.types }).then(async (signedType) => {

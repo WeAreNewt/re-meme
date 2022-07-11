@@ -31,17 +31,35 @@ const wagmiClient = createClient({
 import {
   ApolloClient,
   InMemoryCache,
-  ApolloProvider
+  ApolloProvider,
+  createHttpLink
 } from "@apollo/client";
 import { Provider } from 'react-redux';
 import { store, persistor } from '../store/store';
 import { PersistGate } from 'redux-persist/integration/react';
+import { setContext } from '@apollo/client/link/context';
+
+const httpLink = createHttpLink({
+    uri: 'https://api-mumbai.lens.dev'
+})
+
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = store.getState().auth.accessToken
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      'x-access-token': token ? `Bearer ${token}` : "",
+    }
+  }
+});
 
 const client = new ApolloClient({
-  uri: 'https://api-mumbai.lens.dev',
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache({
     addTypename: false
-  }),
+  })
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
