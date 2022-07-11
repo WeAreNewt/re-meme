@@ -24,10 +24,8 @@ const EditMemePage: NextPage = (props: any) => {
         setShowConfirm(true);
     }
 
-    const handleConfirmation = (status: boolean) => {
+    const handleConfirmation = () => {
         setShowConfirm(false);
-
-        if (!status) return;
 
         //TOOD Create meme here
 
@@ -51,7 +49,7 @@ const EditMemePage: NextPage = (props: any) => {
                 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
             </Head>
             <FeedbackModal show={showFeedback} />
-            <ConfirmModal show={showConfirm} onConfirm={handleConfirmation} />
+            <ConfirmModal show={showConfirm} setShow={setShowConfirm} onConfirm={handleConfirmation} />
             <PageLayout>
                 <Container fluid="md" className='h-full'>
                     <Row className='mb-4'>
