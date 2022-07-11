@@ -59,7 +59,6 @@ const DEFAULT_TEXT_CONFIG = {
 }
 
 const EditStep : React.FC<EditStepProps> = ({ initialImage, onUpload }) => {
-    const accessToken = useSelector<RootState, string | undefined>(state => state.auth.accessToken)
     const containerRef = useRef<HTMLDivElement>(null)
     const [ showConfirm, setShowConfirm ] = useState(false)
     const [ loading, setLoading ] = useState(false)
@@ -202,6 +201,11 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage, onUpload }) => {
                             top: 0,
                             left: 0
                         })
+                        if(fabricImage.getScaledWidth() > fabricImage.getScaledHeight()) {
+                            fabricImage.scaleToWidth(containerRef.current.clientWidth / 2 >> 0)
+                        } else {
+                            fabricImage.scaleToHeight(containerRef.current.clientHeight / 2 >> 0)
+                        }
                         setImages(images => images.concat(fabricImage))
                         canvas.add(fabricImage)
                         canvas.renderAll()
@@ -230,6 +234,11 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage, onUpload }) => {
                         top: 0,
                         left: 0
                     })
+                    if(fabricImage.getScaledWidth() > fabricImage.getScaledHeight()) {
+                        fabricImage.scaleToWidth(containerRef.current.clientWidth / 2 >> 0)
+                    } else {
+                        fabricImage.scaleToHeight(containerRef.current.clientHeight / 2 >> 0)
+                    }
                     setImages(images => images.concat(fabricImage))
                     canvasCreation.setWidth(containerRef.current.clientWidth)
                     canvasCreation.setHeight(containerRef.current.clientWidth)

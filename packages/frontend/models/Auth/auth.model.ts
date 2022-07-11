@@ -27,7 +27,9 @@ export interface AuthenticateParams {
 }
 
 export interface RefreshData {
-    refresh: JwtTokens
+    data: {
+        refresh: JwtTokens
+    }
 }
 
 export interface RefreshDataParams {

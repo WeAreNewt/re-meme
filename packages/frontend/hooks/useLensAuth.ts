@@ -11,7 +11,7 @@ const useLensAuth = (address?: string | null) => {
 
     const { data: signer } = useSigner()
     const auth = useSelector<RootState, AuthSlice>(state => state.auth)
-    const [ getChallenge ] = useLazyQuery<ChallengeData, ChallengeParams>(GET_CHALLENGE)
+    const [ getChallenge, { client } ] = useLazyQuery<ChallengeData, ChallengeParams>(GET_CHALLENGE)
     const [ postAuthentication ] = useMutation<AuthenticateData, AuthenticateParams>(AUTHENTICATION)
     const dispatch = useDispatch()
     const { disconnect } = useDisconnect()
