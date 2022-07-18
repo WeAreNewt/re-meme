@@ -23,9 +23,7 @@ const Profile: NextPage = (props: any) => {
     const { data } = useAccount();
     const user: User = useSelector((state: any) => state.user.selectedUser);
     const dispatch = useDispatch();
-
-    console.log(props)
-
+    
     const handleLogout = () => {
         dispatch(removeUser());
     }
