@@ -41,7 +41,7 @@ export const RemixCreatedBox = ({ meme }: RemixShareBoxProps) => {
     }
 
     return (
-        <div className="flex flex-col space-y-4 comic-border bg-light-green n:p-4 lg:p-10 rounded-4xl text-center w-full lg:w-3/4">
+        <div className="flex flex-col space-y-4 comic-border bg-light-green n:p-4 lg:p-10 rounded-4xl text-center w-full lg:w-2/5">
             <h3 className="text-xl font-extrabold uppercase whitespace-pre-line">{"your meme is live!\nshare with your frens."}</h3>
             <button onClick={handleShareLenster} className="comic-border-mini rounded-full bg-white px-2 lg:px-20 py-1 lg:py-2 text-base font-medium">Share on lenster</button>
             <div className="flex justify-center space-x-4 lg:mb-4">

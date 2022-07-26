@@ -1,3 +1,5 @@
+import { User } from "../User/user.model"
+
 export interface CreatePostTypedData {
     createPostTypedData: {
         id: string
@@ -40,4 +42,47 @@ export interface CreatePostTypedDataParams {
             followerOnlyReferenceModule: boolean
         }
     }
+}
+
+export interface CreateCommentTypedData {
+
+}
+
+export interface CreateCommentTypedDataParams {
+
+}
+
+export interface GetPublicationParams {
+    request: {
+        publicationId: string
+    }
+}
+
+interface MetadataMedia {
+    original: {
+        url: string
+        mimeType: string
+    }
+}
+
+interface PublicationMetadata {
+    media: MetadataMedia[]
+    content: string
+    attributes: string[]
+    description: string
+    name: string
+}
+
+export interface PublicationData {
+    id: string,
+    profile: User,
+    createdAt: number,
+    stats: {
+        totalAmountOfComments: number
+    },
+    metadata: PublicationMetadata
+}
+
+export interface GetPublicationData {
+    publication: PublicationData
 }

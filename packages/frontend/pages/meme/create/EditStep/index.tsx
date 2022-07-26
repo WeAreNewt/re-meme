@@ -8,13 +8,14 @@ import { RootState } from "../../../../store/store";
 import { User } from "../../../../models/User/user.model";
 import { useMutation } from "@apollo/client";
 import { CREATE_POST_TYPED_DATA } from "../../../../queries/publication";
-import { CreatePostTypedData, CreatePostTypedDataParams } from "../../../../models/Publication/publication.model";
+import { CreatePostTypedData, CreatePostTypedDataParams, PublicationData } from "../../../../models/Publication/publication.model";
 import { useContract, useSigner, useSignTypedData } from "wagmi";
 import { utils } from "ethers";
 import LensHubAbi from '../../../../utils/contracts/abis/LensHub.json'
 import { v4 as uuidv4 } from 'uuid'
 import { ConfirmModal } from "../../../../components/Modals/Confirm";
 import { FeedbackModal } from "../../../../components/Modals/Feedback";
+import { parseIpfs } from "../../../../components/Meme/MemeDetail";
 
 interface MetadataMedia {
     item: string
@@ -47,6 +48,7 @@ interface PublicationMetadata {
 }
 
 interface EditStepProps {
+    publication?: PublicationData
     initialImage?: string,
     onUpload: (svg: string) => void
 }
@@ -58,7 +60,7 @@ const DEFAULT_TEXT_CONFIG = {
     fill: '#000000'
 }
 
-const EditStep : React.FC<EditStepProps> = ({ initialImage, onUpload }) => {
+const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUpload }) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const [ showConfirm, setShowConfirm ] = useState(false)
     const [ loading, setLoading ] = useState(false)
@@ -66,7 +68,6 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage, onUpload }) => {
     const isSmallScreen = width < 1024
     const [ canvas, setCanvas ] = useState<fabric.Canvas>();
     const [ texts, setTexts ] = useState<fabric.Text[]>([new fabric.Text('', DEFAULT_TEXT_CONFIG)])
-    const [ images, setImages ] = useState<fabric.Image[]>([]);
     const user = useSelector<RootState, User | null>(state => state.user.selectedUser)
     const { signTypedDataAsync } = useSignTypedData()
     const [ openTextModal, setOpenTextModal ] = useState({
@@ -134,7 +135,7 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage, onUpload }) => {
                 const jsonMetadata = JSON.stringify(metadata)
                 ipfsClient.add(jsonMetadata).then(metadataResult => {
                     const mutationPostParams = {
-                        profileId: user.id || '',
+                        profileId: user.id || '',                        
                         contentURI: `ipfs://${metadataResult.cid}`,
                         collectModule: {
                             freeCollectModule: { followerOnly: false }
@@ -143,32 +144,36 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage, onUpload }) => {
                             followerOnlyReferenceModule: false
                         }
                     }
-                    postTypedData({ variables: { request: mutationPostParams } }).then(postResult => {
-                        const typedData = postResult.data?.createPostTypedData.typedData
-                        if(typedData) {
-                            signTypedDataAsync({ domain: typedData.domain, value: typedData.value, types: typedData.types }).then(async (signedType) => {
-                                const { v, r, s } = utils.splitSignature(signedType)
-                                const tx = await lensHubContract["postWithSig"]({
-                                    profileId: typedData.value.profileId,
-                                    contentURI:typedData.value.contentURI,
-                                    collectModule: typedData.value.collectModule,
-                                    collectModuleInitData: typedData.value.collectModuleInitData,
-                                    referenceModule: typedData.value.referenceModule,
-                                    referenceModuleInitData: typedData.value.referenceModuleInitData,
-                                    sig: {
-                                      v,
-                                      r,
-                                      s,
-                                      deadline: typedData.value.deadline,
-                                    },
-                                });
-                                tx.wait(1).then(() => {
-                                    setLoading(false)
-                                    onUpload(svgMeme)
+                    if(publication) {
+                        // post a comment
+                    } else {
+                        postTypedData({ variables: { request: mutationPostParams } }).then(postResult => {
+                            const typedData = postResult.data?.createPostTypedData.typedData
+                            if(typedData) {
+                                signTypedDataAsync({ domain: typedData.domain, value: typedData.value, types: typedData.types }).then(async (signedType) => {
+                                    const { v, r, s } = utils.splitSignature(signedType)
+                                    const tx = await lensHubContract["postWithSig"]({
+                                        profileId: typedData.value.profileId,
+                                        contentURI:typedData.value.contentURI,
+                                        collectModule: typedData.value.collectModule,
+                                        collectModuleInitData: typedData.value.collectModuleInitData,
+                                        referenceModule: typedData.value.referenceModule,
+                                        referenceModuleInitData: typedData.value.referenceModuleInitData,
+                                        sig: {
+                                          v,
+                                          r,
+                                          s,
+                                          deadline: typedData.value.deadline,
+                                        },
+                                    });
+                                    tx.wait(1).then(() => {
+                                        setLoading(false)
+                                        onUpload(svgMeme)
+                                    })
                                 })
-                            })
-                        }
-                    })
+                            }
+                        })
+                    }
                 })
             })
         }
@@ -206,7 +211,6 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage, onUpload }) => {
                         } else {
                             fabricImage.scaleToHeight(containerRef.current.clientHeight / 2 >> 0)
                         }
-                        setImages(images => images.concat(fabricImage))
                         canvas.add(fabricImage)
                         canvas.renderAll()
                     }
@@ -223,43 +227,55 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage, onUpload }) => {
     
 
     useLayoutEffect(() => {
-        if(initialImage && containerRef.current) {
-            const canvasCreation = new fabric.Canvas('meme-editor')
+        if(containerRef.current) {
+            const canvasCreation = new fabric.Canvas('meme-editor', { width: containerRef.current.clientWidth, height: containerRef.current.clientWidth})
             setCanvas(canvasCreation)
-            const img = new Image()
-            img.src = initialImage
-            img.onload = () => {
-                if(containerRef.current) {
-                    const fabricImage = new fabric.Image(img, {
-                        top: 0,
-                        left: 0
+            if(publication) {
+
+                fabric.loadSVGFromURL(parseIpfs(publication.metadata.media[0].original.url), objects => {
+                    const newTexts : fabric.Text[] = []
+                    objects.map(object => {
+                        canvasCreation.add(object)
+                        if(object.type === 'text') {
+                            newTexts.push(object as fabric.Text)
+                        }
                     })
-                    if(fabricImage.getScaledWidth() > fabricImage.getScaledHeight()) {
-                        fabricImage.scaleToWidth(containerRef.current.clientWidth / 2 >> 0)
-                    } else {
-                        fabricImage.scaleToHeight(containerRef.current.clientHeight / 2 >> 0)
+                    setTexts(newTexts)
+                    canvasCreation.renderAll()
+                })
+            }
+            else if(initialImage) {
+                const img = new Image()
+                img.src = initialImage
+                img.onload = () => {
+                    if(containerRef.current) {
+                        const fabricImage = new fabric.Image(img, {
+                            top: 0,
+                            left: 0
+                        })
+                        if(fabricImage.getScaledWidth() > fabricImage.getScaledHeight()) {
+                            fabricImage.scaleToWidth(containerRef.current.clientWidth / 2 >> 0)
+                        } else {
+                            fabricImage.scaleToHeight(containerRef.current.clientHeight / 2 >> 0)
+                        }
+                        canvasCreation.add(fabricImage)
+                        canvasCreation.add(texts[0])
                     }
-                    setImages(images => images.concat(fabricImage))
-                    canvasCreation.setWidth(containerRef.current.clientWidth)
-                    canvasCreation.setHeight(containerRef.current.clientWidth)
-                    canvasCreation.add(fabricImage)
-                    canvasCreation.add(texts[0])
                 }
             }
+            else {
+                canvasCreation.add(texts[0])
+            }
+
         }
-        if(!initialImage && containerRef.current) {
-            const canvasCreation = new fabric.Canvas('meme-editor', { width: containerRef.current.clientWidth, height: containerRef.current.clientWidth})
-            canvasCreation.add(texts[0])
-            setCanvas(canvasCreation)
-        }
-    }, [initialImage])
+    }, [initialImage, publication])
 
     useEffect(() => {
         if(containerRef.current && canvas) {
             canvas.setWidth(containerRef.current.clientWidth)
             canvas.setHeight(containerRef.current.clientWidth)
         }
-    }, [width, canvas, images])
+    }, [width, canvas])
     
     const memeControllBtns = [
         {
@@ -307,7 +323,7 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage, onUpload }) => {
             <ConfirmModal show={showConfirm} setShow={setShowConfirm} onConfirm={handleConfirm} />
             <FeedbackModal show={loading} />
             <div className="flex flex-col lg:flex-row gap-10 items-start">
-                <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative w-full lg:w-2/3'>
+                <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative w-full lg:w-3/5'>
                     <div
                         className="relative overflow-hidden"
                         ref={containerRef}
@@ -327,7 +343,7 @@ const EditStep : React.FC<EditStepProps> = ({ initialImage, onUpload }) => {
                         />
                     )
                 }
-                <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-full lg:w-1/3'>
+                <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-full lg:w-2/5'>
                     <p className="text-lg font-bold">MEMIXER CONTROLS</p>
                     {
                         texts.map((text, index) =>

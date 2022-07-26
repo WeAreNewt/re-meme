@@ -1,9 +1,10 @@
 import Image from "next/image"
 import { Router, useRouter } from "next/router";
+import { PublicationData } from "../../../models/Publication/publication.model";
 import { RemixBtn } from "../RemixBtn";
 
 type RemixShareBoxProps = {
-    meme: any; //Meme
+    meme: PublicationData; //Meme
 }
 
 export const RemixShareBox = ({ meme }: RemixShareBoxProps) => {
