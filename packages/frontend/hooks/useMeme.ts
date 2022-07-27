@@ -2,7 +2,14 @@ import { useQuery } from "@apollo/client";
 import { GetPublicationData, GetPublicationParams } from "../models/Publication/publication.model";
 import { GET_PUBLICATION } from "../queries/publication";
 
-const useMeme = (publicationId: string | undefined) => {
+interface UseMemeReturn {
+    data?: GetPublicationData
+}
+
+type UseMemeFromPublicationId = (publicationId?: string) => UseMemeReturn
+
+export const useMemeFromPublicationId : UseMemeFromPublicationId = (publicationId) => {
+
     const { data } = useQuery<GetPublicationData, GetPublicationParams>(GET_PUBLICATION, {
         variables: {
             request: {
@@ -13,4 +20,16 @@ const useMeme = (publicationId: string | undefined) => {
     return { data }
 }
 
-export default useMeme;
+type UseMemeFromTxHash = (publicationId?: string) => UseMemeReturn
+
+export const useMemeFromTxHash : UseMemeFromTxHash = (txHash) => {
+
+    const { data } = useQuery<GetPublicationData, GetPublicationParams>(GET_PUBLICATION, {
+        variables: {
+            request: {
+                txHash
+            }
+        }
+    })
+    return { data }
+}

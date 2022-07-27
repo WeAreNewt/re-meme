@@ -1,21 +1,22 @@
 import { ChangeEventHandler, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { fabric } from 'fabric';
-import useWindowDimensions from "../../../../hooks/window-dimensions.hook";
-import EditTextModal, { EditText, TextConfig } from "../../../../components/Modals/EditTextModal";
-import ipfsClient from "../../../../config/ipfs";
+import useWindowDimensions from "../../hooks/window-dimensions.hook";
+import EditTextModal, { EditText, TextConfig } from "../Modals/EditTextModal";
+import ipfsClient from "../../config/ipfs";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../store/store";
-import { User } from "../../../../models/User/user.model";
+import { RootState } from "../../store/store";
+import { User } from "../../models/User/user.model";
 import { useMutation } from "@apollo/client";
-import { CREATE_POST_TYPED_DATA } from "../../../../queries/publication";
-import { CreatePostTypedData, CreatePostTypedDataParams, PublicationData } from "../../../../models/Publication/publication.model";
+import { CREATE_COMMENT_TYPED_DATA, CREATE_POST_TYPED_DATA } from "../../queries/publication";
+import { CreateCommentTypedData, CreateCommentTypedDataParams, CreatePostTypedData, CreatePostTypedDataParams, PublicationData } from "../../models/Publication/publication.model";
 import { useContract, useSigner, useSignTypedData } from "wagmi";
 import { utils } from "ethers";
-import LensHubAbi from '../../../../utils/contracts/abis/LensHub.json'
+import LensHubAbi from '../../utils/contracts/abis/LensHub.json'
 import { v4 as uuidv4 } from 'uuid'
-import { ConfirmModal } from "../../../../components/Modals/Confirm";
-import { FeedbackModal } from "../../../../components/Modals/Feedback";
-import { parseIpfs } from "../../../../components/Meme/MemeDetail";
+import { ConfirmModal } from "../Modals/Confirm";
+import { FeedbackModal } from "../Modals/Feedback";
+import omitDeep from 'omit-deep'
+import { parseIpfs } from "../../utils/link";
 
 interface MetadataMedia {
     item: string
@@ -84,6 +85,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     })
 
     const [ postTypedData ] = useMutation<CreatePostTypedData, CreatePostTypedDataParams>(CREATE_POST_TYPED_DATA)
+    const [ commentTypedData ] = useMutation<CreateCommentTypedData, CreateCommentTypedDataParams>(CREATE_COMMENT_TYPED_DATA)
 
     const handleMemeText = (e, index) => {
         texts[index].text = e.target.value
@@ -145,12 +147,53 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                         }
                     }
                     if(publication) {
-                        // post a comment
+                        const commentPostParams = {
+                            publicationId: publication.id,
+                            ...mutationPostParams
+                        }
+                        commentTypedData({ variables: { request: commentPostParams }}).then(postResult => {
+                            const typedData = postResult.data?.createCommentTypedData.typedData
+                            if(typedData) {
+                                signTypedDataAsync({
+                                    domain: omitDeep(typedData.domain, '__typename'),
+                                    value: omitDeep(typedData.value, '__typename'),
+                                    types: omitDeep(typedData.types, '__typename')
+                                }).then(async (signedType) => {
+                                    const { v, r, s } = utils.splitSignature(signedType)
+                                    const tx = await lensHubContract["commentWithSig"]({
+                                        profileId: typedData.value.profileId,
+                                        contentURI:typedData.value.contentURI,
+                                        profileIdPointed: typedData.value.profileIdPointed,
+                                        pubIdPointed: typedData.value.pubIdPointed,
+                                        referenceModuleData: typedData.value.referenceModuleData,
+                                        collectModule: typedData.value.collectModule,
+                                        collectModuleInitData: typedData.value.collectModuleInitData,
+                                        referenceModule: typedData.value.referenceModule,
+                                        referenceModuleInitData: typedData.value.referenceModuleInitData,
+                                        sig: {
+                                          v,
+                                          r,
+                                          s,
+                                          deadline: typedData.value.deadline,
+                                        },
+                                    });
+                                    tx.wait(1).then(() => {
+                                        setLoading(false)
+                                        onUpload(svgMeme)
+                                    })
+                                })
+                            }
+                        })
                     } else {
                         postTypedData({ variables: { request: mutationPostParams } }).then(postResult => {
                             const typedData = postResult.data?.createPostTypedData.typedData
                             if(typedData) {
-                                signTypedDataAsync({ domain: typedData.domain, value: typedData.value, types: typedData.types }).then(async (signedType) => {
+                                console.log(typedData)
+                                signTypedDataAsync({
+                                    domain: omitDeep(typedData.domain, '__typename'),
+                                    value: omitDeep(typedData.value, '__typename'),
+                                    types: omitDeep(typedData.types, '__typename')
+                                }).then(async (signedType) => {
                                     const { v, r, s } = utils.splitSignature(signedType)
                                     const tx = await lensHubContract["postWithSig"]({
                                         profileId: typedData.value.profileId,
@@ -167,8 +210,9 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                                         },
                                     });
                                     tx.wait(1).then(() => {
+                                        console.log(tx)
                                         setLoading(false)
-                                        onUpload(svgMeme)
+                                        onUpload(tx.hash)
                                     })
                                 })
                             }

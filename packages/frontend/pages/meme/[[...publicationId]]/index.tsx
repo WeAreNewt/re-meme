@@ -1,15 +1,14 @@
 import { NextPage } from "next"
-import Head from "next/head";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import CreateFromPublicationStep from "../../../components/CreateFromPublicationStep";
 import { ConnectionBox } from "../../../components/Layout/ConnectionBox";
-import useMeme from "../../../hooks/useMeme";
 import useWindowDimensions from "../../../hooks/window-dimensions.hook";
 import { User } from "../../../models/User/user.model";
-import EditStep from "../create/EditStep";
-import CreateStep from "./CreateStep";
+import EditStep from "../../../components/EditStep";
+import { useMemeFromPublicationId } from "../../../hooks/useMeme";
 
 const MemePage: NextPage = () => {
     const { width } = useWindowDimensions();
@@ -17,7 +16,7 @@ const MemePage: NextPage = () => {
     const router = useRouter()
     const { publicationId } = router.query
     const user : User = useSelector((state: any) => state.user.selectedUser);
-    const { data } = useMeme(Array.isArray(publicationId) ? publicationId[0] : publicationId)
+    const { data } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId)
     const handleRemixMeme = () => {
       setStep(1)
     }
@@ -43,7 +42,7 @@ const MemePage: NextPage = () => {
                   : null
               }
               <Row>
-                { data && step == 0 && <CreateStep publication={data.publication} handleRemixMeme={handleRemixMeme} />}
+                { data && step == 0 && <CreateFromPublicationStep publication={data.publication} handleRemixMeme={handleRemixMeme} />}
                 { data && step == 1 && <EditStep publication={data.publication} onUpload={onUpload} /> }
               </Row>
             </article>

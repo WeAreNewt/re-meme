@@ -45,16 +45,57 @@ export interface CreatePostTypedDataParams {
 }
 
 export interface CreateCommentTypedData {
-
+    createCommentTypedData: {
+        id: string
+        expiresAt: string
+        typedData: {
+            types: {
+                CommentWithSig: {
+                    name: string
+                    type: string
+                }[]
+            }
+            domain: {
+                name: string
+                chainId: number
+                version: string
+                verifyingContract: string
+            }
+            value: {
+                nonce: number
+                deadline: string
+                profileId: string
+                profileIdPointed: string
+                pubIdPointed: string
+                contentURI: string
+                referenceModuleData: string
+                collectModule: string
+                collectModuleInitData: string
+                referenceModule: string
+                referenceModuleInitData: string
+            }
+        }
+    }
 }
 
 export interface CreateCommentTypedDataParams {
-
+    request: {
+        profileId: string
+        publicationId: string
+        contentURI: string
+        collectModule: {
+            freeCollectModule: { followerOnly: boolean }
+        }
+        referenceModule: {
+            followerOnlyReferenceModule: boolean
+        }
+    }
 }
 
 export interface GetPublicationParams {
     request: {
-        publicationId: string
+        publicationId?: string
+        txHash?: string
     }
 }
 

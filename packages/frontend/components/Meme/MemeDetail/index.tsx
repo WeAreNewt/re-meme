@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import useWindowDimensions from "../../../hooks/window-dimensions.hook";
 import { PublicationData } from "../../../models/Publication/publication.model";
+import { parseIpfs } from "../../../utils/link";
 import { ProfileCard } from "../../ProfileCard";
 import { RemixBtn } from "../../Remix/RemixBtn";
 import { RemixCount } from "../../RemixCount";
@@ -9,13 +10,6 @@ import { RemixCount } from "../../RemixCount";
 type MemeDetailProps = {
     meme: PublicationData;
     inspired?: boolean;
-}
-
-export const parseIpfs = (url: string) => {
-    if(url.startsWith('ipfs://')) {
-        return url.replace('ipfs://', "https://ipfs.infura.io/ipfs/")
-    }
-    return url
 }
 
 export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {

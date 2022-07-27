@@ -1,61 +1,41 @@
 import Image from "next/image"
-import { Router, useRouter } from "next/router";
 import { PublicationData } from "../../../models/Publication/publication.model";
-import { RemixBtn } from "../RemixBtn";
+import { parseIpfs } from "../../../utils/link";
 
 type RemixShareBoxProps = {
-    meme: PublicationData; //Meme
+    publication: PublicationData; //Meme
 }
 
-export const RemixShareBox = ({ meme }: RemixShareBoxProps) => {
+export const RemixShareBox : React.FC<RemixShareBoxProps> = ({ publication }) => {
 
-    const handleShareBean = () => {
+    const memeUrl = parseIpfs(publication.metadata.media[0].original.url)
 
-    }
-
-    const handleShareMemixer = () => {
+    const handleShare = () => {
 
     }
 
-    const handleShareLenster = () => {
+    const handleShareTwitter = () => {
 
     }
 
-    const socialIcons = [
-        {
-            src: "/assets/icons/share-icon.svg",
-            handleClick: () => {
+    const handleDownload = () => {
 
-            }
-        },
-        {
-            src: "/assets/icons/share-twitter.svg",
-            handleClick: () => {
-
-            }
-        },
-        {
-            src: "/assets/icons/download.svg",
-            handleClick: () => {
-
-            }
-        },
-    ]
+    }
 
     return (
         <div className="flex flex-col space-y-6 comic-border bg-white n:p-4 lg:p-10 rounded-4xl text-center">
-            <button onClick={handleShareBean} className="comic-border-mini rounded-full bg-white px-20 py-2">Share on Bean</button>
+            <a target="_blank" rel="noreferrer" href={`https://testnet.lenster.xyz/posts/${publication.id}`} className="comic-border-mini rounded-full bg-white px-10 py-2 cursor-pointer text-black no-underline">Collect/comment on Lenster</a>
             <div className="flex justify-center space-x-4 mb-4">
-                {
-                    socialIcons.map((si, index) => (
-                        <div key={"sicon-"+index} onClick={si.handleClick} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
-                            <Image src={si.src} width="30" height="30" />
-                        </div>
-                    ))
-                }
+                <div key={"sicon-share"} onClick={handleShare} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
+                    <Image src="/assets/icons/share-icon.svg" width="30" height="30" alt="share" />
+                </div>
+                <div key={"sicon-twitter-share"} onClick={handleShareTwitter} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
+                    <Image src="/assets/icons/share-twitter.svg" width="30" height="30" alt="share twitter" />
+                </div>
+                <a key={"sicon-download"} download="meme.svg" href={memeUrl} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
+                    <Image src="/assets/icons/download.svg" width="30" height="30" alt="download" />
+                </a>
             </div>
-            <button onClick={handleShareMemixer} className="comic-border-mini rounded-full bg-white px-20 py-2 font-medium">See on Memixer</button>
-            <button onClick={handleShareLenster} className="comic-border-mini rounded-full bg-white px-20 py-2 font-medium">Share on Lenster</button>
         </div>
     )
 }

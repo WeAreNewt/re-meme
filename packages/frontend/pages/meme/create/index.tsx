@@ -1,26 +1,20 @@
 import { NextPage } from "next"
-import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { GoBackButton } from "../../../components/Buttons/GoBackBtn";
-import PageLayout from "../../../components/Layout";
-import { ConfirmModal } from "../../../components/Modals/Confirm";
-import { FeedbackModal } from "../../../components/Modals/Feedback";
-import useMeme from "../../../hooks/useMeme";
-import { PublicationData } from "../../../models/Publication/publication.model";
-import { delay } from "../../../utils/time";
-import CreateStep from "./CreateStep";
-import EditStep from "./EditStep";
-import FeedbackStep from "./FeedbackStep";
+import CreateStep from "../../../components/CreateStep";
+import EditStep from "../../../components/EditStep";
+import FeedbackStep from "../../../components/FeedbackStep";
+import { useMemeFromPublicationId } from "../../../hooks/useMeme";
 
 const CreateMemePage: NextPage = () => {
 
-    const { data } = useMeme('0x3aed-0x13')
+    const { data } = useMemeFromPublicationId('0x3aed-0x13')
 
     const [ step, setStep ] = useState(0);
     const [initialImage, setInitialImage] = useState<string>();
-    const [ uploadedImage, setUploadedImage ] = useState<string>();
+    const [ txHash, setTxHash ] = useState<string>();
     const router = useRouter();
 
     const goNext = () => setStep(step => step + 1)
@@ -33,8 +27,9 @@ const CreateMemePage: NextPage = () => {
         }
     }
 
-    const handleUpload = (svg: string) => {
-        setUploadedImage(svg)
+    const handleUpload = (txHash: string) => {
+        console.log(txHash)
+        setTxHash(txHash)
         goNext()
     }
 
@@ -48,7 +43,7 @@ const CreateMemePage: NextPage = () => {
             <Row>
                 { step === 0 && data && <CreateStep meme={data.publication} setInitialImage={setInitialImage} goNext={goNext} /> }
                 { step === 1 && <EditStep initialImage={initialImage} onUpload={handleUpload} /> }
-                { step === 2 && uploadedImage && <FeedbackStep image={uploadedImage} />}
+                { step === 2 && txHash && <FeedbackStep txHash={txHash} />}
             </Row>
         </Container>
     )
