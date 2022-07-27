@@ -23,7 +23,8 @@ module.exports = {
       }
     },
     colors: {
-      'alert-red': '#D91A1A'
+      'alert-red': '#D91A1A',
+      'lens-default': '#ABFE2C'
     }
   },
   plugins: [],

@@ -1,9 +1,9 @@
 import { ChangeEventHandler } from "react";
-import { MemeData } from "..";
-import { MemeDetail } from "../../../../components/Meme/MemeDetail";
+import { MemeDetail } from "../Meme/MemeDetail";
+import { PublicationData } from "../../models/Publication/publication.model";
 
 interface CreateStepProps {
-    meme: MemeData
+    meme: PublicationData
     setInitialImage: (image: string) => void
     goNext: () => void
 }
@@ -28,7 +28,7 @@ const CreateStep: React.FC<CreateStepProps> = ({ meme, setInitialImage, goNext }
     return (
         <div className="flex flex-col lg:flex-row gap-10 items-start">
             <MemeDetail meme={meme} inspired />
-            <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-full">
+            <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-full lg:w-2/5">
                 <p className="text-3xl font-bold mb-8">Create new meme</p>
                 <button onClick={uploadMeme} className="comic-border-mini rounded-full bg-purple py-1 font-medium w-full lg:w-4/5 mb-3">Upload image</button>
                 <button onClick={goNext} className="comic-border-mini rounded-full bg-white py-1 font-medium w-full lg:w-4/5">Start from blank canvas</button>

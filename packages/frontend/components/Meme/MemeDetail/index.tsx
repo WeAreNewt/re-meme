@@ -1,18 +1,20 @@
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import useWindowDimensions from "../../../hooks/window-dimensions.hook";
+import { PublicationData } from "../../../models/Publication/publication.model";
+import { parseIpfs } from "../../../utils/link";
 import { ProfileCard } from "../../ProfileCard";
 import { RemixBtn } from "../../Remix/RemixBtn";
 import { RemixCount } from "../../RemixCount";
 
 type MemeDetailProps = {
-    meme?: any;
+    meme: PublicationData;
     inspired?: boolean;
 }
 
 export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
-    const { height, width } = useWindowDimensions();
+
+    const { width } = useWindowDimensions();
     const { data } = useAccount();
     const [disabled, setDisabled] = useState(false);
 
@@ -24,8 +26,10 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
 
     }
 
+    const memeSrc = parseIpfs(meme.metadata.media[0].original.url)
+
     return (
-        <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl">
+        <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl w-full lg:w-3/5">
             {
                 inspired ?
                 <div className="flex justify-between items-center mb-4">
@@ -34,10 +38,10 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
                 </div>
                 : null
             }
-            <Image src={meme.src} className="w-full h-auto rounded-xl" width={ width > 850 ? "1600": "800" } height={ width > 850 ? "1000": "500"} />
+            <img src={memeSrc} className="w-full h-auto rounded-xl" width={ width > 850 ? "1600": "800" } height={ width > 850 ? "1000": "500"} />
             <div className="flex justify-between items-center n:mt-2 lg:mt-6">
-                <ProfileCard profile={meme.mockProfile} subText={new Date(meme.publicationDate).toLocaleDateString('fr-CA')} />
-                <RemixCount disabled={disabled} count={meme.remixCount} />
+                <ProfileCard profile={meme.profile} subText={new Date(meme.createdAt).toLocaleDateString('fr-CA')} />
+                <RemixCount disabled={disabled} count={meme.stats.totalAmountOfComments} />
             </div>
         </div>
     )
