@@ -127,3 +127,42 @@ export interface PublicationData {
 export interface GetPublicationData {
     publication: PublicationData
 }
+
+export interface GetPublicationsParams {
+    request: {
+        commentsOf?: string
+        sources?: string[]
+        limit?: number
+        cursor?: string
+    }
+}
+
+export interface GetPublicationsData {
+    publications: {
+        items: PublicationData[]
+        pageInfo: {
+            prev: string
+            next: string
+            totalCount: number
+        }
+    }
+}
+
+export interface ExplorePublicationsParams {
+    request: {
+        sources?: string[]
+        sortCriteria?: string
+        limit?: number
+    }
+}
+
+export interface ExplorePublicationsData {
+    explorePublications: {
+        items: PublicationData[]
+        pageInfo: {
+            prev: string
+            next: string
+            totalCount: number
+        }
+    }
+}

@@ -17,6 +17,7 @@ import { ConfirmModal } from "../Modals/Confirm";
 import { FeedbackModal } from "../Modals/Feedback";
 import omitDeep from 'omit-deep'
 import { parseIpfs } from "../../utils/link";
+import UploadMemeError, { UploadError } from "../Modals/UploadMemeError";
 
 interface MetadataMedia {
     item: string
@@ -61,8 +62,31 @@ const DEFAULT_TEXT_CONFIG = {
     fill: '#000000'
 }
 
+const uploadImageAndMetadata = (svgImage: string) => {
+    return ipfsClient.add(svgImage).then((result) => {
+        const metadata : PublicationMetadata = {
+            version: '1.0.0',
+            metadata_id: uuidv4(),
+            name: 'Created by me',
+            attributes: [],
+            image: `ipfs://${result.cid}`,
+            imageMimeType: 'image/svg+xml',
+            media: [
+                {
+                    item: `ipfs://${result.cid}`,
+                    type: 'image/svg+xml'
+                }
+            ],
+            appId: process.env.NEXT_PUBLIC_APP_ID || 'thisisarandomappid'
+        }
+        const jsonMetadata = JSON.stringify(metadata)
+        return ipfsClient.add(jsonMetadata)
+    })
+}
+
 const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUpload }) => {
     const containerRef = useRef<HTMLDivElement>(null)
+    const [ uploadError, setUploadError ] = useState<UploadError | undefined>()
     const [ showConfirm, setShowConfirm ] = useState(false)
     const [ loading, setLoading ] = useState(false)
     const { width } = useWindowDimensions();
@@ -118,107 +142,91 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         setLoading(true)
         const svgMeme = canvas?.toSVG(undefined)
         if(svgMeme && user) {
-            ipfsClient.add(svgMeme).then((result) => {
-                const metadata : PublicationMetadata = {
-                    version: '1.0.0',
-                    metadata_id: uuidv4(),
-                    name: 'Created by me',
-                    attributes: [],
-                    image: `ipfs://${result.cid}`,
-                    imageMimeType: 'image/svg+xml',
-                    media: [
-                        {
-                            item: `ipfs://${result.cid}`,
-                            type: 'image/svg+xml'
-                        }
-                    ],
-                    appId: process.env.NEXT_PUBLIC_APP_ID || 'thisisarandomappid'
+            uploadImageAndMetadata(svgMeme).then(metadataResult => {
+                const mutationPostParams = {
+                    profileId: user.id || '',                        
+                    contentURI: `ipfs://${metadataResult.cid}`,
+                    collectModule: {
+                        freeCollectModule: { followerOnly: false }
+                    },
+                    referenceModule: {
+                        followerOnlyReferenceModule: false
+                    }
                 }
-                const jsonMetadata = JSON.stringify(metadata)
-                ipfsClient.add(jsonMetadata).then(metadataResult => {
-                    const mutationPostParams = {
-                        profileId: user.id || '',                        
-                        contentURI: `ipfs://${metadataResult.cid}`,
-                        collectModule: {
-                            freeCollectModule: { followerOnly: false }
-                        },
-                        referenceModule: {
-                            followerOnlyReferenceModule: false
-                        }
+                if(publication) {
+                    const commentPostParams = {
+                        publicationId: publication.id,
+                        ...mutationPostParams
                     }
-                    if(publication) {
-                        const commentPostParams = {
-                            publicationId: publication.id,
-                            ...mutationPostParams
+                    return commentTypedData({ variables: { request: commentPostParams }}).then(postResult => {
+                        const typedData = postResult.data?.createCommentTypedData.typedData
+                        if(typedData) {
+                            return signTypedDataAsync({
+                                domain: omitDeep(typedData.domain, '__typename'),
+                                value: omitDeep(typedData.value, '__typename'),
+                                types: omitDeep(typedData.types, '__typename')
+                            }).then(async (signedType) => {
+                                const { v, r, s } = utils.splitSignature(signedType)
+                                const tx = await lensHubContract["commentWithSig"]({
+                                    profileId: typedData.value.profileId,
+                                    contentURI:typedData.value.contentURI,
+                                    profileIdPointed: typedData.value.profileIdPointed,
+                                    pubIdPointed: typedData.value.pubIdPointed,
+                                    referenceModuleData: typedData.value.referenceModuleData,
+                                    collectModule: typedData.value.collectModule,
+                                    collectModuleInitData: typedData.value.collectModuleInitData,
+                                    referenceModule: typedData.value.referenceModule,
+                                    referenceModuleInitData: typedData.value.referenceModuleInitData,
+                                    sig: {
+                                        v,
+                                        r,
+                                        s,
+                                        deadline: typedData.value.deadline,
+                                    },
+                                });
+                                tx.wait(1).then(() => {
+                                    setLoading(false)
+                                    onUpload(tx.hash)
+                                })
+                            })
                         }
-                        commentTypedData({ variables: { request: commentPostParams }}).then(postResult => {
-                            const typedData = postResult.data?.createCommentTypedData.typedData
-                            if(typedData) {
-                                signTypedDataAsync({
-                                    domain: omitDeep(typedData.domain, '__typename'),
-                                    value: omitDeep(typedData.value, '__typename'),
-                                    types: omitDeep(typedData.types, '__typename')
-                                }).then(async (signedType) => {
-                                    const { v, r, s } = utils.splitSignature(signedType)
-                                    const tx = await lensHubContract["commentWithSig"]({
-                                        profileId: typedData.value.profileId,
-                                        contentURI:typedData.value.contentURI,
-                                        profileIdPointed: typedData.value.profileIdPointed,
-                                        pubIdPointed: typedData.value.pubIdPointed,
-                                        referenceModuleData: typedData.value.referenceModuleData,
-                                        collectModule: typedData.value.collectModule,
-                                        collectModuleInitData: typedData.value.collectModuleInitData,
-                                        referenceModule: typedData.value.referenceModule,
-                                        referenceModuleInitData: typedData.value.referenceModuleInitData,
-                                        sig: {
-                                          v,
-                                          r,
-                                          s,
-                                          deadline: typedData.value.deadline,
-                                        },
-                                    });
-                                    tx.wait(1).then(() => {
-                                        setLoading(false)
-                                        onUpload(svgMeme)
-                                    })
+                    })
+                } else {
+                    return postTypedData({ variables: { request: mutationPostParams } }).then(postResult => {
+                        const typedData = postResult.data?.createPostTypedData.typedData
+                        if(typedData) {
+                            console.log(typedData)
+                            return signTypedDataAsync({
+                                domain: omitDeep(typedData.domain, '__typename'),
+                                value: omitDeep(typedData.value, '__typename'),
+                                types: omitDeep(typedData.types, '__typename')
+                            }).then(async (signedType) => {
+                                const { v, r, s } = utils.splitSignature(signedType)
+                                const tx = await lensHubContract["postWithSig"]({
+                                    profileId: typedData.value.profileId,
+                                    contentURI:typedData.value.contentURI,
+                                    collectModule: typedData.value.collectModule,
+                                    collectModuleInitData: typedData.value.collectModuleInitData,
+                                    referenceModule: typedData.value.referenceModule,
+                                    referenceModuleInitData: typedData.value.referenceModuleInitData,
+                                    sig: {
+                                        v,
+                                        r,
+                                        s,
+                                        deadline: typedData.value.deadline,
+                                    },
+                                });
+                                tx.wait(1).then(() => {
+                                    setLoading(false)
+                                    onUpload(tx.hash)
                                 })
-                            }
-                        })
-                    } else {
-                        postTypedData({ variables: { request: mutationPostParams } }).then(postResult => {
-                            const typedData = postResult.data?.createPostTypedData.typedData
-                            if(typedData) {
-                                console.log(typedData)
-                                signTypedDataAsync({
-                                    domain: omitDeep(typedData.domain, '__typename'),
-                                    value: omitDeep(typedData.value, '__typename'),
-                                    types: omitDeep(typedData.types, '__typename')
-                                }).then(async (signedType) => {
-                                    const { v, r, s } = utils.splitSignature(signedType)
-                                    const tx = await lensHubContract["postWithSig"]({
-                                        profileId: typedData.value.profileId,
-                                        contentURI:typedData.value.contentURI,
-                                        collectModule: typedData.value.collectModule,
-                                        collectModuleInitData: typedData.value.collectModuleInitData,
-                                        referenceModule: typedData.value.referenceModule,
-                                        referenceModuleInitData: typedData.value.referenceModuleInitData,
-                                        sig: {
-                                          v,
-                                          r,
-                                          s,
-                                          deadline: typedData.value.deadline,
-                                        },
-                                    });
-                                    tx.wait(1).then(() => {
-                                        console.log(tx)
-                                        setLoading(false)
-                                        onUpload(tx.hash)
-                                    })
-                                })
-                            }
-                        })
-                    }
-                })
+                            })
+                        }
+                    })
+                }
+            }).catch(() => {
+                setUploadError(UploadError.TX_ERROR)
+                setLoading(false)
             })
         }
     }
@@ -364,6 +372,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                     />
                 )
             }
+            <UploadMemeError error={uploadError} setError={setUploadError} onRetry={handleConfirm} />
             <ConfirmModal show={showConfirm} setShow={setShowConfirm} onConfirm={handleConfirm} />
             <FeedbackModal show={loading} />
             <div className="flex flex-col lg:flex-row gap-10 items-start">
