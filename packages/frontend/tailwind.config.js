@@ -26,7 +26,8 @@ module.exports = {
       'alert-red': '#D91A1A',
       'lens-default': '#ABFE2C',
       'neutral-black': '#101112',
-      'neutral-600': '#6C757D'
+      'neutral-600': '#6C757D',
+      'purple': '#D2A6FF'
     }
   },
   plugins: [],
