@@ -9,20 +9,23 @@ import useWindowDimensions from "../../../hooks/window-dimensions.hook";
 import { User } from "../../../models/User/user.model";
 import EditStep from "../../../components/EditStep";
 import { useMemeFromPublicationId } from "../../../hooks/useMeme";
+import FeedbackStep from "../../../components/FeedbackStep";
 
 const MemePage: NextPage = () => {
+    const [txHash, setTxHash] = useState<string>()
     const { width } = useWindowDimensions();
     const [ step, setStep ] = useState(0)
     const router = useRouter()
     const { publicationId } = router.query
     const user : User = useSelector((state: any) => state.user.selectedUser);
-    const { data } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId)
+    const { publication } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId)
     const handleRemixMeme = () => {
       setStep(1)
     }
 
-    const onUpload = () => {
-
+    const onUpload = (txHash) => {
+      setTxHash(txHash)
+      setStep(2)
     }
   
     return (
@@ -42,8 +45,9 @@ const MemePage: NextPage = () => {
                   : null
               }
               <Row>
-                { data && step == 0 && <CreateFromPublicationStep publication={data.publication} handleRemixMeme={handleRemixMeme} />}
-                { data && step == 1 && <EditStep publication={data.publication} onUpload={onUpload} /> }
+                { publication && step == 0 && <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />}
+                { publication && step == 1 && <EditStep publication={publication} onUpload={onUpload} /> }
+                { step === 2 && txHash && <FeedbackStep txHash={txHash} />}
               </Row>
             </article>
           </Col>

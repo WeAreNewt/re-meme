@@ -8,15 +8,15 @@ interface FeedbackStepProps {
 
 const FeedbackStep : React.FC<FeedbackStepProps> = ({ txHash }) => {
 
-    const { data } = useMemeFromTxHash(txHash)
+    const { publication } = useMemeFromTxHash(txHash)
 
     return (
         <div className="flex flex-col lg:flex-row gap-10 items-start">
             {
-                data && (
+                publication && (
                     <>
-                        <MemeDetail meme={data.publication} />
-                        <RemixCreatedBox meme={data.publication} />
+                        <MemeDetail meme={publication} />
+                        <RemixCreatedBox meme={publication} />
                     </>
                 )
             }

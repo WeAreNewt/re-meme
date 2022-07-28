@@ -10,7 +10,7 @@ import { useMemeFromPublicationId } from "../../../hooks/useMeme";
 
 const CreateMemePage: NextPage = () => {
 
-    const { data } = useMemeFromPublicationId('0x3aed-0x13')
+    const { publication } = useMemeFromPublicationId()
 
     const [ step, setStep ] = useState(0);
     const [initialImage, setInitialImage] = useState<string>();
@@ -28,7 +28,6 @@ const CreateMemePage: NextPage = () => {
     }
 
     const handleUpload = (txHash: string) => {
-        console.log(txHash)
         setTxHash(txHash)
         goNext()
     }
@@ -41,7 +40,7 @@ const CreateMemePage: NextPage = () => {
                 </Col>
             </Row>
             <Row>
-                { step === 0 && data && <CreateStep meme={data.publication} setInitialImage={setInitialImage} goNext={goNext} /> }
+                { step === 0 && publication && <CreateStep meme={publication} setInitialImage={setInitialImage} goNext={goNext} /> }
                 { step === 1 && <EditStep initialImage={initialImage} onUpload={handleUpload} /> }
                 { step === 2 && txHash && <FeedbackStep txHash={txHash} />}
             </Row>
