@@ -7,9 +7,9 @@ interface UseMemeReturn {
     publication?: PublicationData
 }
 
-type UseMemeFromPublicationId = (publicationId?: string) => UseMemeReturn
+type UseMemeFromPublicationId = (publicationId?: string, isLoading?: boolean) => UseMemeReturn
 
-export const useMemeFromPublicationId : UseMemeFromPublicationId = (publicationId) => {
+export const useMemeFromPublicationId : UseMemeFromPublicationId = (publicationId, isLoading) => {
 
     const [ publication, setPublication ]  = useState<PublicationData>()
 
@@ -31,16 +31,20 @@ export const useMemeFromPublicationId : UseMemeFromPublicationId = (publicationI
     })
 
     useEffect(() => {
-        if(publicationId) {
-            getPublication().then(data => {
-                setPublication(data.data?.publication)
-            })
-        } else {
-            getRandomPublication().then(data => {
-                setPublication(data.data?.explorePublications.items[0])
-            })
+        if(!isLoading) {
+            if(publicationId) {
+                console.log(1)
+                getPublication().then(data => {
+                    setPublication(data.data?.publication)
+                })
+            } else {
+                console.log(2)
+                getRandomPublication().then(data => {
+                    setPublication(data.data?.explorePublications.items[0])
+                })
+            }
         }
-    }, [getPublication, getRandomPublication, publicationId])
+    }, [getPublication, getRandomPublication, publicationId, isLoading])
 
     return { publication }
 }

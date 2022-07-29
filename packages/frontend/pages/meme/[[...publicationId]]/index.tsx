@@ -18,7 +18,7 @@ const MemePage: NextPage = () => {
     const router = useRouter()
     const { publicationId } = router.query
     const user : User = useSelector((state: any) => state.user.selectedUser);
-    const { publication } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId)
+    const { publication } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
     const handleRemixMeme = () => {
       setStep(1)
     }
