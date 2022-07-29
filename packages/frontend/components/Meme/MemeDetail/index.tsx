@@ -5,6 +5,9 @@ import useWindowDimensions from "../../../hooks/window-dimensions.hook";
 import { ProfileCard } from "../../ProfileCard";
 import { RemixBtn } from "../../Remix/RemixBtn";
 import { RemixCount } from "../../RemixCount";
+import { UpdateCollectButton } from "../../UpdateCollectButton";
+import { UpdateCollectSettingsModal } from "../../../components/Modals/UpdateCollectSettings";
+
 
 type MemeDetailProps = {
     meme?: any;
@@ -15,6 +18,11 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     const { height, width } = useWindowDimensions();
     const { data } = useAccount();
     const [disabled, setDisabled] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
+
+    const handleUpdateSettings = () => {
+        setShowConfirm(true);
+    }
 
     useEffect(() => {
         setDisabled(!data ? true : false)
@@ -38,6 +46,8 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
             <div className="flex justify-between items-center n:mt-2 lg:mt-6">
                 <ProfileCard profile={meme.mockProfile} subText={new Date(meme.publicationDate).toLocaleDateString('fr-CA')} />
                 <RemixCount disabled={disabled} count={meme.remixCount} />
+                <UpdateCollectButton onUpdateCollectClicked={handleUpdateSettings} disabled={false} />
+                <UpdateCollectSettingsModal show={showConfirm} setShow={setShowConfirm} />
             </div>
         </div>
     )
