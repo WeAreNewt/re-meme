@@ -10,6 +10,7 @@ import { MemeDetail } from '../components/Meme/MemeDetail'
 import { SelectProfile } from '../components/Modals/SelectProfile'
 import { RemixBtnBox } from '../components/Remix/RemixBtnBox'
 import { RemixShareBox } from '../components/Remix/RemixShareBox'
+import { Footer } from '../components/Footer/Footer'
 import useWindowDimensions from '../hooks/window-dimensions.hook'
 import { LoginStatus } from '../models/Connection/connection.model'
 import { User } from '../models/User/user.model'
@@ -78,6 +79,7 @@ const Home: NextPage = (props: any) => {
               </article>
             </Col>
           </Row>
+          <Footer/>
         </Container>
 
       </PageLayout>
