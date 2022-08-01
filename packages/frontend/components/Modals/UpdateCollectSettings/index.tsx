@@ -5,7 +5,7 @@ type UpdateCollectSettingsProps = {
 
 export const UpdateCollectSettingsModal = ({ show, setShow }: UpdateCollectSettingsProps) => {
 
- 
+
     return (
         <div onMouseDown={() => setShow(false)} className={`${show ? "block" : "hidden"} fixed h-screen w-screen z-20 flex items-center justify-center create-btn-gradient-transparent px-4 lg:px-0 top-0 left-0`}>
             <div onMouseDown={(e) => e.stopPropagation()} className="comic-border rounded-4xl bg-white n:p-4 lg:p-10">
@@ -33,17 +33,14 @@ export const UpdateCollectSettingsModal = ({ show, setShow }: UpdateCollectSetti
                 <h5>Who can collect</h5>
 
                 <div>
-                    <input className={"h-5 w-5 mr-3 mt-2 accent-black" } type="checkbox"/>
+                    <input className={"h-5 w-5 mr-3 mt-2 bg-black" } type="checkbox"/>
                     <label className={"align-middle"}><h5>Anyone can collect</h5></label>
                 </div>
                 <div>
-                    <input className={"h-5 w-5 mr-3 mt-2"} type="checkbox"/>
+                    <input className={"h-5 w-5 mr-3 mt-2 accent-bg-purple"} type="checkbox"/>
                     <label className={"align-middle"}><h5>Only holders of Lens profiles can collect</h5></label>
                 </div>
-                <div>
-                    <input className={"h-5 w-5 mr-3 mt-2"} type="checkbox"/>
-                    <label className={"align-middle"}><h5>No one can collect</h5></label>
-                </div>
+               
                
                 <div className="flex justify-end  mt-10">
                     <button className={"flex items-center bg-white rounded-full p-3 border-black border-2 border-solid min-w-fit max-h-6 comic-border-mini mr-4"}> Cancel</button>
