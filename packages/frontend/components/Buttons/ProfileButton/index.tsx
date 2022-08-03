@@ -21,8 +21,8 @@ export const ProfileButton = ({disabled}: ProfileButtonProps) => {
     }
         
     return (
-        <button onClick={handleClick} disabled={disabled} className={`overflow-hidden flex items-center justify-center bg-lime border-3 border-black border-solid rounded-full w-12 h-12 ${disabled ? 'opacity-30' : 'comic-border-mini'}`} type="button">
-            <img src={profilePicture} alt="avatar" />
+        <button onClick={handleClick} disabled={disabled} className="icon-btn p-0 overflow-hidden bg-lens-default" type="button">
+            <img src={profilePicture} alt="avatar" className="w-full h-full" />
         </button>
     )
 }

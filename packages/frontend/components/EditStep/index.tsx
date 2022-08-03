@@ -112,6 +112,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     const [ commentTypedData ] = useMutation<CreateCommentTypedData, CreateCommentTypedDataParams>(CREATE_COMMENT_TYPED_DATA)
 
     const handleMemeText = (e, index) => {
+        if(e.target.value.length > 100) return
         texts[index].text = e.target.value
         canvas?.setActiveObject(texts[index])
         setTexts(texts => [...texts])

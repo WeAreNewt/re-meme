@@ -15,14 +15,9 @@ export const CreateNewMemeBtn = ({ disabled }: CreateNewMemeBtnProps) => {
     }
 
     return (
-        <button onClick={createMeme} disabled={disabled} className={"create-btn-gradient rounded-full border-black border-solid border-3 px-2 sm:px-4 lg:px-20 sm:py-2 " + (disabled ? "opacity-30" : "comic-border-mini")}>
-            <div className='flex items-center sm:space-x-0 md:space-x-3'>
-                <Image src="/assets/icons/create.svg" className='w-full' width={width > 850 ? "20" : "24"} height={width > 850 ? "20" : "24"} />
-                {
-                    width > 850 ? <span className='font-bold'>Create new meme</span>
-                        : null
-                }
-            </div>
+        <button onClick={createMeme} disabled={disabled} className='icon-btn-create-meme lg:btn-create-meme'>
+            <img src="/assets/icons/create.svg" className='icon lg:w-[20px] lg:h-[20px]' />
+            <span className='hidden lg:block'>Create new meme</span>
         </button>
     )
 }
