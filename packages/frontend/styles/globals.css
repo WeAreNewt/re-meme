@@ -35,11 +35,6 @@ a {
   box-shadow: 8px 8px 0px #101112;
 }
 
-.comic-border-mini {
-  border: 3px solid #101112;
-  box-shadow: 3px 3px 0px #101112;
-}
-
 .create-btn-gradient {
   background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
 }
@@ -54,10 +49,6 @@ a {
 
 .bg-lime-transparent {
   background-color: #ABFE2CE6;
-}
-
-.bg-purple {
-  background-color: #D2A6FF;
 }
 
 .bg-light-green {

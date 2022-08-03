@@ -6,19 +6,158 @@
     body {
         @apply text-neutral-black
     }
-}
 
-@layer utilities {
+    /* TYPOGRAPHY */
+
+    .text-heading-1 {
+        @apply font-bold text-[60px] leading-[72px] tracking-[0.0075em]
+    }
+
+    .text-heading-2 {
+        @apply font-bold text-[48px] leading-[64px]
+    }
+
+    .text-heading-3 {
+        @apply font-medium text-[40px] leading-[48px]
+    }
+
+    .text-subtitle-1 {
+        @apply font-bold text-[28px] leading-[32px]
+    }
+
     .text-subtitle-2 {
         @apply font-bold text-[18px] leading-[28px] tracking-[0.4px]
     }
+
+    .text-body-1-semibold {
+        @apply font-bold text-[18px] leading-[28px]
+    }
+
+    .text-body-1-medium {
+        @apply font-medium text-[18px] leading-[28px]
+    }
+
+    .text-body-2-semibold {
+        @apply font-bold text-[16px] leading-[24px]
+    }
+
+    .text-body-2-medium {
+        @apply font-medium text-[16px] leading-[24px]
+    }
+
     .text-description-bold {
         @apply font-bold text-[12px] leading-[18px]
     }
     .text-description-regular {
-        @apply font-normal text-[12px] leading-[18px]
+        @apply font-medium text-[12px] leading-[18px]
     }
 
+    /* COLORS THAT CANT GO IN TAILWIND CONFIG */
+
+    .bg-memixer-gradient-default {
+        background: linear-gradient(135deg, #CFA8F7 0%, #FCBBBB 51.82%, #D4F26C 100%);
+    }
+
+    /* MISCELLANEOUS */
+
+    .comic-border-mini {
+        @apply border-[2px] border-neutral-black shadow-[2px_2px_0px_#101112]
+    }
+
+
+}
+
+@layer components {
+
+    .btn-small {
+        @apply
+            text-body-2-medium
+            comic-border-mini
+            px-[20px]
+            py-[4px]
+            h-[32px]
+            rounded-[31px]
+            bg-primary-600
+            disabled:opacity-30
+    }
+
+    .btn-small-secondary {
+        @apply btn-small bg-neutral-white
+    }
+
+    .btn {
+        @apply text-body-2-medium comic-border-mini px-[24px] py-[8px] h-[40px] rounded-[31px] bg-primary-600 disabled:opacity-30
+    }
+
+    .btn-secondary {
+        @apply btn bg-neutral-white
+    }
+
+    .btn-create-meme {
+        @apply
+            btn
+            bg-memixer-gradient-default
+            pl-[16px]
+            pr-[20px]
+            flex
+            justify-between
+            items-center
+            gap-[8px]
+            w-auto
+    }
+
+    .btn-connect-wallet {
+        @apply
+            btn
+            pl-[12px]
+            pr-[24px]
+            flex
+            justify-between
+            items-center
+            gap-[8px]
+            w-auto
+    }
+
+    .btn-wallet-connected {
+        @apply
+            btn-connect-wallet
+            bg-neutral-white
+    }
+
+    .icon {
+        @apply
+            h-[24px]
+            w-[24px]
+    }
+
+    .icon-btn {
+        @apply
+            comic-border-mini
+            h-[40px]
+            w-[40px]
+            p-[8px]
+            bg-neutral-white
+            rounded-[100px]
+            flex
+            justify-center
+            items-center
+            disabled:opacity-30
+    }
+
+    .icon-btn-create-meme {
+        @apply
+            icon-btn
+            bg-memixer-gradient-default
+    }
+
+    .icon-btn-connect-wallet {
+        @apply
+            icon-btn
+            bg-primary-600
+    }
+}
+
+@layer utilities {
     .no-scrollbar::-webkit-scrollbar {
         display: none;
     }

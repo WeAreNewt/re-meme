@@ -23,10 +23,30 @@ module.exports = {
       }
     },
     colors: {
-      'alert-red': '#D91A1A',
       'lens-default': '#ABFE2C',
       'neutral-black': '#101112',
-      'neutral-600': '#6C757D'
+      'neutral-600': '#6C757D',
+      'purple': '#D2A6FF',
+      primary: {
+        900: '#6322A5',
+        800: '#844DBB',
+        bold: '#AB73E3',
+        600: '#D2A6FF',
+        500: '#E2C6FF',
+        DEFAULT: '#EAD7FF',
+        light: '#EFDFFF',
+        200: '#F3E7FF',
+        100: '#FAF4FF'
+      },
+      alert: {
+        'red': {
+          DEFAULT: '#D91A1A'
+        }
+      },
+      neutral: {
+        black: '#101112',
+        white: '#FDFDFD'
+      }
     }
   },
   plugins: [],
