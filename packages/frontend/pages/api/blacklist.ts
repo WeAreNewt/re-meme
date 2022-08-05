@@ -6,15 +6,11 @@ import dynamodb from '../../lib/dynamodb';
 export default async function handler (_req: NextApiRequest, res: NextApiResponse) {
   const now = new Date().getTime();
 
-  const {
-    body: { postId },
-    method,
-  } = _req;
-
-  switch (method) {
+  switch (_req.method) {
     case 'POST':
-      return handlePost(Number(postId), now, res);
+      return handlePost(Number(_req.body.postId), now, res);
     case 'GET':
+      const { postId } = _req.query;
       return handleGet(Number(postId), now, res);
     default:
       res.status(405);
@@ -48,9 +44,7 @@ const handleGet = async (postId: number, unixtime: number, res: NextApiResponse)
   };
 
   try {
-    console.log('hit1');
     const result = await dynamodb.get(params).promise();
-    console.log('hit2');
     if (unixtime - result.Item?.unixtime > 1000 * 60 * 10) {
       res.status(200).json({
         postId: postId,
