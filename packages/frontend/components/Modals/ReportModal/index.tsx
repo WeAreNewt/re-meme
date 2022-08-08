@@ -1,15 +1,32 @@
-import { MemeDetail } from "../../Meme/MemeDetail";
+
+import axios from 'axios';
+const now = new Date().getTime();
 
 type ReportModalProps = {
     show: boolean;
     setShow: (show: boolean) => void
+    memeid: string
 }
 
-export const ReportModal = ({ show, setShow } : ReportModalProps) => {
+export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
 
     const handleCancel = () => {
         setShow(false);
     }
+
+    const onReport = (memeid) => {
+        axios.post('/api/blacklist', {
+            postId: memeid,
+            unixTime: now
+          })
+          .then(function (response) {
+            console.log(response);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
+
 
     return (
         <div onMouseDown={() => setShow(false)} className={`${show ? "block" : "hidden"} fixed h-screen w-screen z-20 flex items-center justify-center create-btn-gradient-transparent px-4 lg:px-0 top-0 left-0`}>
@@ -45,7 +62,7 @@ export const ReportModal = ({ show, setShow } : ReportModalProps) => {
 
                 <div className="flex justify-end  mt-10">
                     <button onClick={handleCancel} className={"flex items-center bg-white rounded-full p-3 border-black border-2 border-solid min-w-fit max-h-6 comic-border-mini mr-4"}> Cancel</button>
-                    <button className={"flex items-center bg-purple rounded-full p-3 border-black border-2 border-solid min-w-fit max-h-6 comic-border-mini"}>Report</button>
+                    <button onClick={onReport} className={"flex items-center bg-purple rounded-full p-3 border-black border-2 border-solid min-w-fit max-h-6 comic-border-mini"}>Report</button>
                 </div>
             </div>
         </div>
