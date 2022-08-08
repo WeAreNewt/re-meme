@@ -14,11 +14,14 @@ export const ProfileCard = ({profile, subText, selected}: ProfileCardProps) => {
             <img src={profilePicture} alt="profile" className="w-10 h-10 rounded-full border-neutral-400 border-1"/>
             <div className="flex flex-col ml-2 mr-auto">
                 <h3 className="text-description-bold -mb-0 text-ellipsis">{profile.name || profile.handle}</h3>
-                <p className="text-gray-500 text-description-regular text-neutral-600 mb-0">{subText}</p>
+                <p className="text-neutral-600 text-description-regular mb-0">{subText}</p>
             </div>
             { 
-                selected ? 
-                    <Image src="/assets/icons/ok.svg" width="50" height="50" alt="tick" />
+                selected ? (
+                    <div className="icon-btn-medium shadow-none bg-neutral-black active:bg-neutral-black hover:bg-neutral-black">
+                        <img src="/assets/icons/ok.svg" className="icon-md" />
+                    </div>
+                )
                 : null 
             }
         </div>

@@ -7,7 +7,6 @@ type CreateNewMemeBtnProps = {
 }
 
 export const CreateNewMemeBtn = ({ disabled }: CreateNewMemeBtnProps) => {
-    const { height, width } = useWindowDimensions();
     const router = useRouter();
 
     const createMeme = () => {
@@ -15,8 +14,8 @@ export const CreateNewMemeBtn = ({ disabled }: CreateNewMemeBtnProps) => {
     }
 
     return (
-        <button onClick={createMeme} disabled={disabled} className='icon-btn-create-meme lg:btn-create-meme'>
-            <img src="/assets/icons/create.svg" className='icon lg:w-[20px] lg:h-[20px]' />
+        <button onClick={createMeme} disabled={disabled} className='icon-btn-medium-tertiary lg:w-auto lg:btn-with-icon-medium-tertiary'>
+            <img src="/assets/icons/create.svg" className='icon-md lg:icon-sm' />
             <span className='hidden lg:block'>Create new meme</span>
         </button>
     )
