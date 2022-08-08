@@ -470,7 +470,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                     }
                     <div className="flex gap-[12px] mb-4">
                         <input id='upload-file' accept="image/*" hidden type="file" onChange={addImage} onClick={clearFileCache} />
-                            <button key="mbicon-text" onClick={onAddText} className="icon-btn-large-secondary">
+                            <button disabled={texts.length >= 10} key="mbicon-text" onClick={onAddText} className="icon-btn-large-secondary">
                                 <img className="icon-md" src="/assets/icons/edit-meme-1.svg" />
                             </button>
                             <button key="mbicon-image" onClick={uploadFileHandler} className="icon-btn-large-secondary">
