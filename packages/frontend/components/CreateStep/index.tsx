@@ -28,10 +28,10 @@ const CreateStep: React.FC<CreateStepProps> = ({ meme, setInitialImage, goNext }
     return (
         <div className="flex flex-col lg:flex-row gap-10 items-start">
             <MemeDetail meme={meme} inspired />
-            <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-full lg:w-2/5">
-                <p className="text-3xl font-bold mb-8">Create new meme</p>
-                <button onClick={uploadMeme} className="comic-border-mini rounded-full bg-purple py-1 font-medium w-full lg:w-4/5 mb-3">Upload image</button>
-                <button onClick={goNext} className="comic-border-mini rounded-full bg-white py-1 font-medium w-full lg:w-4/5">Start from blank canvas</button>
+            <div className="main-container w-full lg:w-2/5">
+                <p className="text-subtitle-1 mb-[40px]">Create new meme</p>
+                <button onClick={uploadMeme} className="btn-medium w-full mb-[16px]">Upload image</button>
+                <button onClick={goNext} className="btn-medium-secondary w-full">Start from blank canvas</button>
                 <input id='select-meme' accept="image/*" hidden type="file" onChange={fileSelectHandler} />
             </div>
         </div>

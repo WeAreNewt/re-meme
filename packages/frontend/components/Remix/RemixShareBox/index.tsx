@@ -23,17 +23,17 @@ export const RemixShareBox : React.FC<RemixShareBoxProps> = ({ publication }) =>
     }
 
     return (
-        <div className="flex flex-col space-y-6 comic-border bg-white n:p-4 lg:p-10 rounded-4xl text-center">
-            <a target="_blank" rel="noreferrer" href={`https://testnet.lenster.xyz/posts/${publication.id}`} className="comic-border-mini rounded-full bg-white px-10 py-2 cursor-pointer text-black no-underline">Collect/comment on Lenster</a>
-            <div className="flex justify-center space-x-4 mb-4">
-                <div key={"sicon-share"} onClick={handleShare} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
-                    <Image src="/assets/icons/share-icon.svg" width="30" height="30" alt="share" />
+        <div className="main-container">
+            <a target="_blank" rel="noreferrer" href={`https://testnet.lenster.xyz/posts/${publication.id}`} className="btn-medium-secondary no-underline hover:text-neutral-black w-full mb-[16px]">Collect/comment on Lenster</a>
+            <div className="flex justify-center gap-[12px]">
+                <div key={"sicon-share"} onClick={handleShare} className="icon-btn-medium-secondary">
+                    <img className="icon-md" src="/assets/icons/share-icon.svg" alt="share" />
                 </div>
-                <div key={"sicon-twitter-share"} onClick={handleShareTwitter} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
-                    <Image src="/assets/icons/share-twitter.svg" width="30" height="30" alt="share twitter" />
+                <div key={"sicon-twitter-share"} onClick={handleShareTwitter} className="icon-btn-medium-secondary">
+                    <img className="icon-md" src="/assets/icons/share-twitter.svg" width="30" height="30" alt="share twitter" />
                 </div>
-                <a key={"sicon-download"} download="meme.svg" href={memeUrl} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
-                    <Image src="/assets/icons/download.svg" width="30" height="30" alt="download" />
+                <a key={"sicon-download"} download="meme.svg" href={memeUrl} className="icon-btn-medium-secondary">
+                    <img className="icon-md" src="/assets/icons/download.svg" width="30" height="30" alt="download" />
                 </a>
             </div>
         </div>
