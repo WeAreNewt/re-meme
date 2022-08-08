@@ -1,10 +1,6 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import Image from 'next/image';
-import useWindowDimensions from '../../../hooks/window-dimensions.hook';
-
 
 export const CustomConnectButton : React.FC = () => {
-  const { width } = useWindowDimensions();
 
   return (
     <ConnectButton.Custom>
@@ -24,8 +20,8 @@ export const CustomConnectButton : React.FC = () => {
         }
 
         const getBtnStyles = () => {
-          if (!mounted || !account || !chain) return "icon-btn-connect-wallet lg:btn-connect-wallet";
-          return "icon-btn lg:btn-wallet-connected";
+          if (!mounted || !account || !chain) return "icon-btn-medium lg:w-auto lg:btn-with-icon-medium lg:gap-[12px] lg:pl-[12px] lg:pr-[24px]";
+          return "icon-btn-medium-secondary lg:btn-with-icon-medium-secondary lg:gap-[12px] lg:pl-[12px] lg:pr-[24px] lg:w-auto";
         }
 
         const getBtnfuncs = () => {
@@ -62,7 +58,7 @@ export const CustomConnectButton : React.FC = () => {
                     </svg>
                 }
               </div>
-              <img src="/assets/icons/wallet.svg" className='icon lg:w-[20px] lg:h-[20px]' />
+              <img src="/assets/icons/wallet.svg" className='icon-md lg:icon-sm' />
             </div>
           </button>
         );

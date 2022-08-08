@@ -1,11 +1,13 @@
-import Image from "next/image"
-import { RemixBtn } from "../RemixBtn";
+import { PublicationData } from "../../../models/Publication/publication.model";
+import { parseIpfs } from "../../../utils/link";
 
-type RemixShareBoxProps = {
-    meme: any; //Meme
+interface RemixShareBoxProps {
+    meme: PublicationData
 }
 
-export const RemixCreatedBox = ({ meme }: RemixShareBoxProps) => {
+export const RemixCreatedBox : React.FC<RemixShareBoxProps> = ({ meme }) => {
+
+    const memeSrc = parseIpfs(meme.metadata.media[0].original.url)
 
     const handleShareLenster = () => {
 
@@ -28,7 +30,7 @@ export const RemixCreatedBox = ({ meme }: RemixShareBoxProps) => {
             src: "/assets/icons/download.svg",
             handleClick: () => {
                 const a = document.createElement('a')
-                a.href = meme.src
+                a.href = memeSrc
                 a.download = 'meme.svg'
                 document.body.appendChild(a)
                 a.click()
@@ -41,22 +43,20 @@ export const RemixCreatedBox = ({ meme }: RemixShareBoxProps) => {
     }
 
     return (
-        <div className="flex flex-col space-y-4 comic-border bg-light-green n:p-4 lg:p-10 rounded-4xl text-center w-full lg:w-2/5">
-            <h3 className="text-xl font-extrabold uppercase whitespace-pre-line">{"your meme is live!\nshare with your frens."}</h3>
-            <button onClick={handleShareLenster} className="comic-border-mini rounded-full bg-white px-2 lg:px-20 py-1 lg:py-2 text-base font-medium">Share on lenster</button>
-            <div className="flex justify-center space-x-4 lg:mb-4">
+        <div className="main-container lg:w-2/5 bg-alert-green-30">
+            <h3 className="text-subtitle-2 uppercase whitespace-pre-line text-center mb-[16px]">{"your meme is live!\nshare with your frens."}</h3>
+            <button onClick={handleShareLenster} className="btn-medium-secondary w-full mb-[16px]">Share on lenster</button>
+            <div className="flex justify-center gap-[12px] mb-[40px]">
                 {
                     socialIcons.map((si, index) => (
-                        <div key={"sicon-" + index} onClick={si.handleClick} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
-                            <Image src={si.src} width="25" height="25" />
-                        </div>
+                        <button key={"sicon-" + index} onClick={si.handleClick} className="icon-btn-medium-secondary">
+                            <img className="icon-medium" src={si.src} />
+                        </button>
                     ))
                 }
             </div>
-            <div>
-                <p className="font-medium mt-4 mb-2 text-xs">Still felling funny?</p>
-                <RemixBtn disabled={false} onClick={handleRemixAgain} btnText="Remix again" className="mx-auto create-btn-gradient rounded-full border-black border-solid border-3 px-4 lg:px-3 max-w-max text-lg font-medium " />
-            </div>
+            <p className="text-description-bold mb-[8px]">Still felling funny?</p>
+            <button onClick={handleRemixAgain} className="btn-small-tertiary">Remix Again</button>
         </div>
     )
 }

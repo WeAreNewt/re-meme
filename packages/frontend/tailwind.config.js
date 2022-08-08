@@ -20,12 +20,13 @@ module.exports = {
       },
       borderWidth: {
         '3': '3px',
+      },
+      fontFamily: {
+        'mono': ['JetBrains Mono']
       }
     },
     colors: {
       'lens-default': '#ABFE2C',
-      'neutral-black': '#101112',
-      'neutral-600': '#6C757D',
       'purple': '#D2A6FF',
       primary: {
         900: '#6322A5',
@@ -41,12 +42,17 @@ module.exports = {
       alert: {
         'red': {
           DEFAULT: '#D91A1A'
+        },
+        'green': {
+          DEFAULT: '#23C146',
+          30: '#BCEBC6'
         }
       },
-      neutral: {
-        black: '#101112',
-        white: '#FDFDFD'
-      }
+      'neutral-black': '#101112',
+      'neutral-white': '#FDFDFD',
+      "neutral-200": "#E9ECEF",
+      "neutral-400": "#CED4DA",
+      "neutral-600": "#6C757D"
     }
   },
   plugins: [],

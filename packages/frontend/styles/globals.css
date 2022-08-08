@@ -30,11 +30,6 @@ a {
   background-size: cover;
 }
 
-.comic-border {
-  border: 3px solid #101112;
-  box-shadow: 8px 8px 0px #101112;
-}
-
 .create-btn-gradient {
   background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
 }

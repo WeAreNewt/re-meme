@@ -14,8 +14,8 @@ export const GoBackButton = ({ route, onClick }: GoBackButtonProps) => {
     }
 
     return (
-        <div onClick={handleClick} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer max-w-max">
-            <Image src="/assets/icons/back.svg" width="30" height="30" />
+        <div onClick={handleClick} className="icon-btn-medium-secondary">
+            <img className="icon-md" alt="go back" src="/assets/icons/back.svg" />
         </div>
     )
 }
