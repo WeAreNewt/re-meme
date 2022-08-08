@@ -39,7 +39,7 @@ export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
                 //onChange={}
                 >
                 <option selected>Select an option</option>
-                <option value="It's spam">It's spam</option>
+                <option value="It's spam">It&apos;s spam</option>
                 <option value="Nudity of sexual activity">Nudity of sexual activity</option>
                 <option value="Hate speech or symbols">Hate speech or symbols</option>
                 <option value="False information">False information</option>
@@ -53,7 +53,7 @@ export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
 
             </select>
             <div className="mt-3">
-                <h6 className="whitespace-normal bg-[#FFE3B0] rounded-lg p-3">Your report is anonymous, except if you're reporting on intellectual property infringement.</h6>
+                <h6 className="whitespace-normal bg-[#FFE3B0] rounded-lg p-3">Your report is anonymous, except if you&apos;re reporting on intellectual property infringement.</h6>
             </div>
             <div className="mb-6 mt-4">
                 <label className="mb-2 text-xl">Please, provide more information</label>
