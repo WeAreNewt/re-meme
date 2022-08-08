@@ -92,6 +92,15 @@ var getImages = (canvas: fabric.Canvas) => {
     return canvas.getObjects().filter(o => o.get('type') === 'image') as fabric.Image[]
 }
 
+const disableMiddleResizeButtons = (object: fabric.Object) => {
+    object.setControlsVisibility({
+        mt: false, // middle top disable
+        mb: false, // midle bottom
+        ml: false, // middle left
+        mr: false, // I think you get it
+    });
+}
+
 const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUpload }) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const [ uploadError, setUploadError ] = useState<UploadError | undefined>()
@@ -320,6 +329,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                     objects.map(object => {
                         canvasCreation.add(object)
                         if(object.type === 'text') {
+                            disableMiddleResizeButtons(object)
                             newTexts.push(object as fabric.Text)
                         }
                         else if(object.type === 'image') {
@@ -351,12 +361,14 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                         }
                         setImages(images => images.concat([fabricImage]))
                         canvasCreation.add(fabricImage)
+                        disableMiddleResizeButtons(texts[0])
                         canvasCreation.add(texts[0])
                     }
                 }
             }
             else {
                 canvasCreation.add(texts[0])
+                disableMiddleResizeButtons(texts[0])
             }
 
         }
@@ -382,6 +394,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     const onAddText = () => {
         const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
+        disableMiddleResizeButtons(newText)
         canvas?.add(newText)
         setTexts(texts => texts.concat(newText))
     }
