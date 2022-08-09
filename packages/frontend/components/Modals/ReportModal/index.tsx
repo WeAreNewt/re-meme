@@ -5,7 +5,7 @@ const now = new Date().getTime();
 type ReportModalProps = {
     show: boolean;
     setShow: (show: boolean) => void
-    memeid: number
+    memeid: string
 }
 
 export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
