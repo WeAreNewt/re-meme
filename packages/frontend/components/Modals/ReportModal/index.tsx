@@ -5,7 +5,7 @@ const now = new Date().getTime();
 type ReportModalProps = {
     show: boolean;
     setShow: (show: boolean) => void
-    memeid: string
+    memeid: number
 }
 
 export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
@@ -16,7 +16,7 @@ export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
 
     const onReport = (memeid) => {
         axios.post('/api/blacklist', {
-            postId: memeid,
+            postId: parseInt(memeid),
             unixTime: now
           })
           .then(function (response) {
