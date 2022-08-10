@@ -1,4 +1,5 @@
 import '../styles/globals.css'
+import '../styles/main.css'
 import '@rainbow-me/rainbowkit/styles.css';
 import type { AppProps } from 'next/app'
 import { chain, createClient, WagmiProvider } from 'wagmi';
@@ -44,6 +45,7 @@ import { REFRESH_AUTHENTICATION } from '../queries/auth';
 import axios from 'axios';
 import { RefreshData } from '../models/Auth/auth.model';
 import { setTokens } from '../store/reducers/auth.reducer';
+import PageLayout from '../components/Layout';
 
 const API_URL = 'https://api-mumbai.lens.dev'
 
@@ -91,9 +93,7 @@ const client = new ApolloClient({
     authLink,
     httpLink
   ]),
-  cache: new InMemoryCache({
-    addTypename: false
-  })
+  cache: new InMemoryCache()
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -103,7 +103,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <RainbowKitProvider coolMode chains={chains}>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-              <Component {...pageProps} />
+              <PageLayout>
+                <Component {...pageProps} />
+              </PageLayout>
             </PersistGate> 
           </Provider>
         </RainbowKitProvider>

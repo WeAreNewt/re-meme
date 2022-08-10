@@ -13,15 +13,15 @@ export const ProfileButton = ({disabled}: ProfileButtonProps) => {
     const user = useSelector((state: RootState) => state.user.selectedUser);
     const router = useRouter();
 
-    const profilePicture = user?.picture && !isNftImage(user.picture) ? user.picture.original.url : "/assets/icons/profile.svg"
+    const profilePicture = user?.picture && !isNftImage(user.picture) && user.picture.original.url
 
     const handleClick = () => {
         router.push(`/profile`);
     }
         
     return (
-        <button onClick={handleClick} disabled={disabled} className={`overflow-hidden flex items-center justify-center bg-lime border-3 border-black border-solid rounded-full w-12 h-12 ${disabled ? 'opacity-30' : 'comic-border-mini'}`} type="button">
-            <img src={profilePicture} alt="avatar" />
+        <button disabled={disabled} className="icon-btn-medium p-0 overflow-hidden disabled:bg-lens-default bg-lens-default hover:bg-lens-default active:bg-lens-default shadow-none cursor-default" type="button">
+            <img src={profilePicture ? profilePicture : "/assets/icons/profile.svg"} alt="avatar" className={ `${profilePicture ? "w-full h-full cursor-default" : "icon-md"} ` } />
         </button>
     )
 }

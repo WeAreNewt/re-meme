@@ -30,16 +30,6 @@ a {
   background-size: cover;
 }
 
-.comic-border {
-  border: 3px solid #101112;
-  box-shadow: 8px 8px 0px #101112;
-}
-
-.comic-border-mini {
-  border: 3px solid #101112;
-  box-shadow: 3px 3px 0px #101112;
-}
-
 .create-btn-gradient {
   background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
 }
@@ -70,4 +60,8 @@ a {
 
 .bg-share-gradient {
   background: linear-gradient(90deg, rgba(100, 203, 172, 0.8) 0%, rgba(239, 185, 105, 0.8) 22.92%, rgba(235, 116, 156, 0.8) 49.48%, rgba(102, 167, 228, 0.8) 76.56%, rgba(157, 122, 201, 0.8) 100%), #FFFFFF;
+}
+
+.bg-gradient-default-transparent {
+  background: linear-gradient(135deg, rgba(207, 168, 247, 0.94) 0%, rgba(252, 187, 187, 0.94) 51.82%, rgba(212, 242, 108, 0.94) 100%);
 }

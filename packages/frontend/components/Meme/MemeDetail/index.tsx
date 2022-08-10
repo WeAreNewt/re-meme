@@ -1,20 +1,27 @@
-import Image from "next/image";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import useComments from "../../../hooks/useComments";
 import useWindowDimensions from "../../../hooks/window-dimensions.hook";
+import { PublicationData } from "../../../models/Publication/publication.model";
+import { parseIpfs } from "../../../utils/link";
+import Remixes from "../../Modals/Remixes";
 import { ProfileCard } from "../../ProfileCard";
-import { RemixBtn } from "../../Remix/RemixBtn";
 import { RemixCount } from "../../RemixCount";
 
 type MemeDetailProps = {
-    meme?: any;
+    meme: PublicationData;
     inspired?: boolean;
 }
 
 export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
-    const { height, width } = useWindowDimensions();
+
+    const { width } = useWindowDimensions();
     const { data } = useAccount();
     const [disabled, setDisabled] = useState(false);
+    const [remixesOpen, setRemixesOpen] = useState(false)
+
+    const { data: commentsPageData } = useComments(meme.id)
 
     useEffect(() => {
         setDisabled(!data ? true : false)
@@ -24,21 +31,26 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
 
     }
 
+    const memeSrc = parseIpfs(meme.metadata.media[0].original.url)
+
     return (
-        <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl">
-            {
-                inspired ?
-                <div className="flex justify-between items-center mb-4">
-                    <p className="text-lg font-bold mb-0">GET INSPIRED</p>
-                    <RemixBtn btnText="Remix" onClick={handleRemixClick} disabled={disabled} className="comic-border-mini create-btn-gradient rounded-full px-4 text-lg font-bold" />
+        <>
+            <Remixes totalCount={commentsPageData?.publications.pageInfo.totalCount} remixes={commentsPageData?.publications.items} open={remixesOpen} setOpen={setRemixesOpen} />
+            <div className="main-container lg:w-3/5">
+                {
+                    inspired ?
+                    <div className="flex justify-between w-full items-center mb-[16px]">
+                        <p className="text-subtitle-2 mb-0">GET INSPIRED</p>
+                        <button onClick={handleRemixClick} disabled={disabled} className="btn-small-tertiary">Remix</button>
+                    </div>
+                    : null
+                }
+                <img src={memeSrc} className="w-full rounded-xl mb-[16px]" />
+                <div className="flex w-full justify-between items-center">
+                    <ProfileCard profile={meme.profile} subText={moment(meme.createdAt).format('MMM Do YYYY')} />
+                    <RemixCount handleClick={() => setRemixesOpen(true)} count={commentsPageData?.publications.pageInfo.totalCount || 0} />
                 </div>
-                : null
-            }
-            <Image src={meme.src} className="w-full h-auto rounded-xl" width={ width > 850 ? "1600": "800" } height={ width > 850 ? "1000": "500"} />
-            <div className="flex justify-between items-center n:mt-2 lg:mt-6">
-                <ProfileCard profile={meme.mockProfile} subText={new Date(meme.publicationDate).toLocaleDateString('fr-CA')} />
-                <RemixCount disabled={disabled} count={meme.remixCount} />
             </div>
-        </div>
+        </>
     )
 }
