@@ -54,8 +54,16 @@
 
     /* COLORS THAT CANT GO IN TAILWIND CONFIG */
 
+    .bg-memixer-gradient-light {
+        background: linear-gradient(135deg, #DCB9FF 0%, #FFC5C5 51.82%, #E1FF7C 100%);
+    }
+
     .bg-memixer-gradient-default {
         background: linear-gradient(135deg, #CFA8F7 0%, #FCBBBB 51.82%, #D4F26C 100%);
+    }
+    
+    .bg-memixer-gradient-dark {
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), linear-gradient(135deg, #CFA8F7 0%, #FCBBBB 51.82%, #D4F26C 100%);
     }
 
     /* MISCELLANEOUS */
@@ -64,6 +72,163 @@
         @apply border-[2px] border-neutral-black shadow-[2px_2px_0px_#101112]
     }
 
+    .comic-border {
+        @apply border-[2px] border-neutral-black shadow-[5px_5px_0px_#101112]
+    }
+
+    .comic-border-lg {
+        @apply border-[3px] border-neutral-black shadow-[6px_6px_0px_#101112]
+    }
+
+    .comic-border-xl {
+        @apply border-[3px] border-neutral-black shadow-[7px_7px_0px_#101112]
+    }
+
+    .comic-border-xxl {
+        @apply border-[3px] border-neutral-black shadow-[8px_8px_0px_#101112]
+    }
+
+    .base-btn {
+        @apply
+            text-neutral-black
+            flex
+            items-center
+            justify-center
+            cursor-pointer
+            rounded-[31px]
+            disabled:opacity-30
+            disabled:cursor-default
+            disabled:shadow-none
+            disabled:hover:shadow-none
+            disabled:active:shadow-none
+    }
+
+    .base-btn-primary {
+        @apply
+            base-btn
+            bg-primary-600
+            hover:bg-primary-500
+            active:bg-primary-bold
+            disabled:bg-primary-600
+    }
+
+    .base-btn-secondary {
+        @apply
+            base-btn
+            bg-neutral-white
+            hover:bg-neutral-white
+            active:bg-neutral-white
+            disabled:bg-neutral-white
+    }
+
+    .base-btn-tertiary {
+        @apply
+            base-btn
+            bg-memixer-gradient-default
+            hover:bg-memixer-gradient-light
+            active:bg-memixer-gradient-dark
+            disabled:bg-memixer-gradient-default
+    }
+
+    .base-btn-small {
+        @apply
+            text-body-2-medium
+            min-h-[32px]
+            px-[20px]
+            py-[2px]
+            comic-border-mini
+            hover:comic-border
+            active:shadow-[inset_4px_5px_0px_#101112]
+    }
+
+    .base-btn-medium {
+        @apply
+            text-body-2-medium
+            min-h-[40px]
+            px-[24px]
+            py-[6px]
+            comic-border-mini
+            hover:comic-border
+            active:shadow-[inset_4px_5px_0px_#101112]
+    }
+
+    .base-btn-with-icon-medium {
+        @apply
+            base-btn-medium
+            pl-[16px]
+            pr-[20px]
+            gap-[8px]
+    }
+
+    .base-btn-large {
+        @apply
+            text-body-1-semibold
+            min-h-[64px]
+            px-[64px]
+            py-[15px]
+            comic-border-lg
+            hover:comic-border-xl
+            active:shadow-[inset_8px_8px_0px_#101112]
+    }
+
+    .base-icon-btn {
+        @apply
+            flex
+            items-center
+            justify-center
+            cursor-pointer
+            rounded-[100px]
+            disabled:opacity-30
+            disabled:cursor-default
+            disabled:shadow-none
+            disabled:hover:shadow-none
+            disabled:active:shadow-none
+    }
+
+    .base-icon-btn-primary {
+        @apply
+            base-icon-btn
+            bg-primary-600
+            hover:bg-primary-500
+            active:bg-primary-bold
+            disabled:bg-primary-600
+    }
+
+    .base-icon-btn-secondary {
+        @apply
+            base-icon-btn
+            bg-neutral-white
+            hover:bg-neutral-white
+            active:bg-neutral-white
+            disabled:bg-neutral-white
+    }
+
+    .base-icon-btn-tertiary {
+        @apply
+            base-icon-btn
+            bg-memixer-gradient-default
+            hover:bg-memixer-gradient-light
+            active:bg-memixer-gradient-dark
+            disabled:bg-memixer-gradient-default
+    }
+
+    .base-icon-btn-medium {
+        @apply
+            h-[40px]
+            w-[40px]
+            comic-border-mini
+            hover:comic-border
+            active:shadow-[inset_4px_5px_0px_#101112]
+    }
+
+    .base-icon-btn-large {
+        @apply
+            h-[48px]
+            w-[48px]
+            comic-border-mini
+            hover:comic-border
+            active:shadow-[inset_4px_5px_0px_#101112]
+    }
 
 }
 
@@ -71,89 +236,113 @@
 
     .btn-small {
         @apply
-            text-body-2-medium
-            comic-border-mini
-            px-[20px]
-            py-[4px]
-            h-[32px]
-            rounded-[31px]
-            bg-primary-600
-            disabled:opacity-30
+            base-btn-primary
+            base-btn-small
     }
 
     .btn-small-secondary {
-        @apply btn-small bg-neutral-white
-    }
-
-    .btn {
-        @apply text-body-2-medium comic-border-mini px-[24px] py-[8px] h-[40px] rounded-[31px] bg-primary-600 disabled:opacity-30
-    }
-
-    .btn-secondary {
-        @apply btn bg-neutral-white
-    }
-
-    .btn-create-meme {
         @apply
-            btn
-            bg-memixer-gradient-default
-            pl-[16px]
-            pr-[20px]
-            flex
-            justify-between
-            items-center
-            gap-[8px]
-            w-auto
+            base-btn-secondary
+            base-btn-small
     }
 
-    .btn-connect-wallet {
+    .btn-small-tertiary {
         @apply
-            btn
-            pl-[12px]
-            pr-[24px]
-            flex
-            justify-between
-            items-center
-            gap-[8px]
-            w-auto
+            base-btn-tertiary
+            base-btn-small
     }
 
-    .btn-wallet-connected {
+    .btn-medium {
         @apply
-            btn-connect-wallet
-            bg-neutral-white
+            base-btn-primary
+            base-btn-medium
     }
 
-    .icon {
+    .btn-with-icon-medium {
+        @apply
+            base-btn-primary
+            base-btn-with-icon-medium
+    }
+
+    .btn-medium-secondary {
+        @apply
+            base-btn-secondary
+            base-btn-medium
+
+    }
+
+    .btn-with-icon-medium-secondary {
+        @apply
+            base-btn-secondary
+            base-btn-with-icon-medium
+    }
+
+    .btn-medium-tertiary {
+        @apply
+            base-btn-tertiary
+            base-btn-medium
+    }
+
+    .btn-with-icon-medium-tertiary {
+        @apply
+            base-btn-tertiary
+            base-btn-with-icon-medium
+    }
+
+    .btn-large-tertiary {
+        @apply
+            base-btn-tertiary
+            base-btn-large
+    }
+
+    .icon-sm {
+        @apply
+            w-[20px]
+            h-[20px]
+    }
+
+    .icon-md {
         @apply
             h-[24px]
             w-[24px]
     }
 
-    .icon-btn {
+    .icon-btn-medium {
         @apply
-            comic-border-mini
-            h-[40px]
-            w-[40px]
-            p-[8px]
+            base-icon-btn-medium
+            base-icon-btn-primary 
+    }
+
+    .icon-btn-medium-secondary {
+        @apply
+            base-icon-btn-medium
+            base-icon-btn-secondary  
+    }
+
+    .icon-btn-medium-tertiary {
+        @apply
+            base-icon-btn-medium
+            base-icon-btn-tertiary  
+    }
+
+    .icon-btn-large-secondary {
+        @apply
+            base-icon-btn-large
+            base-icon-btn-secondary  
+    }
+
+    .main-container {
+        @apply
+            comic-border-xxl
             bg-neutral-white
-            rounded-[100px]
+            p-[20px]
+            lg:p-[40px]
             flex
-            justify-center
+            flex-col
             items-center
-            disabled:opacity-30
-    }
-
-    .icon-btn-create-meme {
-        @apply
-            icon-btn
-            bg-memixer-gradient-default
-    }
-
-    .icon-btn-connect-wallet {
-        @apply
-            icon-btn
-            bg-primary-600
+            rounded-[30px]
+            w-full
+            lg:w-auto
     }
 }
 

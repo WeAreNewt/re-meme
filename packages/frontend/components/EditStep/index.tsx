@@ -19,6 +19,10 @@ import omitDeep from 'omit-deep'
 import { parseIpfs } from "../../utils/link";
 import UploadMemeError, { UploadError } from "../Modals/UploadMemeError";
 
+interface PathEvent {
+    path?: fabric.Path
+}
+
 interface MetadataMedia {
     item: string
     type: string
@@ -84,6 +88,19 @@ const uploadImageAndMetadata = (svgImage: string) => {
     })
 }
 
+var getImages = (canvas: fabric.Canvas) => {
+    return canvas.getObjects().filter(o => o.get('type') === 'image') as fabric.Image[]
+}
+
+const disableMiddleResizeButtons = (object: fabric.Object) => {
+    object.setControlsVisibility({
+        mt: false, // middle top disable
+        mb: false, // midle bottom
+        ml: false, // middle left
+        mr: false, // I think you get it
+    });
+}
+
 const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUpload }) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const [ uploadError, setUploadError ] = useState<UploadError | undefined>()
@@ -93,6 +110,9 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     const isSmallScreen = width < 1024
     const [ canvas, setCanvas ] = useState<fabric.Canvas>();
     const [ texts, setTexts ] = useState<fabric.Text[]>([new fabric.Text('', DEFAULT_TEXT_CONFIG)])
+    const [ images, setImages ] = useState<fabric.Image[]>([])
+    const [ drawings, setDrawings ] = useState<fabric.Path[]>([])
+    const [ isDrawingMode, setIsDrawingMode ] = useState<boolean>(false)
     const user = useSelector<RootState, User | null>(state => state.user.selectedUser)
     const { signTypedDataAsync } = useSignTypedData()
     const [ openTextModal, setOpenTextModal ] = useState({
@@ -131,6 +151,22 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             const text = texts[index]
             canvas.remove(text)
             setTexts(texts => texts.slice(0, index).concat(texts.slice(index+1)) )
+        }
+    }
+
+    const onDeleteImage = (index: number) => {
+        if(canvas) {
+            const image = images[index]
+            canvas.remove(image)
+            setImages(images => images.slice(0, index).concat(images.slice(index+1)) )
+        }
+    }
+
+    const onDeleteDraw = (index: number) => {
+        if(canvas) {
+            const draw = drawings[index]
+            canvas.remove(draw)
+            setDrawings(draw => draw.slice(0, index).concat(draw.slice(index+1)) )
         }
     }
 
@@ -196,7 +232,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                     return postTypedData({ variables: { request: mutationPostParams } }).then(postResult => {
                         const typedData = postResult.data?.createPostTypedData.typedData
                         if(typedData) {
-                            console.log(typedData)
                             return signTypedDataAsync({
                                 domain: omitDeep(typedData.domain, '__typename'),
                                 value: omitDeep(typedData.value, '__typename'),
@@ -265,6 +300,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             fabricImage.scaleToHeight(containerRef.current.clientHeight / 2 >> 0)
                         }
                         canvas.add(fabricImage)
+                        setImages(images => images.concat([fabricImage]))
                         canvas.renderAll()
                     }
                 }
@@ -282,18 +318,30 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     useLayoutEffect(() => {
         if(containerRef.current) {
             const canvasCreation = new fabric.Canvas('meme-editor', { width: containerRef.current.clientWidth, height: containerRef.current.clientWidth})
+            canvasCreation.freeDrawingBrush.color = 'black'
+            canvasCreation.freeDrawingBrush.width = 2
             setCanvas(canvasCreation)
             if(publication) {
-
                 fabric.loadSVGFromURL(parseIpfs(publication.metadata.media[0].original.url), objects => {
                     const newTexts : fabric.Text[] = []
+                    const newImages : fabric.Image[] = []
+                    const newDrawings : fabric.Path[] = []
                     objects.map(object => {
                         canvasCreation.add(object)
                         if(object.type === 'text') {
+                            disableMiddleResizeButtons(object)
                             newTexts.push(object as fabric.Text)
+                        }
+                        else if(object.type === 'image') {
+                            newImages.push(object as fabric.Image)
+                        }
+                        else if(object.type === 'path') {
+                            newDrawings.push(object as fabric.Path)
                         }
                     })
                     setTexts(newTexts)
+                    setImages(newImages)
+                    setDrawings(newDrawings)
                     canvasCreation.renderAll()
                 })
             }
@@ -311,13 +359,16 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                         } else {
                             fabricImage.scaleToHeight(containerRef.current.clientHeight / 2 >> 0)
                         }
+                        setImages(images => images.concat([fabricImage]))
                         canvasCreation.add(fabricImage)
+                        disableMiddleResizeButtons(texts[0])
                         canvasCreation.add(texts[0])
                     }
                 }
             }
             else {
                 canvasCreation.add(texts[0])
+                disableMiddleResizeButtons(texts[0])
             }
 
         }
@@ -329,35 +380,31 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             canvas.setHeight(containerRef.current.clientWidth)
         }
     }, [width, canvas])
-    
-    const memeControllBtns = [
-        {
-            src: "/assets/icons/edit-meme-1.svg",
-            handleClick: () => {
-                const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
-                canvas?.add(newText)
-                setTexts(texts => texts.concat(newText))
-            }
-        },
-        {
-            src: "/assets/icons/edit-meme-2.svg",
-            handleClick: () => {
-                uploadFileHandler()
-            }
-        },
-        {
-            src: "/assets/icons/edit-meme-3.svg",
-            handleClick: () => {
-    
-            }
-        },
-        {
-            src: "/assets/icons/edit-meme-4.svg",
-            handleClick: () => {
-    
-            }
+
+    useEffect(() => {
+        if(canvas) {
+            canvas.on('path:created', (e) => {
+                const newPath = (e as PathEvent).path
+                if(newPath) {
+                    setDrawings(oldDrawings => oldDrawings.concat([newPath]))
+                }
+            })
         }
-    ]
+    }, [canvas])
+
+    const onAddText = () => {
+        const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
+        disableMiddleResizeButtons(newText)
+        canvas?.add(newText)
+        setTexts(texts => texts.concat(newText))
+    }
+
+    const onDraw = () => {
+        if(canvas) {
+            canvas.isDrawingMode = !isDrawingMode
+            setIsDrawingMode(!isDrawingMode)
+        }
+    }
 
     return (
         <>
@@ -397,11 +444,11 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                         />
                     )
                 }
-                <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-full lg:w-2/5'>
-                    <p className="text-lg font-bold">MEMIXER CONTROLS</p>
+                <div className='main-container pb-[64px] relative w-full lg:w-2/5'>
+                    <p className="text-subtitle-2 mb-[16px]">MEMIXER CONTROLS</p>
                     {
                         texts.map((text, index) =>
-                            <div key={`memixer_text_${index}`} className="border-2 border-black border-solid rounded-xl mb-4 flex p-2 gap-2 w-full">
+                            <div key={`memixer_text_${index}`} className="border-2 border-black border-solid rounded-xl mb-[16px] flex p-2 gap-2 w-full">
                                 <input
                                     onChange={e => handleMemeText(e, index)}
                                     className="w-full focus:outline-none"
@@ -414,15 +461,37 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             </div>
                         )
                     }
-                    <div className="flex space-x-3 mb-4">
+                    {
+                        images.map((image, index) => (
+                            <div className="flex justify-between w-full px-[16px] py-[12px] bg-neutral-200 rounded-[12px] mb-[16px]" key={`memixer_image_${index}`}>
+                                <span>{`Image ${index + 1}`}</span>
+                                <button onClick={() => onDeleteImage(index)}>
+                                    <img src="/assets/icons/x.png"/>
+                                </button>
+                            </div>
+                        ))
+                    }
+                                        {
+                        drawings.map((draw, index) => (
+                            <div className="flex justify-between w-full px-[16px] py-[12px] bg-neutral-200 rounded-[12px] mb-[16px]" key={`drawing_${index}`}>
+                                <span>{`Drawing ${index + 1}`}</span>
+                                <button onClick={() => onDeleteDraw(index)}>
+                                    <img  src="/assets/icons/x.png"/>
+                                </button>
+                            </div>
+                        ))
+                    }
+                    <div className="flex gap-[12px] mb-4">
                         <input id='upload-file' accept="image/*" hidden type="file" onChange={addImage} onClick={clearFileCache} />
-                        {
-                            memeControllBtns.map((btn, i) => (
-                                <div key={"mbicon-" + i} onClick={btn.handleClick} className="rounded-full bg-white comic-border-mini flex items-center p-2 cursor-pointer">
-                                    <img src={btn.src} width="30" height="30" />
-                                </div>
-                            ))
-                        }
+                            <button disabled={texts.length >= 10} key="mbicon-text" onClick={onAddText} className="icon-btn-large-secondary">
+                                <img className="icon-md" src="/assets/icons/edit-meme-1.svg" />
+                            </button>
+                            <button key="mbicon-image" onClick={uploadFileHandler} className="icon-btn-large-secondary">
+                                <img className="icon-md" src="/assets/icons/edit-meme-2.svg" />
+                            </button>
+                            <button key="mbicon-draw" onClick={onDraw} className={`icon-btn-large-secondary ${isDrawingMode && 'bg-neutral-black shadow-none hover:bg-neutral-black'}`}>
+                                <img className="icon-md" src={`${ isDrawingMode ? '/assets/icons/edit-meme-3-reverse.svg' : '/assets/icons/edit-meme-3.svg'}`}/>
+                            </button>
                     </div>
                     <button onClick={onRemix} className={"create-btn-gradient rounded-full border-black border-solid border-3 px-16 sm:px-16 lg:px-20 py-3 text-lg font-bold absolute -bottom-10 " + (false ? "opacity-30" : "comic-border-mini")}>
                         REMIX

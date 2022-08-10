@@ -1,4 +1,4 @@
-// this is a workaround, we need to check what's happening in vercel
+require('dotenv').config()
 
 if (
   process.env.LD_LIBRARY_PATH == null ||
