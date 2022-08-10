@@ -1,4 +1,4 @@
-import { ChangeEventHandler } from "react"
+import { ChangeEventHandler, useState } from "react"
 import { fabric } from 'fabric'
 
 interface State {
@@ -22,12 +22,19 @@ interface EditTextModalProps {
 }
 
 export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, deleteText, text, setConfig }) => {
+
+    const [ toggle, setToggle ] = useState(false)
+    const [ newFont, setNewFont ] = useState("")
+
     const onDelete = () => {
         deleteText(index)
         setOpen({ index: 0, open: false})
     }
 
+    
+
     const setFont: ChangeEventHandler<HTMLSelectElement> = e => {
+        setNewFont(e.target.value)
         setConfig({
             textColor: (text.fill as string),
             shadowColor: (text.fill as string),
@@ -45,6 +52,29 @@ export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, delete
         }, 
         index
         )  
+    }
+    
+    const onToggle = () => {
+        const font = newFont
+        setToggle(!toggle)
+        if(toggle){
+            setConfig({
+                textColor: "rgb(0,0,0)",
+                shadowColor: "rgb(256,256,256)",
+                font: font
+            },
+            index
+            )
+        } else {
+            setConfig({
+                textColor: "rgb(256,256,256)",
+                shadowColor: "rgb(0,0,0)",
+                font: font
+                
+            },
+            index
+            )
+        }
     }
 
     return (
@@ -73,18 +103,15 @@ export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, delete
             </select>
             <div className='flex flex-col lg:flex-row gap-2'>
                 <div className='w-full lg:w-1/2 flex flex-col'>
-                    <span>Font color</span>
-                    <div className="flex w-full h-12 items-stretch border-2 rounded-xl overflow-hidden">
-                        <button style={{ backgroundColor: `${(text.fill as string)}`}} className={`w-12 lg:w-16 rounded-r-xl border-r-2 border-black`} />
-                        <input onChange={setTextColor} value={`${(text.fill as string)}`} type="text" className="min-w-0 w-full text-center focus:outline-none" />
-                    </div>
+                    <span>Font color</span>  
+                        <button onClick={onToggle} className={`flex items-center justify-center w-full h-12 border-2 rounded-xl overflow-hidden text-white bg-black` }>{toggle ? "White" : "Black"}</button>    
                 </div>
+                <div className='w-full lg:w-1/6 flex flex-col'>  
+                        <button onClick={onToggle} className={"flex items-center justify-center text-white w-full h-12 border-2 rounded-xl overflow-hidden bg-white mt-4"}><img src="/assets/icons/reverse.svg"/></button>
+                </div>                
                 <div className='w-full lg:w-1/2 flex flex-col'>
                     <span>Shadow color</span>
-                    <div className="flex w-full h-12 items-stretch border-2 rounded-xl overflow-hidden">
-                    <button style={{ backgroundColor: `${(text.fill as string)}`}} className={`w-12 lg:w-16 rounded-r-xl border-r-2 border-black`} />
-                        <input onChange={setTextColor} value={`${(text.fill as string)}`} type="text" className="min-w-0 w-full text-center focus:outline-none" />
-                    </div>
+                    <button onClick={onToggle} className={`flex items-center justify-center w-full h-12 border-2 rounded-xl overflow-hidden `}>{toggle ? "Black" : "White"}</button>                        
                 </div>
             </div>
             <button className="lg:hidden rounded-4xl bg-alert-red comic-border-mini p-2 border-2 self-center mt-3" onClick={onDelete}>
