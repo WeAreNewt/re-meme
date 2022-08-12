@@ -7,7 +7,7 @@ interface State {
 }
 
 export interface TextConfig {
-    shadowColor?: string
+    shadowColor?: fabric.Shadow
     textColor?: string
     font?: string
 }
@@ -36,23 +36,23 @@ export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, delete
     const setFont: ChangeEventHandler<HTMLSelectElement> = e => {
         setNewFont(e.target.value)
         setConfig({
-            textColor: (text.fill as string),
-            shadowColor: (text.fill as string),
+            textColor: "rgb(0,0,0)",
+            shadowColor: new fabric.Shadow("0px 0px 6px rgb(256,256,256)"),
             font: e.target.value
         },
         index
         )
     }
 
-    const setTextColor: ChangeEventHandler<HTMLInputElement> = e => {
-        setConfig({
-            textColor: e.target.value,
-            shadowColor: e.target.value,
-            font: text.fontFamily
-        }, 
-        index
-        )  
-    }
+    // const setTextColor: ChangeEventHandler<HTMLInputElement> = e => {
+    //     setConfig({
+    //         textColor: e.target.value,
+    //         shadowColor: e.target.value,
+    //         font: text.fontFamily
+    //     }, 
+    //     index
+    //     )  
+    // }
     
     const onToggle = () => {
         const font = newFont
@@ -60,7 +60,7 @@ export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, delete
         if(toggle){
             setConfig({
                 textColor: "rgb(0,0,0)",
-                shadowColor: "rgb(256,256,256)",
+                shadowColor: new fabric.Shadow("0px 0px 6px rgb(256,256,256)"),
                 font: font
             },
             index
@@ -68,9 +68,8 @@ export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, delete
         } else {
             setConfig({
                 textColor: "rgb(256,256,256)",
-                shadowColor: "rgb(0,0,0)",
+                shadowColor: new fabric.Shadow("0px 0px 6px rgb(0,0,0)"),
                 font: font
-                
             },
             index
             )

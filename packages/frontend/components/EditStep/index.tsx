@@ -59,7 +59,8 @@ const DEFAULT_TEXT_CONFIG = {
     top: 0,
     left: 0,
     fontFamily: 'Helvetica',
-    fill: '#000000'
+    fill: '#000000',
+    shadow: new fabric.Shadow("0px 0px 6px rgb(256,256,256)")
 }
 
 const uploadImageAndMetadata = (svgImage: string) => {
@@ -240,7 +241,8 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         const selectedText = texts[index]
         selectedText.set({
             fontFamily: newConfig.font,
-            fill: newConfig.textColor
+            fill: newConfig.textColor,
+            shadow: newConfig.shadowColor
         })
         canvas?.renderAll()
         setTexts(texts => [...texts])
