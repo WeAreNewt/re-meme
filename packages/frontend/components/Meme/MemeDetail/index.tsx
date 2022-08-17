@@ -8,6 +8,8 @@ import { parseIpfs } from "../../../utils/link";
 import Remixes from "../../Modals/Remixes";
 import { ProfileCard } from "../../ProfileCard";
 import { RemixCount } from "../../RemixCount";
+import { ReportModal } from "../../Modals/ReportModal";
+import Image from "next/image";
 
 type MemeDetailProps = {
     meme: PublicationData;
@@ -20,6 +22,8 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     const { data } = useAccount();
     const [disabled, setDisabled] = useState(false);
     const [remixesOpen, setRemixesOpen] = useState(false)
+    const [imageHover, setImageHover] = useState(false)
+    const [showConfirm, setShowConfirm] = useState(false);
 
     const { data: commentsPageData } = useComments(meme.id)
 
@@ -29,6 +33,14 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
 
     const handleRemixClick = () => {
 
+    }
+
+    const onImageHover = () => {
+        setImageHover(true)
+    }
+
+    const onImageHoverOut = () => {
+        setImageHover(false)
     }
 
     const memeSrc = parseIpfs(meme.metadata.media[0].original.url)
@@ -44,12 +56,20 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
                         <button onClick={handleRemixClick} disabled={disabled} className="btn-small-tertiary">Remix</button>
                     </div>
                     : null
-                }
-                <img src={memeSrc} className="w-full rounded-xl mb-[16px]" />
+                }   
+                <div className="relative">
+                    <img src={memeSrc} onMouseOver={onImageHover} onMouseOut={onImageHoverOut} className="w-full rounded-xl mb-[16px]" />
+
+                    <button onClick={() => setShowConfirm(true)} onMouseOver={onImageHover} className={`flex items-center ${imageHover ? "!opacity-100" : "opacity-0" } absolute top-3 right-3 bg-white rounded-full p-3 border-black border-2 border-solid min-w-fit max-h-6 comic-border-mini`}>
+                        <Image src="/assets/icons/report.svg" width={"30"} height={"20"} className="mr-2" />
+                        Report
+                    </button>
+                </div>
                 <div className="flex w-full justify-between items-center">
                     <ProfileCard profile={meme.profile} subText={moment(meme.createdAt).format('MMM Do YYYY')} />
                     <RemixCount handleClick={() => setRemixesOpen(true)} count={commentsPageData?.publications.pageInfo.totalCount || 0} />
                 </div>
+                <ReportModal show={showConfirm} setShow={setShowConfirm} memeid={meme.id}/>
             </div>
         </>
     )
