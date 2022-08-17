@@ -7,7 +7,7 @@ interface State {
 }
 
 export interface TextConfig {
-    shadowColor?: string
+    shadowColor?: fabric.Shadow
     textColor?: string
     font?: string
 }
@@ -36,23 +36,23 @@ export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, delete
     const setFont: ChangeEventHandler<HTMLSelectElement> = e => {
         setNewFont(e.target.value)
         setConfig({
-            textColor: (text.fill as string),
-            shadowColor: (text.fill as string),
+            textColor: "rgb(0,0,0)",
+            shadowColor: new fabric.Shadow("0px 0px 6px rgb(256,256,256)"),
             font: e.target.value
         },
         index
         )
     }
 
-    const setTextColor: ChangeEventHandler<HTMLInputElement> = e => {
-        setConfig({
-            textColor: e.target.value,
-            shadowColor: e.target.value,
-            font: text.fontFamily
-        }, 
-        index
-        )  
-    }
+    // const setTextColor: ChangeEventHandler<HTMLInputElement> = e => {
+    //     setConfig({
+    //         textColor: e.target.value,
+    //         shadowColor: e.target.value,
+    //         font: text.fontFamily
+    //     }, 
+    //     index
+    //     )  
+    // }
     
     const onToggle = () => {
         const font = newFont
@@ -60,7 +60,7 @@ export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, delete
         if(toggle){
             setConfig({
                 textColor: "rgb(0,0,0)",
-                shadowColor: "rgb(256,256,256)",
+                shadowColor: new fabric.Shadow("0px 0px 6px rgb(256,256,256)"),
                 font: font
             },
             index
@@ -68,9 +68,8 @@ export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, delete
         } else {
             setConfig({
                 textColor: "rgb(256,256,256)",
-                shadowColor: "rgb(0,0,0)",
+                shadowColor: new fabric.Shadow("0px 0px 6px rgb(0,0,0)"),
                 font: font
-                
             },
             index
             )
@@ -104,14 +103,14 @@ export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, delete
             <div className='flex flex-col lg:flex-row gap-2'>
                 <div className='w-full lg:w-1/2 flex flex-col'>
                     <span>Font color</span>  
-                        <button onClick={onToggle} className={`flex items-center justify-center w-full h-12 border-2 rounded-xl overflow-hidden text-white bg-black` }>{toggle ? "White" : "Black"}</button>    
+                        <button onClick={onToggle} className={`flex items-center justify-center w-full h-12 border-2 rounded-xl overflow-hidden ` + (toggle ? 'bg-white text-black' : 'bg-black text-white') }>{toggle ? "White" : "Black"}</button>    
                 </div>
                 <div className='w-full lg:w-1/6 flex flex-col'>  
                         <button onClick={onToggle} className={"flex items-center justify-center text-white w-full h-12 border-2 rounded-xl overflow-hidden bg-white mt-4"}><img src="/assets/icons/reverse.svg"/></button>
                 </div>                
                 <div className='w-full lg:w-1/2 flex flex-col'>
                     <span>Shadow color</span>
-                    <button onClick={onToggle} className={`flex items-center justify-center w-full h-12 border-2 rounded-xl overflow-hidden `}>{toggle ? "Black" : "White"}</button>                        
+                    <button onClick={onToggle} className={`flex items-center justify-center w-full h-12 border-2 rounded-xl overflow-hidden ` + (toggle ? 'bg-black text-white' : 'bg-white text-black')}>{toggle ? "Black" : "White"}</button>                        
                 </div>
             </div>
             <button className="lg:hidden rounded-4xl bg-alert-red comic-border-mini p-2 border-2 self-center mt-3" onClick={onDelete}>
