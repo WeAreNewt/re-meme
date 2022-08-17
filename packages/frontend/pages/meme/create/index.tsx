@@ -6,11 +6,11 @@ import { GoBackButton } from "../../../components/Buttons/GoBackBtn";
 import CreateStep from "../../../components/CreateStep";
 import EditStep from "../../../components/EditStep";
 import FeedbackStep from "../../../components/FeedbackStep";
-import { useMemeFromPublicationId } from "../../../hooks/useMeme";
+import { useRandomMeme } from "../../../hooks/useMeme";
 
 const CreateMemePage: NextPage = () => {
 
-    const { publication } = useMemeFromPublicationId()
+    const { publication } = useRandomMeme()
 
     const [ step, setStep ] = useState(0);
     const [initialImage, setInitialImage] = useState<string>();

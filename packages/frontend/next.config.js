@@ -13,15 +13,7 @@ if (
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false,
-  rewrites: () => {
-    return [
-      {
-        source: '/',
-        destination: '/meme'
-      }
-    ]
-  }
+  reactStrictMode: false
 }
 
 module.exports = nextConfig

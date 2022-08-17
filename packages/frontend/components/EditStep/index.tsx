@@ -2,7 +2,7 @@ import { ChangeEventHandler, useEffect, useLayoutEffect, useRef, useState } from
 import { fabric } from 'fabric';
 import useWindowDimensions from "../../hooks/window-dimensions.hook";
 import EditTextModal, { EditText, TextConfig } from "../Modals/EditTextModal";
-import ipfsClient from "../../config/ipfs";
+import web3StorageClient from "../../config/web3Storage";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
 import { User } from "../../models/User/user.model";
@@ -67,24 +67,28 @@ const DEFAULT_TEXT_CONFIG = {
 }
 
 const uploadImageAndMetadata = (svgImage: string) => {
-    return ipfsClient.add(svgImage).then((result) => {
+    const imageBlob = new Blob([svgImage], { type: 'image/svg+xml'})
+    const imageFile = new File([imageBlob], 'meme.svg')
+    return web3StorageClient.put([imageFile], { wrapWithDirectory: false }).then((result) => {
         const metadata : PublicationMetadata = {
             version: '1.0.0',
             metadata_id: uuidv4(),
             name: 'Created by me',
             attributes: [],
-            image: `ipfs://${result.cid}`,
+            image: `ipfs://${result}`,
             imageMimeType: 'image/svg+xml',
             media: [
                 {
-                    item: `ipfs://${result.cid}`,
+                    item: `ipfs://${result}`,
                     type: 'image/svg+xml'
                 }
             ],
             appId: process.env.NEXT_PUBLIC_APP_ID || 'thisisarandomappid'
         }
         const jsonMetadata = JSON.stringify(metadata)
-        return ipfsClient.add(jsonMetadata)
+        const metadataBlob = new Blob([jsonMetadata], { type: 'application/json'})
+        const metadataFile = new File([metadataBlob], 'meme-metadata.json')
+        return web3StorageClient.put([metadataFile], { wrapWithDirectory: false })
     })
 }
 
@@ -182,7 +186,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             uploadImageAndMetadata(svgMeme).then(metadataResult => {
                 const mutationPostParams = {
                     profileId: user.id || '',                        
-                    contentURI: `ipfs://${metadataResult.cid}`,
+                    contentURI: `ipfs://${metadataResult}`,
                     collectModule: {
                         freeCollectModule: { followerOnly: false }
                     },

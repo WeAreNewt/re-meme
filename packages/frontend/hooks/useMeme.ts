@@ -1,5 +1,5 @@
 import { useLazyQuery, useQuery } from "@apollo/client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ExplorePublicationsData, ExplorePublicationsParams, GetPublicationData, GetPublicationParams, GetPublicationsData, PublicationData } from "../models/Publication/publication.model";
 import { EXPLORE_PUBLICATIONS, GET_PUBLICATION } from "../queries/publication";
 
@@ -20,31 +20,44 @@ export const useMemeFromPublicationId : UseMemeFromPublicationId = (publicationI
             }
         }
     })
-    const [ getRandomPublication ] = useLazyQuery<ExplorePublicationsData, ExplorePublicationsParams>(EXPLORE_PUBLICATIONS, {
-        variables: {
-            request: {
-                sortCriteria: 'LATEST',
-                sources: [process.env.NEXT_PUBLIC_APP_ID || ''],
-                limit: 1
-            }
-        }
-    })
 
     useEffect(() => {
         if(!isLoading) {
             if(publicationId) {
-                console.log(1)
                 getPublication().then(data => {
                     setPublication(data.data?.publication)
                 })
-            } else {
-                console.log(2)
-                getRandomPublication().then(data => {
-                    setPublication(data.data?.explorePublications.items[0])
-                })
             }
         }
-    }, [getPublication, getRandomPublication, publicationId, isLoading])
+    }, [getPublication, publicationId, isLoading])
+
+    return { publication }
+}
+
+type UseRandomMeme = () => UseMemeReturn
+
+const sortCriterias = ['TOP_COMMENTED', 'TOP_COLLECTED', 'LATEST']
+
+const getRandomNumber = (max: number) => Math.floor(Math.random() * max)
+
+export const useRandomMeme : UseRandomMeme = () => {
+
+    const [publication, setPublication] = useState<PublicationData>()
+
+    const [ getPublication ] = useLazyQuery<ExplorePublicationsData, ExplorePublicationsParams>(EXPLORE_PUBLICATIONS)
+
+    useEffect(() => {
+        getPublication({
+            variables: {
+                request: {
+                    sortCriteria: sortCriterias[getRandomNumber(sortCriterias.length)],
+                    sources: [process.env.NEXT_PUBLIC_APP_ID || ''],
+                    limit: 50,
+                    timestamp: 1654052400
+                }
+            }
+        }).then(data => setPublication(data.data?.explorePublications.items[getRandomNumber(data.data.explorePublications.items.length)]))
+    }, [getPublication])
 
     return { publication }
 }
