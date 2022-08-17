@@ -153,6 +153,7 @@ export interface ExplorePublicationsParams {
         sources?: string[]
         sortCriteria?: string
         limit?: number
+        timestamp?: number
     }
 }
 

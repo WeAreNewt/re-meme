@@ -1,4 +1,5 @@
 import moment from "moment";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import useComments from "../../../hooks/useComments";
@@ -19,6 +20,7 @@ type MemeDetailProps = {
 export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
 
     const { width } = useWindowDimensions();
+    const router = useRouter()
     const { data } = useAccount();
     const [disabled, setDisabled] = useState(false);
     const [remixesOpen, setRemixesOpen] = useState(false)
@@ -32,7 +34,7 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     }, [data])
 
     const handleRemixClick = () => {
-
+        router.push(`/meme/${meme.id}/edit`)
     }
 
     const onImageHover = () => {

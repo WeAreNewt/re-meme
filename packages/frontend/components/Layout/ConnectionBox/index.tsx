@@ -9,7 +9,6 @@ export const ConnectionBox: React.FC = () => {
 
     return (
         <div className={'w-full h-24 rounded-full meme-header comic-border flex items-center justify-center ' + (data ? 'bg-lime' : 'bg-purple')}>
-            
             {
                 loading ?
                     <span className="text-xl font-bold">Detecting Lens Profile</span> :
