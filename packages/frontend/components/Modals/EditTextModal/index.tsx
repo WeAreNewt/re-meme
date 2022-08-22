@@ -102,14 +102,14 @@ export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, delete
             </select>
             <div className='flex flex-col lg:flex-row gap-2'>
                 <div className='w-full lg:w-1/2 flex flex-col'>
-                    <span>Font color</span>  
+                    <span className="text-sm">Font color</span>  
                         <button onClick={onToggle} className={`flex items-center justify-center w-full h-12 border-2 rounded-xl overflow-hidden ` + (toggle ? 'bg-white text-black' : 'bg-black text-white') }>{toggle ? "White" : "Black"}</button>    
                 </div>
                 <div className='w-full lg:w-1/6 flex flex-col'>  
                         <button onClick={onToggle} className={"flex items-center justify-center text-white w-full h-12 border-2 rounded-xl overflow-hidden bg-white mt-4"}><img src="/assets/icons/reverse.svg"/></button>
                 </div>                
                 <div className='w-full lg:w-1/2 flex flex-col'>
-                    <span>Shadow color</span>
+                    <span className="text-sm">Shadow color</span>
                     <button onClick={onToggle} className={`flex items-center justify-center w-full h-12 border-2 rounded-xl overflow-hidden ` + (toggle ? 'bg-black text-white' : 'bg-white text-black')}>{toggle ? "Black" : "White"}</button>                        
                 </div>
             </div>
