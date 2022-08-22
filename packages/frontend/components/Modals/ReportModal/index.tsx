@@ -1,5 +1,7 @@
 
 import axios from 'axios';
+import { useState } from 'react';
+
 const now = new Date().getTime();
 
 type ReportModalProps = {
@@ -10,11 +12,15 @@ type ReportModalProps = {
 
 export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
 
+    const [reported, setReported] = useState(false);
+
     const handleCancel = () => {
+        setReported(false)
         setShow(false);
     }
 
     const onReport = (memeid) => {
+        setReported(true)
         axios.post('/api/blacklist', {
             postId: parseInt(memeid),
             unixTime: now
@@ -59,9 +65,12 @@ export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
                 <label className="mb-2 text-xl">Please, provide more information</label>
                 <input type="text" placeholder="Type here" id="large-input" className="block p-4 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></input>
             </div>
+            <div className="mb-6 mt-4">
+                { reported ? <label className="mb-2 text-xl">Content has been reported. Thank you.</label> : ''}
+            </div>
 
                 <div className="flex justify-end  mt-10">
-                    <button onClick={handleCancel} className={"flex items-center bg-white rounded-full p-3 border-black border-2 border-solid min-w-fit max-h-6 comic-border-mini mr-4"}> Cancel</button>
+                    <button onClick={handleCancel} className={"flex items-center bg-white rounded-full p-3 border-black border-2 border-solid min-w-fit max-h-6 comic-border-mini mr-4"}>{reported ? 'Close' : 'Cancel'}</button>
                     <button onClick={onReport} className={"flex items-center bg-purple rounded-full p-3 border-black border-2 border-solid min-w-fit max-h-6 comic-border-mini"}>Report</button>
                 </div>
             </div>
