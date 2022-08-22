@@ -141,6 +141,14 @@
             active:shadow-[inset_4px_5px_0px_#101112]
     }
 
+    .base-btn-with-icon-small {
+        @apply
+            base-btn-small
+            pl-[16px]
+            pr-[20px]
+            gap-[8px]
+    }
+
     .base-btn-medium {
         @apply
             text-body-2-medium
@@ -244,6 +252,12 @@
         @apply
             base-btn-secondary
             base-btn-small
+    }
+
+    .btn-with-icon-small-secondary {
+        @apply
+            base-btn-secondary
+            base-btn-with-icon-small
     }
 
     .btn-small-tertiary {
