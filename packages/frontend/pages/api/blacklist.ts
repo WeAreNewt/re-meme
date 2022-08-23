@@ -31,6 +31,7 @@ const handlePost = async (postId: string, unixtime: number, res: NextApiResponse
     await dynamodb.put(params).promise();
     return res.status(200).json({ postId: postId, date: unixtime, blacklisted: false });
   } catch (error) {
+    console.log(error);
     return res.status(500).json(error);
   }
 };
