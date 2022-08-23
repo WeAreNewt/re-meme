@@ -37,3 +37,8 @@ cd packages/frontend
 yarn install # Install dependencies
 yarn dev # Start development server
 ```
+
+## License
+
+[Link to code license](LICENSE.md)
+
