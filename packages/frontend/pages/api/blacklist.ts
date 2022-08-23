@@ -30,8 +30,9 @@ const handlePost = async (postId: string, unixtime: number, res: NextApiResponse
   try {
     await dynamodb.put(params).promise();
     return res.status(200).json({ postId: postId, date: unixtime, blacklisted: false });
-  } catch (error) { 
-    if(error.code === 'ConditionalCheckFailedException') return res.status(200).json({ postId: postId, date: unixtime, blacklisted: false });
+  } catch (error : any) { 
+    if(error.code === 'ConditionalCheckFailedException')
+      return res.status(200).json({ postId: postId, date: unixtime, blacklisted: false });
     return res.status(500).json(error);
   }
 };
