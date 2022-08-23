@@ -26,7 +26,7 @@ export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
         setReported(true)
         setAlert(false)
         axios.post('/api/blacklist', {
-            postId: parseInt(memeid)
+            postId: memeid
           })
           .then(function (response) {
             console.log(response);
