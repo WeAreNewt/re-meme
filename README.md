@@ -8,13 +8,36 @@ re:meme is the first ever on-chain meme generator, built on top of Lens Protocol
 
 Memes are only the first step. This primitive can be extended to other media formats like music, video, and even sources for academic papers.
 
-This experiment by Newt is entirely open source. You can check the smart contracts at [packages/contracts](/packages/contracts)
+### Buidling
 
-You can check the frontend at [packages/frontend](/packages/frontend)
+This experiment by Newt is entirely open source. Given the modular nature of smart contracts, re:meme can be integrated, enhanced, or forked by anyone. See [contributing](CONTRIBUTING.md) for more info on joining the Newt community to build with re:meme.
+
 
 ## Local development
 
+### Front-end
+
+Frontend is build with React with a canvas editor. Main features of the frontend are creating, discovering, and sharing on-chain memes.
+
+1. Install [Node](https://nodejs.org/en/download/)
+1. Install [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/)
+
+```bash
+cd packages/frontend
+
+yarn install # Install dependencies
+yarn dev # Start development server
+```
+
+### Lens API
+
+re:meme uses the [Lens API](https://docs.lens.xyz/docs/introduction) in order to interact with the Lens Protocol. This allows the frontend to post memes as publications on Lens.
+
+An IPFS gateway is also used in order to upload and pin memes as content onto IPFS.
+
 ### Contracts
+
+re:meme uses a custom [Collect Module](https://docs.lens.xyz/docs/icollectmodulesol) on Polygon to allow for the collection and ownership of publications as memes.
 
 1. Install [Foundry](https://github.com/gakonst/foundry#installation)
 
@@ -26,17 +49,6 @@ foundry build # Build smart contracts
 foundry test # Run tests
 ```
 
-### Front-end
-
-1. Install [Node](https://nodejs.org/en/download/)
-1. Install [Yarn](https://classic.yarnpkg.com/lang/en/docs/install/)
-
-```bash
-cd packages/frontend
-
-yarn install # Install dependencies
-yarn dev # Start development server
-```
 
 ## License
 
