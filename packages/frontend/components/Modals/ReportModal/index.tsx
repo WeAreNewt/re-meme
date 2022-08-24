@@ -22,7 +22,7 @@ export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
         setShow(false)
     }
 
-    const onReport = (memeid) => {
+    const onReport = () => {
         setReported(true)
         setAlert(false)
         axios.post('/api/blacklist', {
@@ -48,7 +48,7 @@ export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
                 //onChange={}
                 onChange={(e) => setOption(e.target.value)}
                 >
-                <option selected>Select an option</option>
+                <option defaultValue="select an option">Select an option</option>
                 <option value="It's spam">It&apos;s spam</option>
                 <option value="Nudity of sexual activity">Nudity of sexual activity</option>
                 <option value="Hate speech or symbols">Hate speech or symbols</option>
