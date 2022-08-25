@@ -24,7 +24,7 @@ interface EditTextModalProps {
 export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, deleteText, text, setConfig }) => {
 
     const [ toggle, setToggle ] = useState(false)
-    const [ newFont, setNewFont ] = useState("")
+    const [ newFont, setNewFont ] = useState("Helvetica")
 
     const onDelete = () => {
         deleteText(index)
