@@ -52,7 +52,6 @@ export const useRandomMeme : UseRandomMeme = () => {
 
     const blackListed = async (id) => {
         const response = await axios.get(`/api/blacklist/`, {params: {postId: id}}).then((response) => response.data.blacklisted)
-        console.log(response)
         return response
     }
 
@@ -68,12 +67,11 @@ export const useRandomMeme : UseRandomMeme = () => {
             }
         }).then(async data =>{
             var publcId = data.data?.explorePublications.items[getRandomNumber(data.data.explorePublications.items.length)]
-     
+            
             while(await blackListed(publcId?.id)){
                 publcId = data.data?.explorePublications.items[getRandomNumber(data.data.explorePublications.items.length)]
-                console.log(blackListed(publcId?.id))
             }
-            
+
              setPublication(publcId)
             })
     }, [getPublication])

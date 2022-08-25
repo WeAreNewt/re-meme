@@ -14,10 +14,9 @@ export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
         setShow(false);
     }
 
-    const onReport = (memeid) => {
+    const onReport = () => {
         axios.post('/api/blacklist', {
-            postId: parseInt(memeid),
-            unixTime: now
+            postId: memeid
           })
           .then(function (response) {
             console.log(response);
