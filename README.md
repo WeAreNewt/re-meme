@@ -33,6 +33,8 @@ yarn dev # Start development server
 
 re:meme uses the [Lens API](https://docs.lens.xyz/docs/introduction) in order to interact with the Lens Protocol. This allows the frontend to post memes as publications on Lens.
 
+Each meme that you create is a publication on Lens, to create the actual post we call the [post create endpoint](https://docs.lens.xyz/docs/create-post-typed-data) in order to send the data in-chain.
+
 An IPFS gateway is also used in order to upload and pin memes as content onto IPFS.
 
 ### Contracts
