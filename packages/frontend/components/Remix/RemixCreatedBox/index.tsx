@@ -17,13 +17,14 @@ export const RemixCreatedBox : React.FC<RemixShareBoxProps> = ({ meme }) => {
         {
             src: "/assets/icons/share-icon.svg",
             handleClick: () => {
-
+                const url =  `https://rememe.lol/${meme.id}`
+                navigator.clipboard.writeText(url)
             }
         },
         {
             src: "/assets/icons/share-twitter.svg",
             handleClick: () => {
-
+                window.open(`https://twitter.com/intent/tweet?text=Just%20made%20a%20meme%20on%20Lens%20with%20re:meme:%20https://rememe.lol/${meme.id}`, "_blank")
             }
         },
         {
