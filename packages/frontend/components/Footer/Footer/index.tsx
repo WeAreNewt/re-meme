@@ -1,12 +1,12 @@
 export const Footer = () => {
     return (
         <div className="flex justify-center items-center ">
-            <footer className="flex justify-between bottom-10 mt-5 mb-2 bg-blue w-10/12 rounded-full items-center p-6 ">
-            <span className="text-sm text-white md:ml-10" >re:meme • Built by Newt Team @ AAVE</span>
+            <footer className="flex justify-between lg:fixed md:fixed sm:fixed bottom-8 mt-5 mb-2 bg-blue w-10/12 rounded-full items-center p-6 ">
+            <span className="text-sm text-white ml-10 sm:ml-5 md:mr-3" >re:meme • Built by Newt @ the Aave Companies</span>
             <div className="flex flex-wrap items-center text-sm">
-                <a className='no-underline text-white md:mr-16 sm:mr-10' href='https://github.com/WeAreNewt/Memixer'>GitHub</a>
-                <a className='no-underline text-white md:mr-16 sm:mr-10' href=''>Terms of use</a>
-                <a className='no-underline text-white' href=''>Privacy policy</a>
+                <a className='no-underline text-white sm:mr-10 mr-3' href='https://github.com/WeAreNewt/re-meme'>GitHub</a>
+                <a className='no-underline text-white sm:mr-10' href='terms-and-conditions'>Terms and Conditions</a>
+                <a className='no-underline text-white sm:mr-5 mr-10 ' href='privacy-policy'>Privacy Policy</a>
             </div >
             </footer>
         </div>
