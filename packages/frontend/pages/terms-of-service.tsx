@@ -1,4 +1,4 @@
-export default function TermsAndConditions() {
+export default function TermsOfService() {
   return (
     <main className="terms-style px-10 md:px-20 lg:px-[15rem] xl:px-[25rem] py-10 dark:text-white">
       <h1 className="w-full flex justify-center text-lg mb-5">
