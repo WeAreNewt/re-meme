@@ -17,13 +17,14 @@ export const RemixCreatedBox : React.FC<RemixShareBoxProps> = ({ meme }) => {
         {
             src: "/assets/icons/share-icon.svg",
             handleClick: () => {
-
+                const url =  `https://rememe.lol/${meme.id}`
+                navigator.clipboard.writeText(url)
             }
         },
         {
             src: "/assets/icons/share-twitter.svg",
             handleClick: () => {
-
+                window.open(`https://twitter.com/intent/tweet?text=Just%20made%20a%20meme%20on%20Lens%20with%20re:meme:%20https://rememe.lol/${meme.id}`, "_blank")
             }
         },
         {
@@ -45,7 +46,7 @@ export const RemixCreatedBox : React.FC<RemixShareBoxProps> = ({ meme }) => {
     return (
         <div className="main-container lg:w-2/5 bg-alert-green-30">
             <h3 className="text-subtitle-2 uppercase whitespace-pre-line text-center mb-[16px]">{"your meme is live!\nshare with your frens."}</h3>
-            <button onClick={handleShareLenster} className="btn-medium-secondary w-full mb-[16px]">Share on lenster</button>
+            <button onClick={handleShareLenster} className="btn-medium-secondary w-full mb-[16px]">Share on Lenster</button>
             <div className="flex justify-center gap-[12px] mb-[40px]">
                 {
                     socialIcons.map((si, index) => (
@@ -55,7 +56,7 @@ export const RemixCreatedBox : React.FC<RemixShareBoxProps> = ({ meme }) => {
                     ))
                 }
             </div>
-            <p className="text-description-bold mb-[8px]">Still felling funny?</p>
+            <p className="text-description-bold mb-[8px]">Still feeling funny?</p>
             <button onClick={handleRemixAgain} className="btn-small-tertiary">Remix Again</button>
         </div>
     )

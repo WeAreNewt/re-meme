@@ -11,12 +11,12 @@ export const RemixShareBox : React.FC<RemixShareBoxProps> = ({ publication }) =>
     const memeUrl = parseIpfs(publication.metadata.media[0].original.url)
 
     const handleShare = () => {
-        const url =  `https://memixer.xyz/meme/${publication.id}`
+        const url =  `https://rememe.lol/${publication.id}`
         navigator.clipboard.writeText(url)
     }
 
     const handleShareTwitter = () => {
-        window.open(`https://twitter.com/intent/tweet?text=Just%20made%20a%20meme%20on%20Lens%20with%20Memixer:%20https://memixer.xyz/meme/${publication.id}`, "_blank")
+        window.open(`https://twitter.com/intent/tweet?text=Just%20made%20a%20meme%20on%20Lens%20with%20re:meme:%20https://rememe.lol/${publication.id}`, "_blank")
     }
 
     const handleDownload = () => {
