@@ -5,7 +5,7 @@ export const Footer = () => {
             <span className="text-sm text-white ml-10 sm:ml-5 md:mr-3" >re:meme • Built by Newt @ the Aave Companies</span>
             <div className="flex flex-wrap items-center text-sm">
                 <a className='no-underline text-white sm:mr-10 mr-3' href='https://github.com/WeAreNewt/re-meme'>GitHub</a>
-                <a className='no-underline text-white sm:mr-10' href='terms-and-conditions'>Terms and Conditions</a>
+                <a className='no-underline text-white sm:mr-10' href='terms-of-service'>Terms of Service</a>
                 <a className='no-underline text-white sm:mr-5 mr-10 ' href='privacy-policy'>Privacy Policy</a>
             </div >
             </footer>
