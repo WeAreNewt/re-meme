@@ -2,10 +2,33 @@ export default function PrivacyPolicy() {
   return (
     <main className="terms-style px-10 md:px-20 lg:px-[15rem] xl:px-[25rem] py-10 dark:text-white">
       <h1 className="w-full flex justify-center text-lg mb-5">
-        <b>NEWT: AIKA - PRIVACY POLICY</b>
+        <b>RE:MEME - PRIVACY POLICY</b>
       </h1>
-      <span className="w-full flex justify-center text-lg mb-5">Effective Date: February 15, 2022</span>
+      <span className="w-full flex justify-center text-lg mb-5">Effective Date: August 26, 2022</span>
+
       <ol>
+        <p>We know that privacy policies on websites can be long (really long!), full of legal jargon, and confusing. </p>
+        <p>
+          To ensure you know what’s intended by this Privacy Policy, here’s a quick TL;DR. We also have set out the “takeaways” from each relevant provision to make it easier for you to understand. Using our Services should be simple, as should the terms around your use!
+        </p>
+        <ul className="list-disc">
+          <li>
+            This Privacy Policy provides information about how we process any of your personal information.
+          </li>
+          <li>
+            You should also read our Terms of Service.
+          </li>
+          <li>
+            For any questions, we have a “Contact Us” section at the bottom. For questions, please email privacy@avaralabsui.com.
+          </li>
+          <li>
+            Our Services let you use and interact with smart contracts on a public blockchain network. Blockchain transactions are” immutable,” meaning they cannot be changed – ever, by anyone (and not by us!), and cannot be deleted.
+          </li>
+          <li>
+            If you are not comfortable with the unchangeable, permanent, and public nature of all entries on the blockchain, you should not engage with our Site or the Services.
+          </li>
+        </ul>
+        <br></br>
         <li>
           <h2>
             <b>1.</b>
