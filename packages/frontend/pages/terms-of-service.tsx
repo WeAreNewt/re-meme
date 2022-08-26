@@ -4,7 +4,7 @@ export default function TermsAndConditions() {
       <h1 className="w-full flex justify-center text-lg mb-5">
         <b>NEWT: RE:MEME - TERMS OF SERVICE </b>
       </h1>
-      <span className="w-full flex justify-center text-lg mb-5">Effective Date: August 17, 2022</span>
+      <span className="w-full flex justify-center text-lg mb-5">Effective Date: August 26, 2022</span>
 
       <ol>
         <li>
