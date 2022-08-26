@@ -10,7 +10,7 @@ export const RemixCreatedBox : React.FC<RemixShareBoxProps> = ({ meme }) => {
     const memeSrc = parseIpfs(meme.metadata.media[0].original.url)
 
     const handleShareLenster = () => {
-
+        window.open(`https://testnet.lenster.xyz/posts/${meme.id}`, "_blank")
     }
 
     const socialIcons = [
