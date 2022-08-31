@@ -16,7 +16,7 @@ export const RemixShareBox : React.FC<RemixShareBoxProps> = ({ publication }) =>
     }
 
     const handleShareTwitter = () => {
-        window.open(`https://twitter.com/intent/tweet?text=Just%20made%20a%20meme%20on%20Lens%20with%20Memixer:%20https://memixer.xyz/meme/${publication.id}`, "_blank")
+        window.open(`https://twitter.com/intent/tweet?text=Just%20made%20a%20meme%20on%20Lens%20with%20re:meme:%20https://rememe.lol/${publication.id}`, "_blank")
     }
 
     const handleDownload = () => {

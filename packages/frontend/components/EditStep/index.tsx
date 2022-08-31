@@ -50,6 +50,7 @@ interface PublicationMetadata {
     imageMimeType: string
     media: MetadataMedia[]
     appId: string
+    canvasState: string
 
 }
 
@@ -67,20 +68,26 @@ const DEFAULT_TEXT_CONFIG = {
     shadow: new fabric.Shadow("0px 0px 6px rgb(256,256,256)")
 }
 
-const uploadImageAndMetadata = (svgImage: string) => {
+const uploadImageAndMetadata = (svgImage: string, canvasJson: string) => {
     const imageBlob = new Blob([svgImage], { type: 'image/svg+xml'})
     const imageFile = new File([imageBlob], 'meme.svg')
-    return web3StorageClient.put([imageFile], { wrapWithDirectory: false }).then((result) => {
+    const canvasJsonBlob = new Blob([canvasJson], { type: 'application/json'})
+    const canvasJsonFile = new File([canvasJsonBlob], 'canvasState.json')
+    return Promise.all([
+        web3StorageClient.put([imageFile], { wrapWithDirectory: false }),
+        web3StorageClient.put([canvasJsonFile], { wrapWithDirectory: false })
+    ]).then(([ imageResult, canvasJsonResult ]) => {
         const metadata : PublicationMetadata = {
             version: '1.0.0',
             metadata_id: uuidv4(),
-            name: 'Created by me',
+            name: 'Created in re:meme',
             attributes: [],
-            image: `ipfs://${result}`,
+            image: `ipfs://${imageResult}`,
+            canvasState: `ipfs://${canvasJsonResult}`,
             imageMimeType: 'image/svg+xml',
             media: [
                 {
-                    item: `ipfs://${result}`,
+                    item: `ipfs://${imageResult}`,
                     type: 'image/svg+xml'
                 }
             ],
@@ -114,7 +121,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     const { width } = useWindowDimensions();
     const isSmallScreen = width < 1024
     const [ canvas, setCanvas ] = useState<fabric.Canvas>();
-    const [ texts, setTexts ] = useState<fabric.Text[]>([new fabric.Text('', DEFAULT_TEXT_CONFIG)])
+    const [ texts, setTexts ] = useState<fabric.Text[]>([])
     const [ images, setImages ] = useState<fabric.Image[]>([])
     const [ drawings, setDrawings ] = useState<fabric.Path[]>([])
     const [ isDrawingMode, setIsDrawingMode ] = useState<boolean>(false)
@@ -184,7 +191,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         setLoading(true)
         const svgMeme = canvas?.toSVG(undefined)
         if(svgMeme && user) {
-            uploadImageAndMetadata(svgMeme).then(metadataResult => {
+            uploadImageAndMetadata(svgMeme, JSON.stringify(canvas)).then(metadataResult => {
                 const mutationPostParams = {
                     profileId: user.id || '',                        
                     contentURI: `ipfs://${metadataResult}`,
@@ -226,7 +233,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                                         deadline: typedData.value.deadline,
                                     },
                                 });
-                                tx.wait(1).then(() => {
+                                tx.wait(3).then(() => {
                                     setLoading(false)
                                     onUpload(tx.hash)
                                 })
@@ -257,7 +264,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                                         deadline: typedData.value.deadline,
                                     },
                                 });
-                                tx.wait(1).then(() => {
+                                tx.wait(3).then(() => {
                                     setLoading(false)
                                     onUpload(tx.hash)
                                 })
@@ -328,12 +335,19 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             canvasCreation.freeDrawingBrush.width = 2
             setCanvas(canvasCreation)
             if(publication) {
-                fabric.loadSVGFromURL(parseIpfs(publication.metadata.media[0].original.url), objects => {
+                fabric.loadSVGFromURL(parseIpfs(publication.metadata.media[0].original.url), (objects, options) => {
+                    const svgGroup = new fabric.Group(objects, options)
+                    canvasCreation.add(svgGroup)
+                    svgGroup.scaleToWidth(containerRef.current?.clientWidth || 0)
+                    // svgGroup._restoreObjectsState()
+                    svgGroup.center()
+                    svgGroup.setCoords()
+                    // canvasCreation.remove(svgGroup)
                     const newTexts : fabric.Text[] = []
                     const newImages : fabric.Image[] = []
                     const newDrawings : fabric.Path[] = []
+                    /*
                     objects.map(object => {
-                        canvasCreation.add(object)
                         if(object.type === 'text') {
                             disableMiddleResizeButtons(object)
                             newTexts.push(object as fabric.Text)
@@ -344,7 +358,9 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                         else if(object.type === 'path') {
                             newDrawings.push(object as fabric.Path)
                         }
+                        canvasCreation.add(object)
                     })
+                    */
                     setTexts(newTexts)
                     setImages(newImages)
                     setDrawings(newDrawings)
@@ -367,14 +383,18 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                         }
                         setImages(images => images.concat([fabricImage]))
                         canvasCreation.add(fabricImage)
-                        disableMiddleResizeButtons(texts[0])
-                        canvasCreation.add(texts[0])
+                        const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
+                        disableMiddleResizeButtons(newText)
+                        canvasCreation.add(newText)
+                        setTexts([newText])
                     }
                 }
             }
             else {
-                canvasCreation.add(texts[0])
-                disableMiddleResizeButtons(texts[0])
+                const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
+                canvasCreation.add(newText)
+                disableMiddleResizeButtons(newText)
+                setTexts([newText])
             }
 
         }

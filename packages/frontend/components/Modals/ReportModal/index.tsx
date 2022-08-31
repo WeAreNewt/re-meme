@@ -1,5 +1,7 @@
 
 import axios from 'axios';
+import { useState } from 'react';
+
 const now = new Date().getTime();
 
 type ReportModalProps = {
@@ -10,14 +12,21 @@ type ReportModalProps = {
 
 export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
 
+    const [reported, setReported] = useState(false);
+    const [option, setOption] = useState<string>();
+    const [info, setInfo] = useState<string>();
+    const [alert, setAlert] = useState<boolean>(false);
+
     const handleCancel = () => {
-        setShow(false);
+        setReported(false)
+        setShow(false)
     }
 
-    const onReport = (memeid) => {
+    const onReport = () => {
+        setReported(true)
+        setAlert(false)
         axios.post('/api/blacklist', {
-            postId: parseInt(memeid),
-            unixTime: now
+            postId: memeid
           })
           .then(function (response) {
             console.log(response);
@@ -37,8 +46,9 @@ export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
                 <select
                 className="border-2 border-black border-solid rounded-xl w-full p-2 mb-2 mt-3 h-12"
                 //onChange={}
+                onChange={(e) => setOption(e.target.value)}
                 >
-                <option selected>Select an option</option>
+                <option defaultValue="select an option">Select an option</option>
                 <option value="It's spam">It&apos;s spam</option>
                 <option value="Nudity of sexual activity">Nudity of sexual activity</option>
                 <option value="Hate speech or symbols">Hate speech or symbols</option>
@@ -56,13 +66,21 @@ export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
                 <h6 className="text-description-regular mb-0">Your report is anonymous, except if you&apos;re reporting on intellectual property infringement.</h6>
             </div>
             <div className="mb-6 mt-4">
-                <label className="mb-2 text-body-2-medium">Please, provide more information</label>
-                <input type="text" placeholder="Type here" id="large-input" className="block p-4 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></input>
+                <label className="mb-2 text-xl">Please, provide more information</label>
+                <input onChange={(e) => setInfo(e.target.value)} type="text" placeholder="Type here" id="large-input" className="block p-4 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></input>
             </div>
 
-                <div className="flex justify-end  mt-10 gap-2">
-                    <button onClick={handleCancel} className={"btn-medium-secondary"}> Cancel</button>
-                    <button onClick={onReport} className={"btn-medium"}>Report</button>
+            <div className="mb-6 mt-4">
+                { alert ? <label className="mb-2 text-sm">Please provide more information before submitting</label> : ''}
+            </div>
+
+            <div className="mb-6 mt-4">
+                { reported ? <label className="mb-2 text-xl">Content has been reported. Thank you.</label> : ''}
+            </div>
+
+                <div className="flex justify-end  mt-10">
+                    {reported ? '' : <button onClick={handleCancel} className={"flex items-center bg-white rounded-full p-3 border-black border-2 border-solid min-w-fit max-h-6 comic-border-mini mr-4"}>Cancel</button>}
+                    <button disabled={!option} onClick={!info ? (e) => setAlert(true) : reported ? handleCancel : onReport} className={"flex items-center bg-purple rounded-full p-3 border-black border-2 border-solid min-w-fit max-h-6 comic-border-mini"}>{reported ? 'Close' : 'Report'}</button>
                 </div>
             </div>
         </div>
