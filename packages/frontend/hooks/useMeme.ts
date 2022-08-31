@@ -1,7 +1,7 @@
 import { useLazyQuery, useQuery } from "@apollo/client";
 import { useEffect, useMemo, useState } from "react";
-import { ExplorePublicationsData, ExplorePublicationsParams, GetPublicationData, GetPublicationParams, GetPublicationsData, PublicationData } from "../models/Publication/publication.model";
-import { EXPLORE_PUBLICATIONS, GET_PUBLICATION } from "../queries/publication";
+import { ExplorePublicationsData, ExplorePublicationsParams, GetPublicationData, GetPublicationParams, GetPublicationsData, HasTxBeenIndexedData, HasTxBeenIndexedParams, PublicationData } from "../models/Publication/publication.model";
+import { EXPLORE_PUBLICATIONS, GET_PUBLICATION, HAS_TX_BEEN_INDEXED } from "../queries/publication";
 import axios from 'axios';
 import { resolve } from "path";
 
@@ -22,8 +22,6 @@ export const useMemeFromPublicationId : UseMemeFromPublicationId = (publicationI
             }
         }
     })
-
-
 
     useEffect(() => {
         if(!isLoading) {
@@ -67,11 +65,12 @@ export const useRandomMeme : UseRandomMeme = () => {
             }
         }).then(async data =>{
             var publcId = data.data?.explorePublications.items[getRandomNumber(data.data.explorePublications.items.length)]
-            
-            while(await blackListed(publcId?.id)){
-                publcId = data.data?.explorePublications.items[getRandomNumber(data.data.explorePublications.items.length)]
-            }
 
+            if(!process.env.NEXT_PUBLIC_BLACKLIST_OFF) {
+                while(await blackListed(publcId?.id)){
+                    publcId = data.data?.explorePublications.items[getRandomNumber(data.data.explorePublications.items.length)]
+                }
+            }
              setPublication(publcId)
             })
     }, [getPublication])
@@ -79,16 +78,60 @@ export const useRandomMeme : UseRandomMeme = () => {
     return { publication }
 }
 
-type UseMemeFromTxHash = (publicationId?: string) => UseMemeReturn
+interface UseMemeFromTxHashReturn {
+    publication?: PublicationData
+    loading: boolean
+    error: boolean
+}
+
+type UseMemeFromTxHash = (txHash?: string) => UseMemeFromTxHashReturn
 
 export const useMemeFromTxHash : UseMemeFromTxHash = (txHash) => {
 
-    const { data } = useQuery<GetPublicationData, GetPublicationParams>(GET_PUBLICATION, {
+    const [ publication, setPublication ] = useState<PublicationData>()
+    const [ loading, setLoading ] = useState<boolean>(false)
+    const [ error, setError ] = useState<boolean>(false);
+
+    const [ getPublication ] = useLazyQuery<GetPublicationData, GetPublicationParams>(GET_PUBLICATION, {
         variables: {
             request: {
                 txHash
             }
         }
     })
-    return { publication: data?.publication }
+
+    const [ _, { data: hasTxHashBeenIndexedData, error: hasTxHashBeenIndexedError, startPolling, stopPolling } ] = useLazyQuery<HasTxBeenIndexedData, HasTxBeenIndexedParams>(HAS_TX_BEEN_INDEXED, {
+        variables: {
+            request: {
+                txHash
+            }
+        },
+        fetchPolicy: 'network-only'
+    })
+
+    useEffect(() => {
+        if(txHash) {
+            setLoading(true)
+            startPolling(5000)
+        }
+    }, [txHash, startPolling])
+
+    useEffect(() => {
+        if(hasTxHashBeenIndexedError) {
+            setLoading(false)
+            stopPolling()
+        }
+    }, [ hasTxHashBeenIndexedError, stopPolling])
+
+    useEffect(() => {
+        if(hasTxHashBeenIndexedData?.hasTxHashBeenIndexed.indexed) {
+            stopPolling()
+            getPublication().then((publicationData) => {
+                setPublication(publicationData.data?.publication)
+                setLoading(false)
+            })
+        }
+    }, [ hasTxHashBeenIndexedData, stopPolling, getPublication ])
+
+    return { publication, loading, error }
 }
