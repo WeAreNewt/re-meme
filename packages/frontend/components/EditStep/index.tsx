@@ -507,7 +507,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                     )
                 }
                 <div className='main-container pb-[64px] relative w-full lg:w-2/5'>
-                    <p className="text-subtitle-2 mb-[16px]">MEMIXER CONTROLS</p>
+                    <p className="text-subtitle-2 mb-[16px]">RE:MEME CONTROLS</p>
                     {
                         texts.map((text, index) =>
                             <div key={`memixer_text_${index}`} className="border-2 border-black border-solid rounded-xl mb-[16px] flex p-2 gap-2 w-full">
