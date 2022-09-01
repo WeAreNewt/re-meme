@@ -59,12 +59,12 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
                     </div>
                     : null
                 }   
-                <div className="relative">
+                <div className="relative w-full">
                     <img src={memeSrc} onMouseOver={onImageHover} onMouseOut={onImageHoverOut} className="w-full rounded-xl mb-[16px]" />
 
-                    <button onClick={() => setShowConfirm(true)} onMouseOver={onImageHover} className={`flex items-center ${imageHover ? "!opacity-100" : "opacity-0" } absolute top-3 right-3 bg-white rounded-full p-3 border-black border-2 border-solid min-w-fit max-h-6 comic-border-mini`}>
-                        <Image src="/assets/icons/report.svg" width={"30"} height={"20"} className="mr-2" />
-                        Report
+                    <button onClick={() => setShowConfirm(true)} onMouseOver={onImageHover} className={`btn-with-icon-small-secondary ${imageHover ? "!opacity-100" : "opacity-0" } absolute top-3 right-3`}>
+                        <img src="/assets/icons/report.svg" className="icon-sm" />
+                        <span>Report</span>
                     </button>
                 </div>
                 <div className="flex w-full justify-between items-center">

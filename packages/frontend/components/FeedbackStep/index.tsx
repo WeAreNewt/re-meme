@@ -1,25 +1,17 @@
-import { useMemeFromTxHash } from "../../hooks/useMeme";
+import { PublicationData } from "../../models/Publication/publication.model";
 import { MemeDetail } from "../Meme/MemeDetail";
 import { RemixCreatedBox } from "../Remix/RemixCreatedBox";
 
 interface FeedbackStepProps {
-    txHash: string
+    publication: PublicationData
 }
 
-const FeedbackStep : React.FC<FeedbackStepProps> = ({ txHash }) => {
-
-    const { publication } = useMemeFromTxHash(txHash)
+const FeedbackStep : React.FC<FeedbackStepProps> = ({ publication }) => {
 
     return (
         <div className="flex flex-col lg:flex-row gap-10 items-start">
-            {
-                publication && (
-                    <>
-                        <MemeDetail meme={publication} />
-                        <RemixCreatedBox meme={publication} />
-                    </>
-                )
-            }
+            <MemeDetail meme={publication} />
+            <RemixCreatedBox meme={publication} />
         </div>
     );
 }

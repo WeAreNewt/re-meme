@@ -139,6 +139,21 @@
             comic-border-mini
             hover:comic-border
             active:shadow-[inset_4px_5px_0px_#101112]
+            transform
+            hover:translate-x-[-2px]
+            hover:translate-y-[-2px]
+            active:hover:transform-none
+            transition-all
+            active:disabled:hover:transform-none
+            disabled:transform-none
+    }
+
+    .base-btn-with-icon-small {
+        @apply
+            base-btn-small
+            pl-[16px]
+            pr-[20px]
+            gap-[8px]
     }
 
     .base-btn-medium {
@@ -150,6 +165,12 @@
             comic-border-mini
             hover:comic-border
             active:shadow-[inset_4px_5px_0px_#101112]
+            transform
+            hover:translate-x-[-2px]
+            hover:translate-y-[-2px]
+            active:hover:transform-none
+            transition-all
+            disabled:transform-none
     }
 
     .base-btn-with-icon-medium {
@@ -169,6 +190,12 @@
             comic-border-lg
             hover:comic-border-xl
             active:shadow-[inset_8px_8px_0px_#101112]
+            transform
+            hover:translate-x-[-1px]
+            hover:translate-y-[-1px]
+            active:hover:transform-none
+            transition-all
+            disabled:transform-none
     }
 
     .base-icon-btn {
@@ -219,6 +246,12 @@
             comic-border-mini
             hover:comic-border
             active:shadow-[inset_4px_5px_0px_#101112]
+            transform
+            hover:translate-x-[-2px]
+            hover:translate-y-[-2px]
+            active:hover:transform-none
+            transition-all
+            disabled:transform-none
     }
 
     .base-icon-btn-large {
@@ -228,6 +261,12 @@
             comic-border-mini
             hover:comic-border
             active:shadow-[inset_4px_5px_0px_#101112]
+            transform
+            hover:translate-x-[-2px]
+            hover:translate-y-[-2px]
+            active:hover:transform-none
+            transition-all
+            disabled:transform-none
     }
 
 }
@@ -244,6 +283,12 @@
         @apply
             base-btn-secondary
             base-btn-small
+    }
+
+    .btn-with-icon-small-secondary {
+        @apply
+            base-btn-secondary
+            base-btn-with-icon-small
     }
 
     .btn-small-tertiary {

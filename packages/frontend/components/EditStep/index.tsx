@@ -18,6 +18,7 @@ import { FeedbackModal } from "../Modals/Feedback";
 import omitDeep from 'omit-deep'
 import { parseIpfs } from "../../utils/link";
 import UploadMemeError, { UploadError } from "../Modals/UploadMemeError";
+import { useMemeFromTxHash } from "../../hooks/useMeme";
 
 interface PathEvent {
     path?: fabric.Path
@@ -50,13 +51,12 @@ interface PublicationMetadata {
     imageMimeType: string
     media: MetadataMedia[]
     appId: string
-
 }
 
 interface EditStepProps {
     publication?: PublicationData
     initialImage?: string,
-    onUpload: (svg: string) => void
+    onUpload: (newPublication: PublicationData) => void
 }
 
 const DEFAULT_TEXT_CONFIG = {
@@ -67,20 +67,22 @@ const DEFAULT_TEXT_CONFIG = {
     shadow: new fabric.Shadow("0px 0px 6px rgb(256,256,256)")
 }
 
-const uploadImageAndMetadata = (svgImage: string) => {
+const uploadImageAndMetadata = (svgImage: string, canvasJson: string) => {
     const imageBlob = new Blob([svgImage], { type: 'image/svg+xml'})
     const imageFile = new File([imageBlob], 'meme.svg')
-    return web3StorageClient.put([imageFile], { wrapWithDirectory: false }).then((result) => {
+    const canvasJsonBlob = new Blob([canvasJson], { type: 'application/json'})
+    const canvasJsonFile = new File([canvasJsonBlob], 'canvas_state.json')
+    return web3StorageClient.put([imageFile, canvasJsonFile]).then(cid => {
         const metadata : PublicationMetadata = {
             version: '1.0.0',
             metadata_id: uuidv4(),
-            name: 'Created by me',
+            name: 'Created in re:meme',
             attributes: [],
-            image: `ipfs://${result}`,
+            image: `ipfs://${cid}/meme.svg`,
             imageMimeType: 'image/svg+xml',
             media: [
                 {
-                    item: `ipfs://${result}`,
+                    item: `ipfs://${cid}/meme.svg`,
                     type: 'image/svg+xml'
                 }
             ],
@@ -110,11 +112,12 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     const containerRef = useRef<HTMLDivElement>(null)
     const [ uploadError, setUploadError ] = useState<UploadError | undefined>()
     const [ showConfirm, setShowConfirm ] = useState(false)
+    const [ txHash, setTxHash ]= useState<string>()
     const [ loading, setLoading ] = useState(false)
     const { width } = useWindowDimensions();
     const isSmallScreen = width < 1024
     const [ canvas, setCanvas ] = useState<fabric.Canvas>();
-    const [ texts, setTexts ] = useState<fabric.Text[]>([new fabric.Text('', DEFAULT_TEXT_CONFIG)])
+    const [ texts, setTexts ] = useState<fabric.Text[]>([])
     const [ images, setImages ] = useState<fabric.Image[]>([])
     const [ drawings, setDrawings ] = useState<fabric.Path[]>([])
     const [ isDrawingMode, setIsDrawingMode ] = useState<boolean>(false)
@@ -135,6 +138,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     const [ postTypedData ] = useMutation<CreatePostTypedData, CreatePostTypedDataParams>(CREATE_POST_TYPED_DATA)
     const [ commentTypedData ] = useMutation<CreateCommentTypedData, CreateCommentTypedDataParams>(CREATE_COMMENT_TYPED_DATA)
+    const { publication: newPublication, loading: newPublicationLoading, error: newPublicationError } = useMemeFromTxHash(txHash)
 
     const handleMemeText = (e, index) => {
         if(e.target.value.length > 100) return
@@ -164,6 +168,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             const image = images[index]
             canvas.remove(image)
             setImages(images => images.slice(0, index).concat(images.slice(index+1)) )
+            canvas.renderAll()
         }
     }
 
@@ -184,7 +189,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         setLoading(true)
         const svgMeme = canvas?.toSVG(undefined)
         if(svgMeme && user) {
-            uploadImageAndMetadata(svgMeme).then(metadataResult => {
+            uploadImageAndMetadata(svgMeme, JSON.stringify(canvas?.toJSON(['width', 'height']))).then(metadataResult => {
                 const mutationPostParams = {
                     profileId: user.id || '',                        
                     contentURI: `ipfs://${metadataResult}`,
@@ -227,8 +232,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                                     },
                                 });
                                 tx.wait(1).then(() => {
-                                    setLoading(false)
-                                    onUpload(tx.hash)
+                                    setTxHash(tx.hash)
                                 })
                             })
                         }
@@ -258,8 +262,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                                     },
                                 });
                                 tx.wait(1).then(() => {
-                                    setLoading(false)
-                                    onUpload(tx.hash)
+                                    setTxHash(tx.hash)
                                 })
                             })
                         }
@@ -323,33 +326,68 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     useLayoutEffect(() => {
         if(containerRef.current) {
-            const canvasCreation = new fabric.Canvas('meme-editor', { width: containerRef.current.clientWidth, height: containerRef.current.clientWidth})
+            console.log(containerRef)
+            console.log(containerRef.current.clientWidth)
+            const canvasCreation = new fabric.Canvas('meme-editor')
             canvasCreation.freeDrawingBrush.color = 'black'
             canvasCreation.freeDrawingBrush.width = 2
-            setCanvas(canvasCreation)
             if(publication) {
-                fabric.loadSVGFromURL(parseIpfs(publication.metadata.media[0].original.url), objects => {
-                    const newTexts : fabric.Text[] = []
-                    const newImages : fabric.Image[] = []
-                    const newDrawings : fabric.Path[] = []
-                    objects.map(object => {
-                        canvasCreation.add(object)
-                        if(object.type === 'text') {
-                            disableMiddleResizeButtons(object)
-                            newTexts.push(object as fabric.Text)
-                        }
-                        else if(object.type === 'image') {
-                            newImages.push(object as fabric.Image)
-                        }
-                        else if(object.type === 'path') {
-                            newDrawings.push(object as fabric.Path)
-                        }
+                const newTexts : fabric.Text[] = []
+                const newImages : fabric.Image[] = []
+                const newDrawings : fabric.Path[] = []
+                const ipfsLink = parseIpfs(publication.metadata.media[0].original.url)
+                fetch(ipfsLink.replace('/meme.svg', '/canvas_state.json'))
+                    .then(response => response.json()).then(canvasState => {
+                        canvasCreation.loadFromJSON(canvasState, () => {
+                            const canvasNewWidth = containerRef.current?.clientWidth || 0
+                            const canvasNewHeight = containerRef.current?.clientHeight || 0
+                            const scaleX = canvasNewWidth / canvasCreation.getWidth()
+                            const scaleY = canvasNewHeight / canvasCreation.getHeight()
+                            canvasCreation.getObjects().map(object => {
+                                object.scaleX = (object.scaleX || 0) * scaleX
+                                object.scaleY = (object.scaleY || 0) * scaleY
+                                object.left = (object.left || 0) * scaleX
+                                object.top = (object.top || 0) * scaleY
+                                object.setCoords()
+                                if(object.type === 'text') {
+                                    disableMiddleResizeButtons(object)
+                                    newTexts.push(object as fabric.Text)
+                                }
+                                else if(object.type === 'image') {
+                                    newImages.push(object as fabric.Image)
+                                }
+                                else if(object.type === 'path') {
+                                    newDrawings.push(object as fabric.Path)
+                                }
+                                canvasCreation.add(object)
+                                setTexts(newTexts)
+                                setImages(newImages)
+                                setDrawings(newDrawings)
+                            })
+                        })
+                    }).catch(() => {
+                        fabric.loadSVGFromURL(ipfsLink, objects => {
+                            objects.map(object => {
+                                if(object.type === 'text') {
+                                    disableMiddleResizeButtons(object)
+                                    newTexts.push(object as fabric.Text)
+                                }
+                                else if(object.type === 'image') {
+                                    newImages.push(object as fabric.Image)
+                                }
+                                else if(object.type === 'path') {
+                                    newDrawings.push(object as fabric.Path)
+                                }
+                                canvasCreation.add(object)
+                            })
+                            setTexts(newTexts)
+                            setImages(newImages)
+                            setDrawings(newDrawings)
+                            canvasCreation.renderAll()
+                        })
+                    }).finally(() => {
+                        canvasCreation.renderAll()
                     })
-                    setTexts(newTexts)
-                    setImages(newImages)
-                    setDrawings(newDrawings)
-                    canvasCreation.renderAll()
-                })
             }
             else if(initialImage) {
                 const img = new Image()
@@ -367,15 +405,20 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                         }
                         setImages(images => images.concat([fabricImage]))
                         canvasCreation.add(fabricImage)
-                        disableMiddleResizeButtons(texts[0])
-                        canvasCreation.add(texts[0])
+                        const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
+                        disableMiddleResizeButtons(newText)
+                        canvasCreation.add(newText)
+                        setTexts([newText])
                     }
                 }
             }
             else {
-                canvasCreation.add(texts[0])
-                disableMiddleResizeButtons(texts[0])
+                const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
+                canvasCreation.add(newText)
+                disableMiddleResizeButtons(newText)
+                setTexts([newText])
             }
+            setCanvas(canvasCreation)
 
         }
     }, [initialImage, publication])
@@ -397,6 +440,19 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             })
         }
     }, [canvas])
+
+    useEffect(() => {
+        if(newPublication) {
+            onUpload(newPublication)
+            setLoading(false)
+        }
+    }, [newPublication, onUpload])
+
+    useEffect(() => {
+        if(newPublicationError) {
+            setUploadError(UploadError.TX_ERROR)
+        }
+    }, [newPublicationError])
 
     const onAddText = () => {
         const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
@@ -430,10 +486,10 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             <ConfirmModal show={showConfirm} setShow={setShowConfirm} onConfirm={handleConfirm} />
             <FeedbackModal show={loading} />
             <div className="flex flex-col lg:flex-row gap-10 items-start">
-                <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative w-full lg:w-3/5'>
+                <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative w-full lg:w-3/5 aspect-square'>
                     <div
-                        className="relative overflow-hidden"
-                        ref={containerRef}
+                        className="overflow-hidden aspect-square"
+                        ref={containerRef }
                     >
                         <canvas id="meme-editor" />
                     </div>

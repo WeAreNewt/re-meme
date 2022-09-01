@@ -167,3 +167,16 @@ export interface ExplorePublicationsData {
         }
     }
 }
+
+
+export interface HasTxBeenIndexedParams {
+    request: {
+        txHash?: string
+    }
+}
+
+export interface HasTxBeenIndexedData {
+    hasTxHashBeenIndexed: {
+        indexed: boolean
+    }
+}

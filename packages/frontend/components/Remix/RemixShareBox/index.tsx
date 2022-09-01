@@ -1,9 +1,9 @@
-import Image from "next/image"
+import { selectedEnvironment } from "../../../config/environments";
 import { PublicationData } from "../../../models/Publication/publication.model";
 import { parseIpfs } from "../../../utils/link";
 
 type RemixShareBoxProps = {
-    publication: PublicationData; //Meme
+    publication: PublicationData
 }
 
 export const RemixShareBox : React.FC<RemixShareBoxProps> = ({ publication }) => {
@@ -11,7 +11,7 @@ export const RemixShareBox : React.FC<RemixShareBoxProps> = ({ publication }) =>
     const memeUrl = parseIpfs(publication.metadata.media[0].original.url)
 
     const handleShare = () => {
-        const url =  `https://rememe.lol/${publication.id}`
+        const url =  `${selectedEnvironment.appUrl}/meme/${publication.id}`
         navigator.clipboard.writeText(url)
     }
 
@@ -25,7 +25,7 @@ export const RemixShareBox : React.FC<RemixShareBoxProps> = ({ publication }) =>
 
     return (
         <div className="main-container">
-            <a target="_blank" rel="noreferrer" href={`https://testnet.lenster.xyz/posts/${publication.id}`} className="btn-medium-secondary no-underline hover:text-neutral-black w-full mb-[16px]">Collect/comment on Lenster</a>
+            <a target="_blank" rel="noreferrer" href={`${selectedEnvironment.lensterUrl}/posts/${publication.id}`} className="btn-medium-secondary no-underline hover:text-neutral-black w-full mb-[16px]">Collect/comment on Lenster</a>
             <div className="flex justify-center gap-[12px]">
                 <div key={"sicon-share"} onClick={handleShare} className="icon-btn-medium-secondary">
                     <img className="icon-md" src="/assets/icons/share-icon.svg" alt="share" />

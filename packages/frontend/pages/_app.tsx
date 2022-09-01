@@ -12,7 +12,7 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const { chains, provider } = configureChains(
-  [chain.polygon, chain.polygonMumbai],
+  [selectedEnvironment.chain],
   [
     apiProvider.fallback()
   ]
@@ -46,8 +46,7 @@ import axios from 'axios';
 import { RefreshData } from '../models/Auth/auth.model';
 import { setTokens } from '../store/reducers/auth.reducer';
 import PageLayout from '../components/Layout';
-
-const API_URL = 'https://api-mumbai.lens.dev'
+import { selectedEnvironment } from '../config/environments';
 
 interface RefreshJwt {
   id: string
@@ -57,7 +56,7 @@ interface RefreshJwt {
 }
 
 const httpLink = createHttpLink({
-    uri: API_URL
+    uri: selectedEnvironment.lensApiUrl
 })
 
 const authLink = setContext(() => {
@@ -66,7 +65,7 @@ const authLink = setContext(() => {
   if(!accessToken || !refreshToken) return Promise.resolve({})
   const decoded = jwtDecode<RefreshJwt>(accessToken)
   if(Date.now() >= (decoded.exp - 10) * 1000) {
-    return axios.post<RefreshData>(API_URL, {
+    return axios.post<RefreshData>(selectedEnvironment.lensApiUrl, {
         query: REFRESH_AUTHENTICATION,
         variables: {
           request: { refreshToken }
