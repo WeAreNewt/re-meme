@@ -62,8 +62,8 @@ export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
                 <option value="Something else">Something else</option>
 
             </select>
-            <div className="mt-3 rounded-lg p-3 bg-[#FFE3B0]">
-                <h6 className="text-description-regular mb-0">Your report is anonymous, except if you&apos;re reporting on intellectual property infringement.</h6>
+            <div className="mt-3">
+                <h6 className="whitespace-normal bg-[#FFE3B0] rounded-lg p-3">Your report is anonymous, except if you&apos;re reporting on intellectual property infringement. Please be sure to include all information required by the DMCA in your takedown request and send to IP@aave.com. See Terms of Service for additional details.</h6>
             </div>
             <div className="mb-6 mt-4">
                 <label className="mb-2 text-xl">Please, provide more information</label>
