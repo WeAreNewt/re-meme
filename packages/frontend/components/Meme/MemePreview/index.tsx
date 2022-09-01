@@ -12,7 +12,7 @@ export const MemePreview = ({ meme }: MemePreviewProps) => {
 
     return (
         <div className='border-black border-solir border-4 rounded-4xl bg-white p-6 max-w-max'>
-            <Link href={`/meme/${meme.id}`}>
+            <Link href={`meme/${meme.id}`}>
                 <Image src={meme.src} className="h-auto cursor-pointer rounded-xl" width="275" height="200" />
             </Link>
             <div className="flex justify-between items-center mt-2">
