@@ -68,7 +68,7 @@ export const MemeEditControls = ({onRemixClicked}: MemeEditControlsProps) => {
 
     return (
         <div className="comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative flex flex-col items-center w-full">
-            <p className="text-lg font-bold">MEMIXER CONTROLS</p>
+            <p className="text-lg font-bold">RE:MEME CONTROLS</p>
             {
                 texts.map((text, index) =>
                     <input
