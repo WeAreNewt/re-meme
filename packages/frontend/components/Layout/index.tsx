@@ -8,11 +8,11 @@ type PageLayoutProps = {
 
 const PageLayout = ({ children }: PageLayoutProps) => {
     return (
-        <>
+        <div className="min-h-screen flex flex-col">
             <Header />
-            <main>{children}</main>
+            <main className="mb-[120px]">{children}</main>
             <Footer />
-        </>
+        </div>
     )
 }
 

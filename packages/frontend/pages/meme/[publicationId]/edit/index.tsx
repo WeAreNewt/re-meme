@@ -7,10 +7,11 @@ import FeedbackStep from "../../../../components/FeedbackStep";
 import { ConnectionBox } from "../../../../components/Layout/ConnectionBox";
 import { useMemeFromPublicationId } from "../../../../hooks/useMeme";
 import useWindowDimensions from "../../../../hooks/window-dimensions.hook";
+import { PublicationData } from "../../../../models/Publication/publication.model";
 import { User } from "../../../../models/User/user.model";
 
 const Edit = () => {
-    const [txHash, setTxHash] = useState<string>()
+    const [ newPublication, setNewPublication ] = useState<PublicationData>();
     const router = useRouter()
     const { publicationId } = router.query
     const { width } = useWindowDimensions();
@@ -18,8 +19,8 @@ const Edit = () => {
     const [ step, setStep ] = useState(0)
     const { publication } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
 
-    const onUpload = (txHash) => {
-        setTxHash(txHash)
+    const onUpload = (newPublication: PublicationData) => {
+        setNewPublication(newPublication)
         setStep(1)
       }
 
@@ -37,7 +38,7 @@ const Edit = () => {
                 }
                 <Row>
                     { publication && step == 0 && <EditStep publication={publication} onUpload={onUpload} /> }
-                    { step === 1 && txHash && <FeedbackStep txHash={txHash} />}
+                    { step === 1 && newPublication && <FeedbackStep publication={newPublication} />}
                 </Row>
                 </article>
             </Col>

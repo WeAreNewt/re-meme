@@ -40,9 +40,9 @@ export const ReportModal = ({ show, setShow, memeid } : ReportModalProps) => {
     return (
         <div onMouseDown={() => setShow(false)} className={`${show ? "block" : "hidden"} fixed h-screen w-screen z-20 flex items-center justify-center create-btn-gradient-transparent px-4 lg:px-0 top-0 left-0`}>
             <div onMouseDown={(e) => e.stopPropagation()} className="comic-border rounded-4xl bg-white n:p-4 lg:p-10">
-                <h3 className="mb-6">REPORT MEME</h3> 
+                <h3 className="text-subtitle-2">REPORT MEME</h3> 
                 
-                <h5>Why are you reporting this meme?</h5>
+                <h5 className="text-body-2-medium">Why are you reporting this meme?</h5>
                 <select
                 className="border-2 border-black border-solid rounded-xl w-full p-2 mb-2 mt-3 h-12"
                 //onChange={}

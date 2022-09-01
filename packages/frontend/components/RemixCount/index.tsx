@@ -10,19 +10,12 @@ export const RemixCount = ({count, handleClick}: RemixCountProps) => {
     const { height, width } = useWindowDimensions();
 
     return (
-        <button disabled={count === 0} onClick={handleClick} className={"btn-with-icon-medium-secondary"}>
+        <button disabled={count === 0} onClick={handleClick} className={"btn-with-icon-small-secondary"}>
+            <img src="/assets/icons/remix.svg" className="icon-sm" />
             {
-                width > 850 ? (
-                    <div className="flex items-center space-x-2">
-                        <Image src="/assets/icons/remix.svg" width={"20"} height={"20"} />
-                        <span>{`${count} remixes`}</span>
-                    </div>
-                )
+                width > 850 ? <span>{`${count} remixes`}</span>
                 :
-                <div className="flex items-center space-x-2">
-                    <Image src="/assets/icons/remix.svg" width={"20"} height={"20"} />
-                    <span>{count}</span>
-                </div>
+                <span>{count}</span>
             }
         </button>
     )
