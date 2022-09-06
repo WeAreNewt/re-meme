@@ -8,26 +8,11 @@ import {
   configureChains,
   getDefaultWallets,
   RainbowKitProvider,
+  DisclaimerComponent,
 } from '@rainbow-me/rainbowkit';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const { chains, provider } = configureChains(
-  [selectedEnvironment.chain],
-  [
-    apiProvider.fallback()
-  ]
-);
 
-const { connectors } = getDefaultWallets({
-  appName: 'Memixer',
-  chains
-});
-
-const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider
-})
 
 import {
   ApolloClient,
@@ -47,6 +32,33 @@ import { RefreshData } from '../models/Auth/auth.model';
 import { setTokens } from '../store/reducers/auth.reducer';
 import PageLayout from '../components/Layout';
 import { selectedEnvironment } from '../config/environments';
+
+
+const { chains, provider } = configureChains(
+  [selectedEnvironment.chain],
+  [
+    apiProvider.fallback()
+  ]
+);
+
+const { connectors } = getDefaultWallets({
+  appName: 'Memixer',
+  chains
+});
+
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider
+})
+
+const Disclaimer: DisclaimerComponent = ({ Text, Link }) => (
+  <Text>
+    By connecting your wallet, you agree to the{' '}
+    <Link href="https://rememe.lol/terms-of-service">Terms of Service</Link> and
+    acknowledge you have read and understand the app{' '}
+    <Link href="https://rememe.lol/privacy-policy">Privacy Policy</Link>
+  </Text>);
 
 interface RefreshJwt {
   id: string
@@ -99,7 +111,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
       <WagmiProvider client={wagmiClient}>
-        <RainbowKitProvider coolMode chains={chains}>
+        <RainbowKitProvider coolMode chains={chains} appInfo={{
+        appName: 're:meme',
+        disclaimer: Disclaimer,
+      }}>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
               <PageLayout>
