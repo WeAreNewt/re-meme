@@ -4,7 +4,7 @@ export default function TermsOfService() {
       <h1 className="w-full flex justify-center text-lg mb-5">
         <b>NEWT: RE:MEME - TERMS OF SERVICE </b>
       </h1>
-      <span className="w-full flex justify-center text-lg mb-5">Effective Date: August 26, 2022</span>
+      <span className="w-full flex justify-center text-lg mb-5">Effective Date: September 7, 2022</span>
 
       <ol>
         <li>
@@ -15,13 +15,13 @@ export default function TermsOfService() {
             </u>
           </h2>
           <p>
-            The website, “rememe.lol,” (the “Site”) is operated by Avara UI Labs Ltd. (“Company,” “we,” “our,” or “us”). We offer the Site, including all information, tools and services available from the Site (collectively, the “Services”) to you to allow you to interact with re:meme - a web application that allows users to edit content and mint images, conditioned upon your acceptance of all terms, conditions, policies, and notices stated here.
+          The website, “rememe.lol” (the “Site”), is operated by Avara UI Labs Ltd. (“Company,” “we,” “our,” or “us”). We offer the Site, including all information, tools, and services available from the Site (collectively, the “Services”) to allow you to interact with re:meme - a web application that allows users to edit content and mint images, conditioned upon your acceptance of all terms, conditions, policies, and notices set in this Agreement.
           </p>
           <p>
             We know that terms of use can be long (really long!), full of legal jargon and confusing.
           </p>
           <p>
-            To ensure you know what&apos;s intended by this Agreement, here&apos;s a quick TL;DR.  We also have set out the “takeaways” from each relevant provision to make it easier for you to understand. Using our Services should be simple, as should the terms around your use!
+            To ensure you know what&apos;s intended by this Agreement, here&apos;s a quick TL;DR. We also have set out the key “takeaways” from each relevant provision to make it easier for you to understand. Using our Services should be simple, as should the terms around your use! You should read the entirety of these Terms before using the Services.
           </p>
           <ul className="list-disc">
             <li>
@@ -40,11 +40,11 @@ export default function TermsOfService() {
               We might change this Site and our Services from time to time. When we do, we will update these Terms.
             </li>
             <li>
-              If you have a problem or complaint, you and we agree to first engage in good faith negotiations to try to resolve it. You and we agree that if we can’t find an answer through these negotiations, we will resort to the binding arbitration proceedings as outlined in the Terms of Service.
+              If you have a problem or complaint, you and we agree to first engage in good faith negotiations to try to resolve it. You and we agree that if we can&apos;t find an answer through these negotiations, we will resort to the binding arbitration proceedings as outlined in the Terms of Service.
             </li>
             <br></br>
             <p>
-              Please note, that these TL;DRs do not form a part of these Terms of Service. They are provided merely for convenience.
+              Please note, that these TL;DRs do not form a part of these Terms of Service. They are provided merely for convenience and should not replace your review of the Terms of Service before using the Site and Services.
             </p>
             <p>
               By visiting the Site and/or using the Services, you agree to be bound by the following terms and conditions (“Terms”), including those additional terms and conditions and policies referenced herein and/or available by hyperlink (collectively, the “Agreement”). The Agreement applies to all users of the Site and the Services, including without limitation users who are browsers and/or contributors of content.
@@ -286,10 +286,10 @@ export default function TermsOfService() {
               <b>7. PERSONAL INFORMATION </b>
             </h3>
             <p>
-              You should read our privacy policy – at the very least the TL;DRs.
+              You should read our Privacy Policy. 
             </p>
             <p>
-              Your submission of personal information through the Site is governed by our Privacy Policy. Our Privacy Policy is available here.
+              Your submission of personal information through the Site is governed by our Privacy Policy. Our Privacy Policy is available [here](https://rememe.lol/privacy-policy).
             </p>
           </li>
           <li>
