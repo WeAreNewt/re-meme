@@ -51,6 +51,16 @@ foundry build # Build smart contracts
 foundry test # Run tests
 ```
 
+## User guide
+
+We uploaded a step-by-step user guide for anyone (technical and non-technical peeps) to use re:meme. Check them out on Lenstube:
+
+1. How to [discover and share memes](https://lenstube.xyz/watch/0xf803-0x02)
+1. How to [remix memes](https://lenstube.xyz/watch/0xf803-0x03)
+1. How to [create a brand new meme](https://lenstube.xyz/watch/0xf803-0x04)
+1. How to [report content]()
+1. How to [appeal content takedown]()
+
 
 ## License
 
