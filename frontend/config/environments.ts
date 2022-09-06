@@ -14,7 +14,7 @@ export const environmentsConfig = {
         chain: chain.polygonMumbai,
         lensterUrl: 'https://testnet.lenster.xyz',
         appUrl: 'https://memixer.vercel.app/',
-        collectModuleAddress: '0xa8CEb9108D659c675145BEBdaB8CE37ee12E974D',
+        collectModuleAddress: '0xA78E4a4D0367f0f4674130F0Bb2653957ab5917e',
         lensHubAddress: '0x60Ae865ee4C725cd04353b5AAb364553f56ceF82'
     }
 }
