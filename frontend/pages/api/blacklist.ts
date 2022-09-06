@@ -8,7 +8,12 @@ export default async function handler (_req: NextApiRequest, res: NextApiRespons
 
   switch (_req.method) {
     case 'POST':
-      return handlePost(String(_req.body.postId), now, res);
+      return handlePost(
+        String(_req.body.postId),
+        String(_req.body.option),
+        String(_req.body.info),
+        now,
+        res);
     case 'GET':
       const { postId } = _req.query;
       return handleGet(String(postId), now, res);
@@ -17,12 +22,14 @@ export default async function handler (_req: NextApiRequest, res: NextApiRespons
   }
 };
 
-const handlePost = async (postId: string, unixtime: number, res: NextApiResponse) => {
+const handlePost = async (postId: string, option: string, info: string, unixtime: number, res: NextApiResponse) => {
   const params = {
     TableName: 'Memixer',
     Item: {
       postId,
       unixtime,
+      option,
+      info
     },
     ConditionExpression: 'attribute_not_exists(postId)',
   };
