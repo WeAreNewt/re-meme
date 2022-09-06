@@ -92,7 +92,11 @@ const client = new ApolloClient({
     authLink,
     httpLink
   ]),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({
+    possibleTypes: {
+      CollectModule: ["FreeCollectModuleSettings", "FeeCollectModuleSettings", "LimitedFeeCollectModuleSettings", "LimitedTimedFeeCollectModuleSettings", "RevertCollectModuleSettings", "TimedFeeCollectModuleSettings", "UnknownCollectModuleSettings"]
+    }
+  })
 });
 
 function MyApp({ Component, pageProps }: AppProps) {

@@ -57,7 +57,7 @@ export const CREATE_COMMENT_TYPED_DATA = gql`
         profileId
         profileIdPointed
         pubIdPointed
-                referenceModuleData
+        referenceModuleData
         contentURI
         collectModule
         collectModuleInitData
@@ -254,6 +254,11 @@ export const GET_PUBLICATION = gql`
       recipient
       referralFee
       endTimestamp
+    }
+    ... on UnknownCollectModuleSettings {
+      type
+      contractAddress
+      collectModuleReturnData
     }
   }
 
@@ -574,6 +579,11 @@ fragment CollectModuleFields on CollectModule {
     recipient
     referralFee
     endTimestamp
+  }
+  ... on UnknownCollectModuleSettings {
+    type
+    contractAddress
+    collectModuleReturnData
   }
 }
 
@@ -912,6 +922,11 @@ export const EXPLORE_PUBLICATIONS = gql`
       recipient
       referralFee
       endTimestamp
+    }
+    ... on UnknownCollectModuleSettings {
+      type
+      contractAddress
+      collectModuleReturnData
     }
   }
 

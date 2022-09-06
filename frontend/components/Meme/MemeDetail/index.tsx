@@ -1,7 +1,7 @@
 import moment from "moment";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
+import { useEffect, useMemo, useState } from "react";
+import { useAccount, useContract, useContractRead, useSigner } from "wagmi";
 import useComments from "../../../hooks/useComments";
 import useWindowDimensions from "../../../hooks/window-dimensions.hook";
 import { PublicationData } from "../../../models/Publication/publication.model";
@@ -10,7 +10,14 @@ import Remixes from "../../Modals/Remixes";
 import { ProfileCard } from "../../ProfileCard";
 import { RemixCount } from "../../RemixCount";
 import { ReportModal } from "../../Modals/ReportModal";
-import Image from "next/image";
+import { UpdateCollectButton } from "../../UpdateCollectButton";
+import { FormData, UpdateCollectSettingsModal } from "../../../components/Modals/UpdateCollectSettings";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store";
+import { User } from "../../../models/User/user.model";
+import { BigNumber, ethers } from "ethers";
+import { selectedEnvironment } from "../../../config/environments";
+import CollectModuleAbi from '../../../utils/contracts/abis/UpdateOwnableFeeCollectModule.json'
 
 type MemeDetailProps = {
     meme: PublicationData;
@@ -18,20 +25,36 @@ type MemeDetailProps = {
 }
 
 export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
-
-    const { width } = useWindowDimensions();
     const router = useRouter()
     const { data } = useAccount();
     const [disabled, setDisabled] = useState(false);
     const [remixesOpen, setRemixesOpen] = useState(false)
     const [imageHover, setImageHover] = useState(false)
     const [showConfirm, setShowConfirm] = useState(false);
-
+    const [showCollectSettings, setShowCollectSettings] = useState(false)
     const { data: commentsPageData } = useComments(meme.id)
+    const { data: signer } = useSigner()
+    const user = useSelector<RootState, User | null>(state => state.user.selectedUser)
+
+    const pubId = meme.id.split('-')[1]
+
+    const collectModuleContract = useContract({
+        addressOrName: selectedEnvironment.collectModuleAddress,
+        contractInterface: CollectModuleAbi,
+        signerOrProvider: signer
+    })
+
+    const collectModuleSettings = useContractRead({
+        addressOrName: selectedEnvironment.collectModuleAddress,
+        contractInterface: CollectModuleAbi}, 'getPublicationData', { args: [user?.id, pubId]})
 
     useEffect(() => {
         setDisabled(!data ? true : false)
     }, [data])
+
+    const handleUpdateSettings = () => {
+        setShowCollectSettings(true);
+    }
 
     const handleRemixClick = () => {
         router.push(`/meme/${meme.id}/edit`)
@@ -46,6 +69,26 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     }
 
     const memeSrc = parseIpfs(meme.metadata.media[0].original.url)
+    const initialModuleData = useMemo(() => {
+        if(collectModuleSettings.data) {
+            const decodedData = collectModuleSettings.data
+            return {
+                amount: decodedData[1],
+                currency: decodedData[2],
+                recipient: decodedData[3],
+                referralFee: decodedData[4],
+                followerOnly: decodedData[5]
+            }
+        }
+    }, [collectModuleSettings])
+
+    const onSubmitModuleChanges = async (formData: FormData) => {
+        const pubId = meme.id.split('-')[1]
+        const tx = await collectModuleContract["updateModuleParameters"](meme.profile.id, pubId, formData.amount, formData.currency, formData.recipient, formData.referralFee, formData.followerOnly)
+        tx.wait(1).then(() => {
+            setShowCollectSettings(false)
+        })
+    }
 
     return (
         <>
@@ -69,7 +112,17 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
                 </div>
                 <div className="flex w-full justify-between items-center">
                     <ProfileCard profile={meme.profile} subText={moment(meme.createdAt).format('MMM Do YYYY')} />
-                    <RemixCount handleClick={() => setRemixesOpen(true)} count={commentsPageData?.publications.pageInfo.totalCount || 0} />
+                    <div className="flex gap-[16px]">
+                        <RemixCount handleClick={() => setRemixesOpen(true)} count={commentsPageData?.publications.pageInfo.totalCount || 0} />
+                        {
+                            user?.id === meme.profile.id && initialModuleData && (
+                                <>
+                                    <UpdateCollectButton onUpdateCollectClicked={handleUpdateSettings} />
+                                    <UpdateCollectSettingsModal onSubmit={onSubmitModuleChanges} show={showCollectSettings} setShow={setShowCollectSettings} initialValues={initialModuleData} />
+                                </>
+                            )
+                        }
+                    </div>
                 </div>
                 <ReportModal show={showConfirm} setShow={setShowConfirm} memeid={meme.id}/>
             </div>

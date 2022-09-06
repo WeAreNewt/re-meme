@@ -10,7 +10,7 @@ import { useMutation } from "@apollo/client";
 import { CREATE_COMMENT_TYPED_DATA, CREATE_POST_TYPED_DATA } from "../../queries/publication";
 import { CreateCommentTypedData, CreateCommentTypedDataParams, CreatePostTypedData, CreatePostTypedDataParams, PublicationData } from "../../models/Publication/publication.model";
 import { useContract, useSigner, useSignTypedData } from "wagmi";
-import { utils } from "ethers";
+import { ethers, utils } from "ethers";
 import LensHubAbi from '../../utils/contracts/abis/LensHub.json'
 import { v4 as uuidv4 } from 'uuid'
 import { ConfirmModal } from "../Modals/Confirm";
@@ -19,6 +19,9 @@ import omitDeep from 'omit-deep'
 import { parseIpfs } from "../../utils/link";
 import UploadMemeError, { UploadError } from "../Modals/UploadMemeError";
 import { useMemeFromTxHash } from "../../hooks/useMeme";
+import { selectedEnvironment } from "../../config/environments";
+import { AbiCoder } from "ethers/lib/utils";
+import useLensModuleEnabledCurrencies from "../../hooks/useLensModuleEnabledCurrencies";
 
 interface PathEvent {
     path?: fabric.Path
@@ -128,10 +131,12 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         index: 0
     })
 
+    const { currencies } = useLensModuleEnabledCurrencies()
+
     const { data: signer } = useSigner()
 
     const lensHubContract = useContract({
-        addressOrName: '0x60Ae865ee4C725cd04353b5AAb364553f56ceF82',
+        addressOrName: selectedEnvironment.lensHubAddress,
         contractInterface: LensHubAbi,
         signerOrProvider: signer
     })
@@ -184,6 +189,22 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         setShowConfirm(true)
     }
 
+    const encodeDefaultModuleData = () => {
+        return ethers.utils.defaultAbiCoder.encode([
+            "uint256",
+            "address",
+            "address",
+            "uint16",
+            "bool"
+        ], [
+            0,
+            currencies[0]?.address,
+            ethers.constants.AddressZero,
+            0,
+            false
+        ])
+    }
+
     const handleConfirm = () => {
         setShowConfirm(false)
         setLoading(true)
@@ -194,7 +215,10 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                     profileId: user.id || '',                        
                     contentURI: `ipfs://${metadataResult}`,
                     collectModule: {
-                        freeCollectModule: { followerOnly: false }
+                        unknownCollectModule: {
+                            contractAddress: selectedEnvironment.collectModuleAddress,
+                            data: encodeDefaultModuleData()
+                        }
                     },
                     referenceModule: {
                         followerOnlyReferenceModule: false
@@ -326,8 +350,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     useLayoutEffect(() => {
         if(containerRef.current) {
-            console.log(containerRef)
-            console.log(containerRef.current.clientWidth)
             const canvasCreation = new fabric.Canvas('meme-editor')
             canvasCreation.freeDrawingBrush.color = 'black'
             canvasCreation.freeDrawingBrush.width = 2
