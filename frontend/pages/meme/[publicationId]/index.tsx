@@ -77,6 +77,7 @@ export const getServerSideProps: GetStaticProps<MemePageProps, MemePageQueryPara
     }
   }
 
+  /*
   if(!process.env.NEXT_PUBLIC_BLACKLIST_OFF) {
     const blacklisted = await axios.get(`/api/blacklist/`, {params: { postId: publication.data.publication.id }}).then((response) => response.data.blacklisted)
     if(blacklisted) {
@@ -85,6 +86,7 @@ export const getServerSideProps: GetStaticProps<MemePageProps, MemePageQueryPara
       }
     }
   }
+  */
   return {
     props: {
       publication: publication.data.publication
