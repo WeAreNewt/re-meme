@@ -301,11 +301,11 @@ export default function TermsOfService() {
           </li>
           <li>
             <h3>
-              <b>5. MODIFICATIONS TO THE SERVICES  </b>
+              <b>5. MODIFICATIONS TO THE SERVICES</b>
             </h3>
-            <p>
-              We may change or modify the Services at any time.
-            </p>
+            <p><em>
+              We may change or modify this Site and our Services at any time. When a change or modification is made, we will update these Terms. 
+            </em></p>
             <p>
               We reserve the right to modify or discontinue the Services (or any part or content thereof) at any time and without notice. We shall not be liable to you or any third-party for any modification, information change, suspension, or discontinuance of the Services.
             </p>
@@ -314,11 +314,11 @@ export default function TermsOfService() {
             <h3>
               <b>6. THIRD-PARTY SERVICES, LINKS, MATERIALS & WEBSITES </b>
             </h3>
-            <p>
+            <p><em>
               We are not responsible for the content or services of any third-party, including, without limitation, any network, or apps like Discord, or MetaMask, and we make no representations regarding the content or accuracy of any of their services or materials.  You should separately make sure you agree with their terms of use before using them.
-            </p>
+            </em></p>
             <p>
-              The Site may include materials from third-parties. Third-party links on this Site may direct you to third-party websites, applications, or resources that are not affiliated with us. We are not responsible for examining or evaluating the content or accuracy and we do not warrant and will not have any liability or responsibility for any third-party materials or websites, or for any other materials, products, or services of third-parties.
+              The Site may include materials from third parties. Third-party links on this Site may direct you to third-party websites, applications, or resources that are not affiliated with us, including Lenster. We are not responsible for examining or evaluating the content or accuracy and we do not warrant and will not have any liability or responsibility for any third-party materials or websites, or for any other materials, products, or services of third parties.
             </p>
             <p>
               We are not liable for any harm or damages related to the order or use of goods, services, resources, content, or any other transactions made in connection with any third-party websites. Please review carefully the third-party&apos;s policies and practices and make sure you understand them before you engage in any transaction. Complaints, claims, concerns, or questions regarding third-party products should be directed to the third-party.
@@ -328,9 +328,9 @@ export default function TermsOfService() {
             <h3>
               <b>7. PERSONAL INFORMATION </b>
             </h3>
-            <p>
+            <p><em>
               You should read our Privacy Policy. 
-            </p>
+            </em></p>
             <p>
               Your submission of personal information through the Site is governed by our Privacy Policy. Our Privacy Policy is available [here](https://rememe.lol/privacy-policy).
             </p>
@@ -339,9 +339,9 @@ export default function TermsOfService() {
             <h3>
               <b>8. PROHIBITED USES</b>
             </h3>
-            <p>
+            <p><em>
               You are not allowed to use the Services to engage in illegal activity, infringe upon anyone&apos;s intellectual property rights, harass or otherwise engage in abusive behavior, spread false information or viruses, spam, or interfere with the security features of the Services in any way. We reserve the right to block your wallet from engaging with the Services.
-            </p>
+            </em></p>
             <p>
               In addition to other prohibitions as set forth in the Terms of Service, you are prohibited from using the Site or the Services:
             </p>
@@ -386,11 +386,11 @@ export default function TermsOfService() {
             <h3>
               <b>9. Assumption of Risk</b>
             </h3>
-            <p>
+            <p><em>
               You assume the risks of using the Services (including any risks related to the use of smart contracts). You are responsible for your wallet. We may restrict your access to the Services for any reason, including, but not limited to, compliance with applicable laws and sanctions regulations. We don’t guarantee the quality of the Services.
-            </p>
+            </em></p>
             <p>
-              <b>You agree to the automated collection and disbursement of proceeds by smart contracts. </b>
+              <b>You agree to the automated collection and disbursement of proceeds by smart contracts.</b>
             </p>
             <p>
               You acknowledge and agree that all transactions accessed through the Services will be automatically processed using one or more blockchain-based smart contracts. By engaging in transactions using the Services, you acknowledge and consent to the automatic processing of all transactions in connection with using the Services.
@@ -418,9 +418,9 @@ export default function TermsOfService() {
             <h3>
               <b>10. DISCLAIMER OF WARRANTIES; LIMITATION OF LIABILITY</b>
             </h3>
-            <p>
-              The Services are provided to you completely as they are and could function differently than you had expected. The Services are provided “as is.” You expressly agree that your use of the Services is at your sole risk. Our liability shall be limited entirely or to the maximum extent permitted by law.
-            </p>
+            <p><em>
+              The Services are provided to you completely as they are and could function differently than you had expected. You expressly agree that your use of the Services is at your sole risk. Our liability shall be limited entirely or to the maximum extent permitted by law.
+            </em></p>
             <p>
               We do not guarantee, represent or warrant that your use of our Services will be uninterrupted, timely, secure or error-free. We do not warrant that the results that may be obtained from the use of the Services will be accurate or reliable. You acknowledge and understand that from time to time, we may remove the Services for indefinite periods or cancel them at any time, without notice to you.
             </p>
@@ -435,9 +435,9 @@ export default function TermsOfService() {
             <h3>
               <b>11. INDEMNIFICATION</b>
             </h3>
-            <p>
-              You promise to be responsible for and cover our losses in circumstances where it would be unfair for us to bear the loss.
-            </p>
+            <p><em>
+              You will be responsible for and cover our losses in circumstances where it would be unfair for us to bear the loss. 
+            </em></p>
             <p>
               You agree to indemnify, defend, and hold harmless the Company and Company parents, subsidiaries, affiliates, partners, officers, directors, agents, contractors, licensors, service providers, subcontractors, suppliers, and employees, from any claim or demand, including reasonable attorneys’ fees, made by any third-party due to or arising out of your breach of these Terms or the anything they incorporate by reference, or your violation of any law or the rights of any third-party.
             </p>
@@ -446,9 +446,9 @@ export default function TermsOfService() {
             <h3>
               <b>12. SEVERABILITY</b>
             </h3>
-            <p>
+            <p><em>
               The terms in these Terms of Service are independent of one another such that the remainder of the terms will remain in force and effect if for any reason a court declares one or more of its provisions void or unenforceable.
-            </p>
+            </em></p>
             <p>
               In the event that any provision of these Terms is determined to be unlawful, void or unenforceable, such provision shall nonetheless be enforceable to the fullest extent permitted by applicable law, and the unenforceable portion shall be deemed to be severed from these Terms of Service. Such determination shall not affect the validity and enforceability of any other remaining provisions.
             </p>
@@ -457,9 +457,9 @@ export default function TermsOfService() {
             <h3>
               <b>13. TERMINATION; CANCELLATION </b>
             </h3>
-            <p>
+            <p><em>
               This Agreement can be terminated at any time and for any reason; however, it will govern your activity for so long as you continue using the Site or Services.
-            </p>
+            </em></p>
             <p>
               This Agreement is effective unless and until terminated by either you or us. You may terminate the Agreement with us at any time by not accessing the Site or the Services. If, in our sole judgment, you fail, or we suspect that you have failed, to comply with any term or provision of the Agreement (including without limitation any provision of the Terms of Service), we reserve the right to terminate our Agreement with you and deny you access to the Services. We further reserve the right to restrict your access to the Site in any way or to stop providing you with all or part of the Services at any time and for no reason, including, without limitation, if we reasonably believe: (a) your use of the Services exposes us to risk or liability; (b) you are using the Services for unlawful purposes; or (c) it is not commercially viable to continue providing you with our Services. The aforementioned does not limit any other rights and remedies that may be available to us, whether in equity or at law, all of which we expressly reserve.
             </p>
@@ -468,9 +468,9 @@ export default function TermsOfService() {
             <h3>
               <b>14. ENTIRE AGREEMENT</b>
             </h3>
-            <p>
-              You should only rely on this Agreement to understand what has been agreed to. If anything in this Agreement is deemed unclear, it should not be held against us. If we have a right under these Terms and we don’t use it, this doesn’t mean we can’t use such right in the future.
-            </p>
+            <p><em>
+              You should only rely on this Agreement. If anything in this Agreement is deemed unclear, it should not be held against us. If we have a right under these Terms and we don’t exercise it, we can still exercise such right in the future.
+            </em></p>
             <p>
               The Agreement constitutes the entire agreement and understanding between you and us and governs your use of the Services. This Agreement supersedes any prior or contemporaneous agreements, communications, and proposals, whether oral or written, between you and us (including, but not limited to, any prior versions of the Terms).
             </p>
@@ -485,9 +485,9 @@ export default function TermsOfService() {
             <h3>
               <b>15. GOVERNING LAW</b>
             </h3>
-            <p>
+            <p><em>
             The law of the Cayman Islands governs our Services.
-            </p>
+            </em></p>
             <p>
             These Terms and any separate agreements whereby we provide you Services shall be governed by and construed in accordance with the laws of the Cayman Islands.
             </p>
@@ -499,9 +499,11 @@ export default function TermsOfService() {
             <p>
             PLEASE READ THIS SECTION CAREFULLY: IT MAY SIGNIFICANTLY AFFECT YOUR LEGAL RIGHTS, INCLUDING YOUR RIGHT TO FILE A LAWSUIT IN COURT AND TO HAVE A JURY HEAR YOUR CLAIMS. IT CONTAINS PROCEDURES FOR MANDATORY BINDING ARBITRATION AND A CLASS ACTION WAIVER.
             </p>
-            <p>
-            Before commencing any legal proceeding against us, we agree to first engage in good faith negotiations to resolve the dispute. You and we agree that if a dispute cannot be resolved through negotiations, it will be resolved through binding arbitration as described below.
-            </p>
+            <p><em>
+            Before commencing any legal proceeding against us, you agree to first engage in good faith negotiations with us to resolve any dispute. You and we agree that if a dispute can’t be resolved through negotiations, it will be resolved through binding arbitration.
+            <br></br>
+            Unless you provide a timely arbitration opt-out notice to us at legal@aave.com, you acknowledge and agree that you and we are each waiving the right to a trial by jury or to participate as a plaintiff or class member in any purported class action or representative proceeding. 
+            </em></p>
             <p>
             Unless you provide a timely arbitration opt-out notice to us at legal@aave.com, you acknowledge and agree that you and we are each waiving the right to a trial by jury or to participate as a plaintiff or class member in any purported class action or representative proceeding.
             </p>
@@ -531,7 +533,7 @@ export default function TermsOfService() {
             <h3>
               <b>17. CONTACT INFORMATION</b>
             </h3>
-            <p>Questions about the Terms should be sent to us at <a className="text-black" href="mailto:wecare@avaralabsui.com">wecare@avaralabsui.com </a></p>
+            <p>Questions about the Terms should be sent to us at <a className="text-black" href="mailto:wecare@avaralabsui.com">wecare@avaralabsui.com</a></p>
           </li>
         </li>
       </ol>
