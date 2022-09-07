@@ -10,14 +10,12 @@ export default function TermsOfService() {
         <li>
           <h2>
             <b>1.</b>
-            <u>
               <b>Welcome to re:meme!</b>
-            </u>
           </h2>
           <p>
           The website, “rememe.lol” (the “Site”), is operated by Avara UI Labs Ltd. (“Company,” “we,” “our,” or “us”). We offer the Site, including all information, tools, and services available from the Site (collectively, the “Services”) to allow you to interact with re:meme - a web application that allows users to edit content and mint images, conditioned upon your acceptance of all terms, conditions, policies, and notices set in this Agreement.
           </p>
-          <p>
+          <em><p>
             We know that terms of use can be long (really long!), full of legal jargon and confusing.
           </p>
           <p>
@@ -84,10 +82,9 @@ export default function TermsOfService() {
             <li>
               Unless you provide a timely arbitration opt-out notice to us at legal@aave.com, you agree that you and we are each waiving the right to a trial by jury or to participate as a plaintiff or class member in any purported class action or representative proceeding.
             </li>
-            <br></br>
             <p>
               Please note, that these TL;DRs do not form a part of these Terms of Service. The TL;DR is provided merely for your convenience and should not replace your review of the Terms of Service before using the Site and Services.
-            </p>
+            </p></em>
             <p>
               By visiting the Site and/or using the Services, you agree to be bound by the following terms and conditions (“Terms”), including those additional terms and conditions and policies referenced herein and/or available by hyperlink (collectively, the “Agreement”). The Agreement applies to all users of the Site and the Services, including without limitation users who are browsers and/or contributors of content.
             </p>
@@ -106,9 +103,9 @@ export default function TermsOfService() {
           <h2>
             <b>1. GENERAL CONDITIONS</b>
           </h2>
-          <p>
-            You must be at least 13 years old to use this Site and the Services. You may not use the Services for any illegal activity. The Site and our Services evolve constantly and may change from time to time, at our sole discretion.
-          </p>
+          <em><p>
+          You must be at least 13 years old to use the Site and the Services. The Site and our Services evolve constantly and may change from time to time, at our sole discretion, without notice to you.
+          </p></em>
           <p>
             To access the Site and use the Services, you must be at least 13 years old. By using the Services, you represent and warrant that you meet the eligibility requirement. If you do not meet the requirement, you must not access or use the Site or the Services.
           </p>
@@ -125,81 +122,83 @@ export default function TermsOfService() {
         <li>
           <h2>
             <b>2.</b>
-            <u>
               <b>Services</b>
-            </u>
           </h2>
           <h3>
-            <b>The Site allows you to edit content and mint images on Lenster, a composable, permissionless, and decentralized social media web application built with the Lens Protocol.   </b>
+            <b>The Site allows you to edit content, upload, and store images, which can be shared on Lenster, a composable, permissionless, and decentralized social media web application built on top of the Lens Protocol.</b>
           </h3>
           <p>
-            You can edit and mint images through re:meme. These images can then be shared on Lenster.
+            <em>You can edit and mint images through re:meme. These images can then be shared on Lenster, a third party website.</em>
           </p>
           <p>
-            The Site is provided to allow you to edit content and mint images through re:meme. These images or “memes” can be shared on Lenster once minted. We reserve the right - but are not obligated to - limit the provision of Services to any person, geographic region, or jurisdiction. We may exercise this right on a case-by-case basis in our sole discretion. We reserve the right to limit the type and number of memes that can be minted via this Site. We reserve the right to discontinue the Services at any time.
+            The Site is provided to allow you to edit content and mint images through re:meme. These images or “memes” can be shared on Lenster once minted. We reserve the right - but are not obligated to - limit the provision of Services to any person, geographic region, or jurisdiction. We may exercise this right on a case-by-case basis in our sole discretion. We reserve the right to limit the type and number of memes that can be minted via this Site. We reserve the right to discontinue the Services at any time. Lenster is a third party website that we do not control.
           </p>
           <p>
-            <b>You are responsible for securing your digital wallet. </b>
+            <b>You are responsible for securing your digital wallet.</b>
           </p>
           <p>
-            Keep your wallet safe. You are responsible for it.
+            <em>Keep your wallet safe. You are responsible for it.</em>
           </p>
           <p>
-            You are responsible for safeguarding your digital wallet. We cannot and will not be liable for any loss or damage arising from your failure to secure your wallet or damage resulting from connecting your wallet to the Site. You alone are responsible for securing your private keys. We do not have access to your private keys.
+            You connect to and interact with the Site and Services through your personal digital wallet. You are responsible for safeguarding your digital wallet. We cannot and will not be liable for any loss or damage arising from your failure to secure your wallet or damage resulting from connecting your wallet to the Site. You alone are responsible for securing your private keys. We do not have access to your private keys.
           </p>
           <p>
             <b>Entries on the blockchain are not anonymous.</b>
           </p>
           <p>
-            You are interacting with an inherently transparent blockchain. Transparency does not mean anonymity as your public key and wallet address will be visible to everyone. If you’re not comfortable with this, you should not engage with our.
+            <em>When you use the Site and Services, you are interacting with an inherently transparent blockchain. Transparency does not mean anonymity as your public key and wallet address will be visible to everyone. If you’re not comfortable with this, you should not engage with our Site and Services.</em>
           </p>
           <p>
             A widespread belief is that entries and transactions involving blockchains are anonymous. In fact, a central feature of blockchains and thus, blockchain-based transactions and entries, is that they are transparent. Your public key and your wallet address, which you need to interact with the Site, are visible to anyone. To the extent your public key or wallet address can be linked back to you, it would be possible for someone to determine your identity.
           </p>
           <p>
-            <b>Any content uploaded to our Site will be hosted by IPFS, a third-party service. </b>
+          All transactions and blockchain entries accessed through the Services are irreversible, final, and without refunds.
           </p>
           <p>
-            If you use the Site to upload content, the content will be stored on IPFS. We do not control IPFS. You should understand that even if you delete content from the Site, the file will remain stored in IPFS.
+            <b>Any content uploaded to our Site will be hosted by IPFS, a third-party hosting service.</b>
           </p>
           <p>
-            You understand and agree that files uploaded to the Site are hosted on the Interplanetary File System (“IPFS”), a third-party service. We do not control and are not responsible for any act or omission by IPFS as it pertains to the user interface or otherwise. The use and access of any third-party products or services, including through the Services, is at your own risk. By using our Site, you consent to any content that you have uploaded being hosted on IPFS.
+            <em>If you use the Site to upload content, the content will be stored on IPFS. We do not control IPFS. You should understand that even if you delete content from the Site, the file will remain stored in IPFS.</em>
           </p>
           <p>
-            <b>You assume the risks of engaging in transactions that rely on smart contracts and other experimental technology. </b>
+            You understand and agree that files uploaded to the Site are hosted on the Interplanetary File System (“IPFS”), a third-party hosting service. We do not control and are not responsible for any act or omission by IPFS as it pertains to the user interface or otherwise. The use and access of any third-party products or services, including through the Services, is at your own risk. By using our Site, you consent to any content that you have uploaded being hosted on IPFS. Any content that is reported and subsequently removed from the Site will continue to remain stored as a file on IPFS.
           </p>
           <p>
-            You accept that engaging with the Site relies on smart contracts and other experimental technology and uses networks that we can&apos;t control. Things may not go as expected. You accept that risk.
+            <b>You assume the risks of engaging in transactions that rely on smart contracts and other experimental technology.</b>
+          </p>
+          <p>
+            <em>You accept that engaging with the Site relies on smart contracts and other experimental technology and uses networks that we do not and cannot control. Things may not go as expected. You accept that risk.</em>
           </p>
           <p>
             Transactions on the Site rely on smart contracts stored on a blockchain, cryptographic tokens generated by the smart contracts, and other nascent software, applications and systems that interact with blockchain-based networks. These technologies are experimental, speculative, inherently risky, and subject to change. Among other risks, bugs, malfunctions, cyberattacks, or changes to the applicable blockchain (e.g., forks) could disrupt these technologies and even result in a total loss of tokens, cryptoassets, their market value, or digital funds. You are solely responsible for the safekeeping of the private key associated with the blockchain address used to interact with the Site. We assume no liability or responsibility for any such risks. If you are not comfortable assuming these risks, you should not access or engage in transactions using blockchain-based technology.
-            One of the other defining features of blockchain technology is that its entries are immutable, which means, as a technical matter, they generally cannot be deleted or modified by anyone. This includes smart contracts and tokens generated and programmed by smart contracts.
+            <br></br>
+            One of the other defining features of blockchain technology is that its entries are immutable, which means, as a technical matter, they generally cannot be deleted or modified by anyone. Similarly, smart contracts, which are programs stored on a blockchain, are also immutable and cannot be deleted or modified.
           </p>
           <p>
-            THUS, TRANSACTIONS RECORDED ON THE BLOCKCHAIN MUST BE TREATED AS PERMANENT AND CANNOT BE UNDONE BY US OR BY ANYONE. <b>YOU MUST BE VERY CAREFUL WHEN YOU FINALIZE ANY ENTRY OR TRANSACTION THAT WILL BE RECORDED ON THE BLOCKCHAIN. </b>
+            THUS, TRANSACTIONS RECORDED ON THE BLOCKCHAIN MUST BE TREATED AS PERMANENT AND CANNOT BE UNDONE BY US OR BY ANYONE. <b>YOU MUST BE VERY CAREFUL WHEN YOU FINALIZE ANY ENTRY OR TRANSACTION THAT WILL BE RECORDED ON THE BLOCKCHAIN.</b>
           </p>
           <p>
-            <b>You acknowledge the risks of using the Services. </b>
+            <b>You acknowledge the risks of using the Services.</b>
           </p>
-          <p>You bear sole responsibility for evaluating the Services before using them. </p>
+          <p><em>>You bear sole responsibility for evaluating the Services before using them.</em></p>
           <p>
             You bear sole responsibility for evaluating the Services before using them, and all transactions and blockchain entries accessed through the Services are irreversible, final, and without refunds. The Services may be disabled, disrupted or adversely impacted as a result of sophisticated cyber-attacks, surges in activity, computer viruses, and/or other operational or technical challenges, among other things. We disclaim any ongoing obligation to notify you of all of the potential risks of using and accessing our Services. You agree to (defined below) accept these risks and agree that you will not seek to hold any Avara UI Labs Indemnified Party responsible for any consequent losses.
           </p>
           <p>
             <b>The Site is deployed on blockchain-based networks, and we are not responsible for the operation of such networks. </b>
           </p>
-          <p>The Site is deployed on the Polygon Networks, which we don&apos;t control.  </p>
+          <p><em>The Site is deployed on the Polygon Networks, which we don&apos;t control.</em></p>
           <p>
-            The software underlying blockchain networks on which the Site is deployed, including the Polygon  Network, is open source, which means that anyone can use, utilize, and build on top of it. By using the Services, you acknowledge and agree that (i) we are not responsible for the operation of the blockchain-based software and networks underlying the Site, (ii) there exists no guarantee of the functionality, security, or availability of that software and networks, and (iii) the underlying blockchain-based networks are subject to sudden changes in operating rules, such as those commonly referred to as “forks”.
+            The underlying blockchain networks on which the Site is deployed, including the Polygon  Network, is open source, which means that anyone can use, utilize, and build on top of it. By using the Services, you acknowledge and agree that (i) we are not responsible for the operation of the blockchain-based software and networks underlying the Site, (ii) there exists no guarantee of the functionality, security, or availability of that software and networks, and (iii) the underlying blockchain-based networks are subject to sudden changes in operating rules, such as those commonly referred to as “forks,” which may impact parts of or your use of the Services.
           </p>
           <p>
-            <b>The Services are provided free of charge, however, there may be associated blockchain fees.  </b>
+            <b>The Services are provided free of charge, however, there may be associated blockchain fees.</b>
           </p>
           <p>
-            Blockchains come with gas fees. We may pay for those fees on your behalf; however, we may choose to not pay for them at any time.
+            <em>Blockchains come with gas fees. We may pay for those fees on your behalf; however, we may choose to not pay for them at any time.</em>
           </p>
           <p>
-            By using the Services, you understand that it is being provided to you as a giveaway good, free of charge (i.e., no consideration in the form of monetary or non-monetary compensation). However, all transactions using blockchains require the payment of gas fees, which are essentially transaction fees (also called “gas fees”) paid on every transaction that occurs on the selected blockchain network. We may, at our sole discretion, cover the gas fees for users. We may temporarily suspend or permanently stop covering the gas fees at any time. We do not receive any fees for any transactions, the Services, or the Site.
+          By using the Services, you understand that it is being provided to you as a giveaway good, free of charge (i.e., no consideration in the form of monetary or non-monetary compensation). However, transactions using blockchains require the payment of “gas fees,” which are fees paid on every transaction that occurs on the selected blockchain network. We may, at our sole discretion, cover the gas fees for users. We may temporarily suspend or permanently stop covering the gas fees at any time. We do not receive any fees for any transactions, the Services, or the Site.
           </p>
 
           <li>
@@ -207,10 +206,10 @@ export default function TermsOfService() {
               <b>3. ACCURACY, COMPLETENESS AND TIMELINESS OF INFORMATION </b>
             </h3>
             <p>
-              We are not responsible for any mistakes or inaccuracies on this Site.
+              <em>We are not responsible for any mistakes or inaccuracies on this Site.</em>
             </p>
             <p>
-              We are not responsible if information made available on this site is inaccurate, incomplete, or not current. The material on this site is provided for general information only and should not be relied upon. Any reliance on the material contained on this Site is at your own risk.
+              We are not responsible if information made available on this Site is inaccurate, incomplete, or not current. The material on this Site is provided for general information only and should not be relied upon. Any reliance on the material contained on this Site is at your own risk.
             </p>
             <p>
               This Site may contain certain historical information. Historical information is not necessarily current and is provided for your reference only. We reserve the right to modify the contents of this Site at any time; however, we do not have any obligation to update the information on the Site. You agree that it is your responsibility to monitor changes to the Site.
@@ -220,49 +219,51 @@ export default function TermsOfService() {
             <h3>
               <b>4. IP Rights and Ownership</b>
             </h3>
-            <p>
-              What&apos;s yours is yours.
-            </p>
+            <p><em>
+              With respect to intellectual property rights and ownership - what&apos;s yours is yours.
+            </em></p>
             <p>
               Content creators and owners retain their existing rights to any content uploaded, edited, or minted into an image utilizing a smart contract on the Site in connection with the Services. However, by using the Services, all users (including content creators and owners) grant limited licenses to one another to use their contributions in various ways, as discussed below.
             </p>
-            <p>
+            <p><em>
               Users who mint images using the Services obtain a limited license to use the content.
-            </p>
+            </em></p>
             <p>
               By using the Services to mint an image, users receive, for so long as they own the image, a limited, worldwide, non-assignable, non-sublicenseable, royalty-free license to use the image to: (i) publicly and privately display the image at any size; and (ii) to market, promote, advertise, and sell the image. This license belongs only to the then current owner of the image and automatically terminates when they no longer own the image. An image owner may expand the rights granted to image owners as part of a particular sale, in which case those rights will also be attached to the image purchased.
             </p>
-            <p>
+            <p><em>
               Image owners may only use content in accordance with any governing Terms of Use.
-            </p>
+            </em></p>
             <p>
               Image owners may only use, sell, trade, transfer, copy, or display the content associated with a minted image for the purpose of creating derivative works based upon the artwork (“Commercial Use”) subject to any applicable Terms of Use. Examples of Commercial Use include creating and selling copies of an image, licensing the image for commercial purposes (e.g., selling merchandise, products, or services), or otherwise commercially exploiting the image.
             </p>
-            <p>
+            <p><em>
               Users must have all necessary rights to content before minting an image on the Site.
-            </p>
+            </em></p>
             <p>
-              As a user, you represent and warrant that you hold all rights, licenses, authorizations, and power necessary to grant the rights held under the particular terms governing any content that you mint into an image through the Services. You agree that any such content will not violate the copyright, trademark, right of publicity (e.g., image, likeness, persona, performance, signature, voice or other indicia), or other proprietary rights of any third party. Any minted image that incorporates the works or personas of others must have been minted with the necessary permission, constitute fair use, or otherwise have valid legal footing for such use.
-              You understand that you may be liable if you don&apos;t have the necessary rights.
+              As a user, you represent and warrant that you hold all rights, licenses, authorizations, and power necessary to grant the rights held under the particular terms governing any content that you mint into an image through the Services. You agree that any such content will not violate the copyright, trademark, right of publicity (e.g., image, likeness, persona, performance, signature, voice or other indicia), or other proprietary rights of any third party. Any minted image that incorporates the works or personas of others must have been minted with the necessary permission, constitute fair use, or otherwise have valid legal rights for such use.
             </p>
+            <p><em>
+            You understand that you may be liable if you don&apos;t have the necessary rights to content.
+            </em></p>
             <p>
-              If you do not or did not have the necessary rights to the content used to mint an image through the Services, you may be liable not only to any person whose intellectual property or other proprietary rights you violated, but also to other users, including the owner of content that has been damaged through the minting of an image and subsequent use, in which you did not hold necessary rights. This could happen, for example, if we decide to disable or otherwise remove access from the Site to an image after receiving a valid Digital Millennium Copyright Act (“DMCA”) takedown notification without receiving a valid counter-notification. You agree to indemnify us for any claims asserted against us arising from you not having the necessary rights required to use the Site and the Services.
+              If you do not or did not have the necessary rights to the content used to mint an image through the Services, you may be liable not only to any person whose intellectual property or other proprietary rights you violated, but also to other users, including the owner of content that has been damaged through the minting of an image and subsequent use, in which you did not hold necessary rights. This could happen, for example, if we decide to disable or otherwise remove access from the Site to an image after receiving a valid Digital Millennium Copyright Act (“DMCA”) takedown notification without receiving a valid counter-notification. You agree to indemnify us for any claims asserted against us arising from you not having the necessary rights required to content posted on the Site or using the Services.
             </p>
             <p>
               We will not, under any circumstances, be held liable to a user for removing allegedly infringing works from the Services or otherwise fulfilling our legal obligations under the DMCA.
             </p>
-            <p>
+            <p><em>
               We reserve the right to remove images that violate these Terms. You can report content that violates these Terms by clicking the “Report” button.
-            </p>
+            </em></p>
             <p>
               We reserve the right to remove any image that violates these Terms, including, but not limited to, materials that infringe upon someone else&apos;s copyright, trademark, right of publicity, or that constitutes impersonation, unlawful conduct, harassment, or abuse.
             </p>
             <p>
-              If you believe any content on the Site violates your personal legal rights or these Terms, you can report content to us by clicking the “Report” button on the Site. We will review any content that is reported and remove any content that violates these Terms.
+              If you believe any content on the Site violates your personal legal rights or these Terms, you can report content to us by clicking the “Report” button on the Site. We will review any content that is reported and immediately remove any content that violates these Terms.
             </p>
-            <p>
+            <p><em>
               Report any claims of copyright infringement by contacting our designated DMCA agent.
-            </p>
+            </em></p>
             <p>
               We handle claims of copyright infringement in accordance with the DMCA. If you believe that any image available on or through the Services has been used in a way that violates your copyright, please report this by contacting our designated DMCA agent at:
             </p>
@@ -279,23 +280,23 @@ export default function TermsOfService() {
             <p>
               Please be sure to include all information required by the DMCA. If you do not, we may ignore your takedown request and have no obligation to remove the allegedly infringing material. For more information, please see <a className="text-black" href="https://www.law.cornell.edu/uscode/text/17/512"> 17 U.S.C.§ 512</a>
             </p>
-            <p>
+            <p><em>
               We have and enforce a repeat infringer policy.
-            </p>
+            </em></p>
             <p>
-              We may enforce a “repeat infringer” policy, under which we will block an image from appearing on the Site if a user is determined by us to be a repeat copyright infringer. We also reserve the right to restrict a user&apos;s access to and use of our Services for reasons other than copyright infringement, such as, but not limited to conduct that breaks our rules.
+              If we determine, in our sole discretion, that a user has attempted to upload content that infringes the intellectual property rights of another, we reserve the right to block the user’s digital wallet address. We also reserve the right to restrict a user’s access to and use of our Services for reasons other than copyright infringement, such as, but not limited to, conduct that breaks our rules.
             </p>
-            <p>
-              Users agree to cooperate with us.
-            </p>
+            <p><em>
+              Users agree to cooperate with us during IP infringement investigations.
+            </em></p>
             <p>
               Site users expressly agree to cooperate and respond in a timely manner to our investigations, requests, and inquiries related to DMCA disputes or allegations of infringement. We will remove any images in response to a valid DMCA takedown notice or an allegation that the content reflected by the image is otherwise infringing a third party&apos;s intellectual property rights.
             </p>
-            <p>
+            <p><em>
               Users have the right to appeal the removal of their content from the Site.
-            </p>
+            </em></p>
             <p>
-              User reported content is automatically removed from the Site while under review by the Company for a potential violation of the Terms of Service. If a user is of the reasonable opinion that their content was wrongfully removed from the Site, the user reserves the right to appeal the removal of said content through the appeal process. Once an appeal has been submitted, the Company will use its best efforts to reply to the user, within seven (7) days after receipt of the appeal, with the Company&apos;s determination on the appeal. If an appeal is granted, the content will be reinstated on the Site; however, if the Company determines in its sole discretion that the content violates the Terms of Service, the content will not be reinstated. A user making an appeal is limited to one appeal per image minted on the Site. Any additional appeals for the same image will not be considered.
+              User-reported content (i.e., content that is flagged as containing Prohibited Content by a user on the Site through the “report” button”) is automatically removed from the Site while under review by the Company for a potential violation of the Terms of Service. If a user is of the reasonable opinion that their content was wrongfully removed from the Site, the user may appeal the removal of said content through the “Submit Appeal” button which begins the appeal process. Once an appeal form has been submitted, the Company will use its best efforts to reply to the user, within seven (7) days after receipt of the appeal, with the Company’s determination on the appeal. If an appeal is granted, the content will be reinstated on the Site; however, if the Company determines in its sole discretion that the content violates the Terms of Service, the content will not be reinstated. A user making an appeal is limited to one appeal per image minted on the Site. Any additional appeals for the same image will not be considered.
             </p>
           </li>
           <li>
