@@ -12,6 +12,7 @@ import { ssrClient } from "../../../config/apollo";
 import { GET_PUBLICATION } from "../../../queries/publication";
 import { GetPublicationData, PublicationData } from "../../../models/Publication/publication.model";
 import { ParsedUrlQuery } from "querystring";
+import axios from "axios";
 
 interface MemePageProps {
   publication: PublicationData
@@ -76,6 +77,14 @@ export const getServerSideProps: GetStaticProps<MemePageProps, MemePageQueryPara
     }
   }
 
+  if(!process.env.NEXT_PUBLIC_BLACKLIST_OFF) {
+    const blacklisted = await axios.get(`/api/blacklist/`, {params: { postId: publication.data.publication.id }}).then((response) => response.data.blacklisted)
+    if(blacklisted) {
+      return {
+        notFound: true
+      }
+    }
+  }
   return {
     props: {
       publication: publication.data.publication
