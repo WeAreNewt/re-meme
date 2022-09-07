@@ -8,6 +8,7 @@ import useWindowDimensions from "../../../hooks/window-dimensions.hook";
 import { User } from "../../../models/User/user.model";
 import { useMemeFromPublicationId } from "../../../hooks/useMeme";
 import Loader from "../../../components/Loader";
+import Head from "next/head";
 
 const MemePage: NextPage = () => {
     const router = useRouter()
@@ -19,32 +20,39 @@ const MemePage: NextPage = () => {
     }
   
     return (
-      <Container fluid="md" className='h-full'>
-        <Row className='mt-auto'>
-          <Col>
-            <article className='space-y-10'>
-              {
-                !user && (
-                  <header className="hidden lg:block">
-                    <ConnectionBox />
-                  </header>
-                )
-              }
-              <Row>
+      <>
+        <Head>
+          <meta property="og:title" content="re:meme - the on-chain meme remixer" />
+          <meta property="og:description" content="Create memes, remix memes, and give recognition to all meme creators. The on-chain meme source of truth, thanks to the power of the Lens Protocol." />
+          <meta property="og:image" content={`${publication?.metadata.media[0].original.url}`} />
+        </Head>
+        <Container fluid="md" className='h-full'>
+          <Row className='mt-auto'>
+            <Col>
+              <article className='space-y-10'>
                 {
-                  loading ? (
-                    <div className="h-20 flex w-full items-center justify-center">
-                      <Loader />
-                    </div>
-                  ) : (
-                    publication && <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />
+                  !user && (
+                    <header className="hidden lg:block">
+                      <ConnectionBox />
+                    </header>
                   )
                 }
-              </Row>
-            </article>
-          </Col>
-        </Row>
-      </Container>
+                <Row>
+                  {
+                    loading ? (
+                      <div className="h-20 flex w-full items-center justify-center">
+                        <Loader />
+                      </div>
+                    ) : (
+                      publication && <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />
+                    )
+                  }
+                </Row>
+              </article>
+            </Col>
+          </Row>
+        </Container>
+      </>
     )
 }
 
