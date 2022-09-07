@@ -10,6 +10,7 @@ import { useMemeFromPublicationId } from "../../../hooks/useMeme";
 import Loader from "../../../components/Loader";
 import Head from "next/head";
 import { selectedEnvironment } from "../../../config/environments";
+import { parseIpfs } from "../../../utils/link";
 
 const MemePage: NextPage = () => {
     const router = useRouter()
@@ -23,8 +24,8 @@ const MemePage: NextPage = () => {
     return (
       <>
         <Head>
-          <meta property="og:url" content={`${selectedEnvironment.appUrl}/meme/${publication?.metadata.media[0].original.url}`} />
-          <meta property="og:image" content={`${publication?.metadata.media[0].original.url}`} />
+          <meta property="og:url" content={`${selectedEnvironment.appUrl}/meme/${publication?.id}`} />
+          <meta property="og:image" content={parseIpfs(publication?.metadata.media[0].original.url || '')} />
         </Head>
         <Container fluid="md" className='h-full'>
           <Row className='mt-auto'>
