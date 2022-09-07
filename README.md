@@ -41,6 +41,14 @@ An IPFS gateway is also used in order to upload and pin memes as content onto IP
 
 re:meme uses a custom [Collect Module](https://docs.lens.xyz/docs/icollectmodulesol) on Polygon to allow for the collection and ownership of publications as memes.
 
+The custom collect module allows meme "owners" to update collect parameters such as `collect currency`, `collect amount`, `fund recipient`, `secondary royalty`, and `who can collect`. Two unique features of this collect module:
+1. It is the first customizable collect module on Lens Protocol, meaning that collect parameters can be configured and modified after initialization.
+1. It has an ERC-721 collection in the module. Meaning that there is an NFT associated with each meme; this NFT is the "ownership NFT", where the NFT holder is able to update the collect parameters. This means that the meme creator can send or sell the "ownership NFT" to another person, who is then able to update the collect parameters without the need to coorindate with the meme creator. This allows for the sale of the monetization rights of memes. Pretty huge.
+
+The custom collect module is called `UpdatableOwnableFeeCollectModule`. You can discover and read the verified contract on [PolygonScan](https://polygonscan.com/address/0x432960b3209686cc69e2eec1dbbab52a1c0bf938) or on GitHub in the [Lens repository](https://github.com/lens-protocol/modules/blob/master/contracts/collect/UpdatableOwnableFeeCollectModule.sol).
+
+Contract address: [0x432960b3209686cc69e2eec1dbbab52a1c0bf938](https://polygonscan.com/address/0x432960b3209686cc69e2eec1dbbab52a1c0bf938)
+
 1. Install [Foundry](https://github.com/gakonst/foundry#installation)
 
 ```bash
