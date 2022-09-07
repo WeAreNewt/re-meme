@@ -1,3 +1,4 @@
+import { selectedEnvironment } from "../../../config/environments";
 import { PublicationData } from "../../../models/Publication/publication.model";
 import { parseIpfs } from "../../../utils/link";
 
@@ -10,14 +11,14 @@ export const RemixCreatedBox : React.FC<RemixShareBoxProps> = ({ meme }) => {
     const memeSrc = parseIpfs(meme.metadata.media[0].original.url)
 
     const handleShareLenster = () => {
-        window.open(`https://testnet.lenster.xyz/posts/${meme.id}`, "_blank")
+        window.open(`${selectedEnvironment.lensterUrl}/posts/${meme.id}`, "_blank")
     }
 
     const socialIcons = [
         {
             src: "/assets/icons/share-icon.svg",
             handleClick: () => {
-                const url =  `https://rememe.lol/${meme.id}`
+                const url =  `${selectedEnvironment.appUrl}/meme/${meme.id}`
                 navigator.clipboard.writeText(url)
             }
         },

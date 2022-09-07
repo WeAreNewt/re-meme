@@ -1,6 +1,7 @@
 import { selectedEnvironment } from "../../../config/environments";
 import { PublicationData } from "../../../models/Publication/publication.model";
 import { parseIpfs } from "../../../utils/link";
+import FileSaver from 'file-saver'
 
 type RemixShareBoxProps = {
     publication: PublicationData
@@ -20,7 +21,7 @@ export const RemixShareBox : React.FC<RemixShareBoxProps> = ({ publication }) =>
     }
 
     const handleDownload = () => {
-
+        FileSaver.saveAs(memeUrl, 'meme.svg')
     }
 
     return (
@@ -33,9 +34,9 @@ export const RemixShareBox : React.FC<RemixShareBoxProps> = ({ publication }) =>
                 <div key={"sicon-twitter-share"} onClick={handleShareTwitter} className="icon-btn-medium-secondary">
                     <img className="icon-md" src="/assets/icons/share-twitter.svg" width="30" height="30" alt="share twitter" />
                 </div>
-                <a key={"sicon-download"} download="meme.svg" href={memeUrl} className="icon-btn-medium-secondary">
+                <div key={"sicon-download"} onClick={handleDownload} className="icon-btn-medium-secondary">
                     <img className="icon-md" src="/assets/icons/download.svg" width="30" height="30" alt="download" />
-                </a>
+                </div>
             </div>
         </div>
     )

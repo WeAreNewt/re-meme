@@ -1,18 +1,19 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router";
 import { Col, Container, Row } from "react-bootstrap";
+import { TailSpin } from "react-loader-spinner";
 import { useSelector } from "react-redux";
 import CreateFromPublicationStep from "../components/CreateFromPublicationStep";
 import { ConnectionBox } from "../components/Layout/ConnectionBox";
-import useWindowDimensions from "../hooks/window-dimensions.hook";
-import { User } from "../models/User/user.model";
+import Loader from "../components/Loader";
 import { useRandomMeme } from "../hooks/useMeme";
+import { RootState } from "../store/store";
 
 const Home : NextPage = () => {
-    const { width } = useWindowDimensions();
     const router = useRouter()
-    const user : User = useSelector((state: any) => state.user.selectedUser);
-    const { publication } = useRandomMeme()
+    const { publication, loading } = useRandomMeme()
+    const user = useSelector((state: RootState) => state.user.selectedUser);
+  
     const handleRemixMeme = () => {
       router.push(`/meme/${publication?.id}/edit`)
     }
@@ -23,14 +24,22 @@ const Home : NextPage = () => {
           <Col>
             <article className='space-y-10'>
               {
-                width > 850 && !user ?
-                  <header>
+                !user && (
+                  <header className="hidden lg:block">
                     <ConnectionBox />
                   </header>
-                  : null
+                )
               }
               <Row>
-                { publication && <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />}
+                {
+                  loading ? (
+                    <div className="h-20 flex w-full items-center justify-center">
+                      <Loader />
+                    </div>
+                  ) : (
+                    publication && <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />
+                  )
+                }
               </Row>
             </article>
           </Col>

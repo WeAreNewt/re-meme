@@ -10,7 +10,6 @@ import { useRandomMeme } from "../../../hooks/useMeme";
 import { PublicationData } from "../../../models/Publication/publication.model";
 
 const CreateMemePage: NextPage = () => {
-
     const { publication } = useRandomMeme()
 
     const [ step, setStep ] = useState(0);

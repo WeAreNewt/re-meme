@@ -15,7 +15,7 @@ const Remixes : React.FC<RemixesProps> = ({ setOpen, open, remixes = [], totalCo
 
     const onRemixClick = (remixId: string) => {
         setOpen(false)
-        router.push(`/meme/${remixId}`)
+        router.push(`${remixId}`)
     }
 
     return (

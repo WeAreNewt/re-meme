@@ -36,7 +36,11 @@ export interface CreatePostTypedDataParams {
         profileId: string
         contentURI: string
         collectModule: {
-            freeCollectModule: { followerOnly: boolean }
+            freeCollectModule?: { followerOnly: boolean }
+            unknownCollectModule?: {
+                contractAddress: string,
+                data: string
+            }
         }
         referenceModule: {
             followerOnlyReferenceModule: boolean
@@ -84,7 +88,11 @@ export interface CreateCommentTypedDataParams {
         publicationId: string
         contentURI: string
         collectModule: {
-            freeCollectModule: { followerOnly: boolean }
+            freeCollectModule?: { followerOnly: boolean }
+            unknownCollectModule?: {
+                contractAddress: string,
+                data: string
+            }
         }
         referenceModule: {
             followerOnlyReferenceModule: boolean
@@ -122,6 +130,11 @@ export interface PublicationData {
         totalAmountOfComments: number
     },
     metadata: PublicationMetadata
+    collectModule: {
+        contractAddress: string,
+        collectModuleReturnData: string
+        type: string
+    }
 }
 
 export interface GetPublicationData {
@@ -154,6 +167,7 @@ export interface ExplorePublicationsParams {
         sortCriteria?: string
         limit?: number
         timestamp?: number
+        publicationTypes?: string[]
     }
 }
 

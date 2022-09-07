@@ -57,7 +57,7 @@ export const CREATE_COMMENT_TYPED_DATA = gql`
         profileId
         profileIdPointed
         pubIdPointed
-                referenceModuleData
+        referenceModuleData
         contentURI
         collectModule
         collectModuleInitData
@@ -255,6 +255,11 @@ export const GET_PUBLICATION = gql`
       referralFee
       endTimestamp
     }
+    ... on UnknownCollectModuleSettings {
+      type
+      contractAddress
+      collectModuleReturnData
+    }
   }
 
   fragment PostFields on Post {
@@ -407,6 +412,8 @@ query($request: PublicationsQueryRequest!) {
 
 fragment MediaFields on Media {
   url
+  width
+  height
   mimeType
 }
 
@@ -415,14 +422,14 @@ fragment ProfileFields on Profile {
   name
   bio
   attributes {
-     displayType
-     traitType
-     key
-     value
+    displayType
+    traitType
+    key
+    value
   }
-  isFollowedByMe
+      isFollowedByMe
   isFollowing(who: null)
-  followNftAddress
+      followNftAddress
   metadata
   isDefault
   handle
@@ -437,6 +444,12 @@ fragment ProfileFields on Profile {
       original {
         ...MediaFields
       }
+      small {
+        ...MediaFields
+      }
+      medium {
+        ...MediaFields
+      }
     }
   }
   coverPicture {
@@ -448,6 +461,12 @@ fragment ProfileFields on Profile {
     }
     ... on MediaSet {
       original {
+        ...MediaFields
+      }
+      small {
+       ...MediaFields
+      }
+      medium {
         ...MediaFields
       }
     }
@@ -502,6 +521,12 @@ fragment MetadataOutputFields on MetadataOutput {
     original {
       ...MediaFields
     }
+    small {
+      ...MediaFields
+    }
+    medium {
+      ...MediaFields
+    }
   }
   attributes {
     displayType
@@ -520,9 +545,7 @@ fragment Erc20Fields on Erc20 {
 fragment CollectModuleFields on CollectModule {
   __typename
   ... on FreeCollectModuleSettings {
-      type
-      followerOnly
-      contractAddress
+    type
   }
   ... on FeeCollectModuleSettings {
     type
@@ -575,6 +598,11 @@ fragment CollectModuleFields on CollectModule {
     referralFee
     endTimestamp
   }
+  ... on UnknownCollectModuleSettings {
+    type
+    contractAddress
+    collectModuleReturnData
+  }
 }
 
 fragment PostFields on Post {
@@ -598,9 +626,9 @@ fragment PostFields on Post {
     }
   }
   appId
-  hidden
-  reaction(request: null)
-  mirrors(by: null)
+      hidden
+      reaction(request: null)
+      mirrors(by: null)
   hasCollectedByMe
 }
 
@@ -625,7 +653,7 @@ fragment MirrorBaseFields on Mirror {
     }
   }
   appId
-  hidden
+    hidden
   reaction(request: null)
   hasCollectedByMe
 }
@@ -663,7 +691,7 @@ fragment CommentBaseFields on Comment {
     }
   }
   appId
-  hidden
+    hidden
   reaction(request: null)
   mirrors(by: null)
   hasCollectedByMe
@@ -912,6 +940,11 @@ export const EXPLORE_PUBLICATIONS = gql`
       recipient
       referralFee
       endTimestamp
+    }
+    ... on UnknownCollectModuleSettings {
+      type
+      contractAddress
+      collectModuleReturnData
     }
   }
 
