@@ -28,23 +28,65 @@ export default function TermsOfService() {
               The Terms of Service include important information related to permissionless blockchains that you should know about. You should read these terms carefully.
             </li>
             <li>
-              You can use this Site to edit content and mint images on the Lens Protocol.
+              You must be at least 13 years old to use the Site and Services. You may not use the Services for any illegal activity.
             </li>
             <li>
-              When you use re:meme, you are interacting with smart contracts and other experimental technology.  The technology is built on public blockchain networks that we do not and cannot control. Things might not go as expected. You accept that risk.
+              Keep your digital wallet safe. You are responsible for it. 
             </li>
             <li>
-              Through your Lens Profile, you are engaging with a totally public, transparent blockchain. Transparency does not mean anonymity.
+              If you use the Site to upload content, the content will be stored on IPFS. We do not control IPFS. You should understand that even if content is reported and removed from the Site, the file will remain stored on IPFS.
             </li>
             <li>
-              We might change this Site and our Services from time to time. When we do, we will update these Terms.
+              You bear sole responsibility for evaluating the Services before using them.
             </li>
             <li>
-              If you have a problem or complaint, you and we agree to first engage in good faith negotiations to try to resolve it. You and we agree that if we can&apos;t find an answer through these negotiations, we will resort to the binding arbitration proceedings as outlined in the Terms of Service.
+              The Site is deployed on the Polygon Networks, which we don’t control.
+            </li>
+            <li>
+              With respect to intellectual property rights and ownership – what’s yours is yours.
+            </li>
+            <li>
+              Users who mint images using the Services obtain a limited license to use the content.
+            </li>
+            <li>
+              Image owners may only use content in accordance with any governing Terms of Use.
+            </li>
+            <li>
+              Users must have all necessary rights to content before minting an image on the Site.
+            </li>
+            <li>
+              You understand that you may be liable if you don’t have the necessary rights to content.
+            </li>
+            <li>
+              We reserve the right to remove images that violate these Terms. You can report content that violates these Terms by clicking the “Report” button.
+            </li>
+            <li>
+              We have and enforce a repeat infringer policy.
+            </li>
+            <li>
+              You should read our Privacy Policy.
+            </li>
+            <li>
+            You are not allowed to use the Services to engage in illegal activity, infringe upon anyone’s intellectual property rights, harass or otherwise engage in abusive behavior, spread false information or viruses, spam, or interfere with the security features of the Services in any way. We reserve the right to block your wallet from engaging with the Services. 
+            </li>
+            <li>
+              You will be responsible for and cover our losses in circumstances where it would be unfair for us to bear the loss. 
+            </li>
+            <li>
+              This Agreement can be terminated at any time and for any reason; however, it will govern your activity for so long as you continue using the Site or Services.
+            </li>
+            <li>
+              The law of the Cayman Islands governs our Services. 
+            </li>
+            <li>
+              You and we agree to first engage in good faith negotiations to resolve any dispute. You and we agree that if a dispute can’t be resolved through negotiations, it will be resolved through binding arbitration.
+            </li>
+            <li>
+              Unless you provide a timely arbitration opt-out notice to us at legal@aave.com, you agree that you and we are each waiving the right to a trial by jury or to participate as a plaintiff or class member in any purported class action or representative proceeding.
             </li>
             <br></br>
             <p>
-              Please note, that these TL;DRs do not form a part of these Terms of Service. They are provided merely for convenience and should not replace your review of the Terms of Service before using the Site and Services.
+              Please note, that these TL;DRs do not form a part of these Terms of Service. The TL;DR is provided merely for your convenience and should not replace your review of the Terms of Service before using the Site and Services.
             </p>
             <p>
               By visiting the Site and/or using the Services, you agree to be bound by the following terms and conditions (“Terms”), including those additional terms and conditions and policies referenced herein and/or available by hyperlink (collectively, the “Agreement”). The Agreement applies to all users of the Site and the Services, including without limitation users who are browsers and/or contributors of content.
