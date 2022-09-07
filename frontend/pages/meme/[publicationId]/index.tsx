@@ -8,26 +8,19 @@ import { User } from "../../../models/User/user.model";
 import Head from "next/head";
 import { selectedEnvironment } from "../../../config/environments";
 import { parseIpfs } from "../../../utils/link";
-import { ssrClient } from "../../../config/apollo";
-import { GET_PUBLICATION } from "../../../queries/publication";
-import { GetPublicationData, PublicationData } from "../../../models/Publication/publication.model";
-import { ParsedUrlQuery } from "querystring";
-import axios from "axios";
+import { useMemeFromPublicationId } from "../../../hooks/useMeme";
+import Loader from "../../../components/Loader";
 
-interface MemePageProps {
-  publication: PublicationData
-}
-
-interface MemePageQueryParams extends ParsedUrlQuery {
-  publicationId: string
-}
-
-const MemePage: React.FC<MemePageProps> = ({ publication }) => {
+const MemePage = () => {
     const router = useRouter()
+    const { publicationId } = router.query
     const user : User = useSelector((state: any) => state.user.selectedUser);
+    const { publication, loading } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
     const handleRemixMeme = () => {
-      router.push(`/meme/${publication.id}/edit`)
+      router.push(`/meme/${publication?.id}/edit`)
     }
+
+    console.log(loading)
   
     return (
       <>
@@ -48,53 +41,23 @@ const MemePage: React.FC<MemePageProps> = ({ publication }) => {
                     </header>
                   )
                 }
-                <Row>
-                  <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />
-                </Row>
+              <Row>
+                {
+                  loading ? (
+                    <div className="h-20 flex w-full items-center justify-center">
+                      <Loader />
+                    </div>
+                  ) : (
+                    publication && <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />
+                  )
+                }
+              </Row>
               </article>
             </Col>
           </Row>
         </Container>
       </>
     )
-}
-
-export const getServerSideProps: GetStaticProps<MemePageProps, MemePageQueryParams> = async (context) => {
-
-  const params = context.params
-
-  if(!params?.publicationId) return { notFound: true }
-
-  const publication = await ssrClient.query<GetPublicationData>({ query: GET_PUBLICATION, variables: {
-    request: {
-        publicationId: params.publicationId
-    }
-  }})
-
-  if(publication.errors || publication.error || !publication.data.publication) {
-    return {
-      notFound: true
-    }
-  }
-
-  /*
-
-  if(!process.env.NEXT_PUBLIC_BLACKLIST_OFF) {
-    const blacklisted = await axios.get(`/api/blacklist/`, {params: { postId: publication.data.publication.id }}).then((response) => response.data.blacklisted)
-    if(blacklisted) {
-      return {
-        notFound: true
-      }
-    }
-  }
-
-  */
-
-  return {
-    props: {
-      publication: publication.data.publication
-    }
-  }
 }
 
 export default MemePage
