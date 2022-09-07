@@ -4,29 +4,44 @@ export default function PrivacyPolicy() {
       <h1 className="w-full flex justify-center text-lg mb-5">
         <b>RE:MEME - PRIVACY POLICY</b>
       </h1>
-      <span className="w-full flex justify-center text-lg mb-5">Effective Date: August 26, 2022</span>
+      <span className="w-full flex justify-center text-lg mb-5">Effective Date: September 7, 2022</span>
 
       <ol>
+        <em>
         <p>We know that privacy policies on websites can be long (really long!), full of legal jargon, and confusing. </p>
         <p>
-          To ensure you know what’s intended by this Privacy Policy, here’s a quick TL;DR. We also have set out the “takeaways” from each relevant provision to make it easier for you to understand. Using our Services should be simple, as should the terms around your use!
+          To ensure you know what&apos;s intended by this Privacy Policy, here&apos;s a quick TL;DR. We also have set out the key “takeaways” from each relevant provision to make it easier for you to understand. Using our Services should be simple, as should the terms around your use! You should read the entirety of the Privacy Policy before using the Services.
         </p>
         <ul className="list-disc">
           <li>
-            This Privacy Policy provides information about how we process any of your personal information.
+            This Privacy Policy provides information about how we process any of your personal information. You should also read our Terms of Service.
           </li>
           <li>
-            You should also read our Terms of Service.
+            By accessing the Site and / or using our Services, you agree to not only this Privacy Policy, but also to our Terms of Use and any other written agreements governing your use of the Services. You agree to our collection and use of any personal data (as described below) as well as the features of public / permissionless blockchain technology.
           </li>
           <li>
-            For any questions, we have a “Contact Us” section at the bottom. For questions, please email privacy@avaralabsui.com.
+            We only collect the content of your messages that you decide to send to us (like feedback and questions to our information support team). We do not collect any data automatically, however, we may begin doing so in the future to make sure that our Services work well for our users. We do retrieve publicly available data from the blockchain.
           </li>
           <li>
-            Our Services let you use and interact with smart contracts on a public blockchain network. Blockchain transactions are” immutable,” meaning they cannot be changed – ever, by anyone (and not by us!), and cannot be deleted.
+            We may use information collected to operate and manage the Services on this Site (or other places), provide you with support, ensure our compliance with applicable laws and regulations, and enforce the security of the Site or make other improvements.
           </li>
           <li>
-            If you are not comfortable with the unchangeable, permanent, and public nature of all entries on the blockchain, you should not engage with our Site or the Services.
+            We may share or give information to our affiliates (other entities in our company group), service providers and professional advisors or in connection with a corporate deal. We may also need to share information to comply with the law or other legal processes. We may share information about you at your request or if you agree to let us do so.  We can share information about you that does not identify you specifically (this is called “anonymized data”).
           </li>
+          <li>
+            Relax. We don’t use Google Analytics (or other analytics services).
+          </li>
+          <li>
+            By using the Services, you agree that your data may be transferred to countries other than your home country. Where we do, we do so in accordance with this Policy and applicable laws.
+          </li>
+          <li>
+            We may change this Privacy Policy at any time.
+          </li>
+          <li>
+            The fastest way to get in touch is via email at privacy@avaralabsui.com.
+          </li>
+          <p>Please note that this TL;DR does not form a part of the Privacy Policy. The TL;DR is provided merely for your convenience and should not replace your review of the Privacy Policy before using the Site and Services.</p>
+          </em>
         </ul>
         <br></br>
         <li>
