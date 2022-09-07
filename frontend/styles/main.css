@@ -239,6 +239,21 @@
             disabled:bg-memixer-gradient-default
     }
 
+    .base-icon-btn-small {
+        @apply
+            h-[32px]
+            w-[32px]
+            comic-border-mini
+            hover:comic-border
+            active:shadow-[inset_4px_5px_0px_#101112]
+            transform
+            hover:translate-x-[-2px]
+            hover:translate-y-[-2px]
+            active:hover:transform-none
+            transition-all
+            disabled:transform-none
+    }
+
     .base-icon-btn-medium {
         @apply
             h-[40px]
@@ -277,6 +292,12 @@
         @apply
             base-btn-primary
             base-btn-small
+    }
+
+    .btn-with-icon-small {
+        @apply
+            base-btn-primary
+            base-btn-with-icon-small
     }
 
     .btn-small-secondary {
@@ -344,6 +365,12 @@
         @apply
             w-[20px]
             h-[20px]
+    }
+
+    .icon-btn-small {
+        @apply
+            base-icon-btn-small
+            base-icon-btn-primary 
     }
 
     .icon-md {

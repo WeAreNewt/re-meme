@@ -1,0 +1,7 @@
+schema: https://api-mumbai.lens.dev
+
+generates:
+  models/lensApi.model.ts:
+    plugins:
+      - typescript
+      - fragment-matcher
