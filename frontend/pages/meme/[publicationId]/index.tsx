@@ -7,13 +7,13 @@ import { ConnectionBox } from "../../../components/Layout/ConnectionBox";
 import useWindowDimensions from "../../../hooks/window-dimensions.hook";
 import { User } from "../../../models/User/user.model";
 import { useMemeFromPublicationId } from "../../../hooks/useMeme";
+import Loader from "../../../components/Loader";
 
 const MemePage: NextPage = () => {
-    const { width } = useWindowDimensions();
     const router = useRouter()
     const { publicationId } = router.query
     const user : User = useSelector((state: any) => state.user.selectedUser);
-    const { publication } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
+    const { publication, loading } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
     const handleRemixMeme = () => {
       router.push(`/meme/${publication?.id}/edit`)
     }
@@ -24,14 +24,22 @@ const MemePage: NextPage = () => {
           <Col>
             <article className='space-y-10'>
               {
-                width > 850 && !user ?
-                  <header>
+                !user && (
+                  <header className="hidden lg:block">
                     <ConnectionBox />
                   </header>
-                  : null
+                )
               }
               <Row>
-                { publication && <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />}
+                {
+                  loading ? (
+                    <div className="h-20 flex w-full items-center justify-center">
+                      <Loader />
+                    </div>
+                  ) : (
+                    publication && <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />
+                  )
+                }
               </Row>
             </article>
           </Col>

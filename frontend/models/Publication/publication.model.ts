@@ -167,6 +167,7 @@ export interface ExplorePublicationsParams {
         sortCriteria?: string
         limit?: number
         timestamp?: number
+        publicationTypes?: string[]
     }
 }
 

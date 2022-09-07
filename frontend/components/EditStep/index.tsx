@@ -20,8 +20,9 @@ import { parseIpfs } from "../../utils/link";
 import UploadMemeError, { UploadError } from "../Modals/UploadMemeError";
 import { useMemeFromTxHash } from "../../hooks/useMeme";
 import { selectedEnvironment } from "../../config/environments";
-import { AbiCoder } from "ethers/lib/utils";
 import useLensModuleEnabledCurrencies from "../../hooks/useLensModuleEnabledCurrencies";
+import { BROADCAST_MUTATION } from "../../queries/broadcast";
+import { BroadcastData, BroadcastParams } from "../../models/Broadcast/broadcast.model";
 
 interface PathEvent {
     path?: fabric.Path
@@ -89,7 +90,7 @@ const uploadImageAndMetadata = (svgImage: string, canvasJson: string) => {
                     type: 'image/svg+xml'
                 }
             ],
-            appId: process.env.NEXT_PUBLIC_APP_ID || 'thisisarandomappid'
+            appId: selectedEnvironment.appId
         }
         const jsonMetadata = JSON.stringify(metadata)
         const metadataBlob = new Blob([jsonMetadata], { type: 'application/json'})
@@ -122,6 +123,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     const [ canvas, setCanvas ] = useState<fabric.Canvas>();
     const [ texts, setTexts ] = useState<fabric.Text[]>([])
     const [ images, setImages ] = useState<fabric.Image[]>([])
+    const [ backgroundImage, setBackgroundImage ] = useState<fabric.Image | string>()
     const [ drawings, setDrawings ] = useState<fabric.Path[]>([])
     const [ isDrawingMode, setIsDrawingMode ] = useState<boolean>(false)
     const user = useSelector<RootState, User | null>(state => state.user.selectedUser)
@@ -143,6 +145,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     const [ postTypedData ] = useMutation<CreatePostTypedData, CreatePostTypedDataParams>(CREATE_POST_TYPED_DATA)
     const [ commentTypedData ] = useMutation<CreateCommentTypedData, CreateCommentTypedDataParams>(CREATE_COMMENT_TYPED_DATA)
+    const [ broadcast ] = useMutation<BroadcastData, BroadcastParams>(BROADCAST_MUTATION)
     const { publication: newPublication, loading: newPublicationLoading, error: newPublicationError } = useMemeFromTxHash(txHash)
 
     const handleMemeText = (e, index) => {
@@ -173,6 +176,14 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             const image = images[index]
             canvas.remove(image)
             setImages(images => images.slice(0, index).concat(images.slice(index+1)) )
+            canvas.renderAll()
+        }
+    }
+
+    const onDeleteBackgroundImage = () => {
+        if(canvas) {
+            canvas.backgroundImage = undefined
+            setBackgroundImage(undefined)
             canvas.renderAll()
         }
     }
@@ -230,64 +241,93 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                         ...mutationPostParams
                     }
                     return commentTypedData({ variables: { request: commentPostParams }}).then(postResult => {
-                        const typedData = postResult.data?.createCommentTypedData.typedData
-                        if(typedData) {
+                        if(postResult.data?.createCommentTypedData) {
+                            const typedData = postResult.data.createCommentTypedData.typedData
+                            const id = postResult.data.createCommentTypedData.id
                             return signTypedDataAsync({
                                 domain: omitDeep(typedData.domain, '__typename'),
                                 value: omitDeep(typedData.value, '__typename'),
                                 types: omitDeep(typedData.types, '__typename')
                             }).then(async (signedType) => {
-                                const { v, r, s } = utils.splitSignature(signedType)
-                                const tx = await lensHubContract["commentWithSig"]({
-                                    profileId: typedData.value.profileId,
-                                    contentURI:typedData.value.contentURI,
-                                    profileIdPointed: typedData.value.profileIdPointed,
-                                    pubIdPointed: typedData.value.pubIdPointed,
-                                    referenceModuleData: typedData.value.referenceModuleData,
-                                    collectModule: typedData.value.collectModule,
-                                    collectModuleInitData: typedData.value.collectModuleInitData,
-                                    referenceModule: typedData.value.referenceModule,
-                                    referenceModuleInitData: typedData.value.referenceModuleInitData,
-                                    sig: {
-                                        v,
-                                        r,
-                                        s,
-                                        deadline: typedData.value.deadline,
-                                    },
-                                });
-                                tx.wait(1).then(() => {
-                                    setTxHash(tx.hash)
-                                })
+                                if(process.env.NEXT_PUBLIC_LENS_BROADCAST_ON) {
+                                    broadcast({
+                                        variables: {
+                                            request: {
+                                                id,
+                                                signature: signedType
+                                            }
+                                        }
+                                    }).then(broadcastResult => {
+                                        setTxHash(broadcastResult.data?.broadcast.txHash)
+                                    })
+                                } else {
+                                    const { v, r, s } = utils.splitSignature(signedType)
+                                    const tx = await lensHubContract["commentWithSig"]({
+                                        profileId: typedData.value.profileId,
+                                        contentURI:typedData.value.contentURI,
+                                        profileIdPointed: typedData.value.profileIdPointed,
+                                        pubIdPointed: typedData.value.pubIdPointed,
+                                        referenceModuleData: typedData.value.referenceModuleData,
+                                        collectModule: typedData.value.collectModule,
+                                        collectModuleInitData: typedData.value.collectModuleInitData,
+                                        referenceModule: typedData.value.referenceModule,
+                                        referenceModuleInitData: typedData.value.referenceModuleInitData,
+                                        sig: {
+                                            v,
+                                            r,
+                                            s,
+                                            deadline: typedData.value.deadline,
+                                        },
+                                    });
+                                    tx.wait(1).then(() => {
+                                        setTxHash(tx.hash)
+                                    })
+                                }
                             })
                         }
                     })
                 } else {
                     return postTypedData({ variables: { request: mutationPostParams } }).then(postResult => {
-                        const typedData = postResult.data?.createPostTypedData.typedData
-                        if(typedData) {
+                        if(postResult.data?.createPostTypedData) {
+                            const typedData = postResult.data.createPostTypedData.typedData
+                            const id = postResult.data.createPostTypedData.id
                             return signTypedDataAsync({
                                 domain: omitDeep(typedData.domain, '__typename'),
                                 value: omitDeep(typedData.value, '__typename'),
                                 types: omitDeep(typedData.types, '__typename')
                             }).then(async (signedType) => {
-                                const { v, r, s } = utils.splitSignature(signedType)
-                                const tx = await lensHubContract["postWithSig"]({
-                                    profileId: typedData.value.profileId,
-                                    contentURI:typedData.value.contentURI,
-                                    collectModule: typedData.value.collectModule,
-                                    collectModuleInitData: typedData.value.collectModuleInitData,
-                                    referenceModule: typedData.value.referenceModule,
-                                    referenceModuleInitData: typedData.value.referenceModuleInitData,
-                                    sig: {
-                                        v,
-                                        r,
-                                        s,
-                                        deadline: typedData.value.deadline,
-                                    },
-                                });
-                                tx.wait(1).then(() => {
-                                    setTxHash(tx.hash)
-                                })
+                                if(process.env.NEXT_PUBLIC_LENS_BROADCAST_ON) {
+                                    broadcast({
+                                        variables: {
+                                            request: {
+                                                id,
+                                                signature: signedType
+                                            }
+                                        }
+                                    }).then(broadcastResult => {
+                                        setTxHash(broadcastResult.data?.broadcast.txHash)
+                                    })
+                                }
+                                else {
+                                    const { v, r, s } = utils.splitSignature(signedType)
+                                    const tx = await lensHubContract["postWithSig"]({
+                                        profileId: typedData.value.profileId,
+                                        contentURI:typedData.value.contentURI,
+                                        collectModule: typedData.value.collectModule,
+                                        collectModuleInitData: typedData.value.collectModuleInitData,
+                                        referenceModule: typedData.value.referenceModule,
+                                        referenceModuleInitData: typedData.value.referenceModuleInitData,
+                                        sig: {
+                                            v,
+                                            r,
+                                            s,
+                                            deadline: typedData.value.deadline,
+                                        },
+                                    });
+                                    tx.wait(1).then(() => {
+                                        setTxHash(tx.hash)
+                                    })
+                                }
                             })
                         }
                     })
@@ -346,7 +386,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         const element = event.target as HTMLInputElement
         element.value = ''
     }
-    
 
     useLayoutEffect(() => {
         if(containerRef.current) {
@@ -365,12 +404,14 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             const canvasNewHeight = containerRef.current?.clientHeight || 0
                             const scaleX = canvasNewWidth / canvasCreation.getWidth()
                             const scaleY = canvasNewHeight / canvasCreation.getHeight()
+                            canvasCreation.setWidth(canvasNewWidth)
+                            canvasCreation.setHeight(canvasNewHeight)
+                            console.log(canvasCreation.getZoom())
                             canvasCreation.getObjects().map(object => {
                                 object.scaleX = (object.scaleX || 0) * scaleX
                                 object.scaleY = (object.scaleY || 0) * scaleY
                                 object.left = (object.left || 0) * scaleX
                                 object.top = (object.top || 0) * scaleY
-                                object.setCoords()
                                 if(object.type === 'text') {
                                     disableMiddleResizeButtons(object)
                                     newTexts.push(object as fabric.Text)
@@ -386,6 +427,15 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                                 setImages(newImages)
                                 setDrawings(newDrawings)
                             })
+                            if(canvasCreation.backgroundImage) {
+                                const publicationBackgroundImage = canvasCreation.backgroundImage as fabric.Image
+                                if(publicationBackgroundImage.getScaledWidth() > publicationBackgroundImage.getScaledHeight()) {
+                                    publicationBackgroundImage.scaleToWidth(containerRef.current?.clientWidth || 0)
+                                } else {
+                                    publicationBackgroundImage.scaleToHeight(containerRef.current?.clientHeight || 0)
+                                }
+                                setBackgroundImage(canvasCreation.backgroundImage)
+                            }
                         })
                     }).catch(() => {
                         fabric.loadSVGFromURL(ipfsLink, objects => {
@@ -421,16 +471,16 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             left: 0
                         })
                         if(fabricImage.getScaledWidth() > fabricImage.getScaledHeight()) {
-                            fabricImage.scaleToWidth(containerRef.current.clientWidth / 2 >> 0)
+                            fabricImage.scaleToWidth(containerRef.current.clientWidth)
                         } else {
-                            fabricImage.scaleToHeight(containerRef.current.clientHeight / 2 >> 0)
+                            fabricImage.scaleToHeight(containerRef.current.clientHeight)
                         }
-                        setImages(images => images.concat([fabricImage]))
-                        canvasCreation.add(fabricImage)
+                        canvasCreation.setBackgroundImage(fabricImage, () => {})
                         const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
                         disableMiddleResizeButtons(newText)
                         canvasCreation.add(newText)
                         setTexts([newText])
+                        setBackgroundImage(fabricImage)
                     }
                 }
             }
@@ -531,6 +581,16 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                 <div className='main-container pb-[64px] relative w-full lg:w-2/5'>
                     <p className="text-subtitle-2 mb-[16px]">RE:MEME CONTROLS</p>
                     {
+                        backgroundImage && (
+                            <div className="flex justify-between w-full px-[16px] py-[12px] bg-neutral-200 rounded-[12px] mb-[16px]">
+                                <span>{`Background image`}</span>
+                                <button onClick={() => onDeleteBackgroundImage()}>
+                                    <img src="/assets/icons/x.png"/>
+                                </button>
+                            </div>
+                        )
+                    }
+                    {
                         texts.map((text, index) =>
                             <div key={`memixer_text_${index}`} className="border-2 border-black border-solid rounded-xl mb-[16px] flex p-2 gap-2 w-full">
                                 <input
@@ -577,8 +637,8 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                                 <img className="icon-md" src={`${ isDrawingMode ? '/assets/icons/edit-meme-3-reverse.svg' : '/assets/icons/edit-meme-3.svg'}`}/>
                             </button>
                     </div>
-                    <button onClick={onRemix} className={"create-btn-gradient rounded-full border-black border-solid border-3 px-16 sm:px-16 lg:px-20 py-3 text-lg font-bold absolute -bottom-10 " + (false ? "opacity-30" : "comic-border-mini")}>
-                        REMIX
+                    <button onClick={onRemix} className={"btn-large-tertiary absolute -bottom-10 " + (false ? "opacity-30" : "comic-border-mini")}>
+                        { publication ? 'REMIX' : 'CREATE' }
                     </button>
                 </div>
             </div>

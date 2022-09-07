@@ -31,30 +31,11 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     const [remixesOpen, setRemixesOpen] = useState(false)
     const [imageHover, setImageHover] = useState(false)
     const [showConfirm, setShowConfirm] = useState(false);
-    const [showCollectSettings, setShowCollectSettings] = useState(false)
     const { data: commentsPageData } = useComments(meme.id)
-    const { data: signer } = useSigner()
-    const user = useSelector<RootState, User | null>(state => state.user.selectedUser)
-
-    const pubId = meme.id.split('-')[1]
-
-    const collectModuleContract = useContract({
-        addressOrName: selectedEnvironment.collectModuleAddress,
-        contractInterface: CollectModuleAbi,
-        signerOrProvider: signer
-    })
-
-    const collectModuleSettings = useContractRead({
-        addressOrName: selectedEnvironment.collectModuleAddress,
-        contractInterface: CollectModuleAbi}, 'getPublicationData', { args: [user?.id, pubId]})
 
     useEffect(() => {
         setDisabled(!data ? true : false)
     }, [data])
-
-    const handleUpdateSettings = () => {
-        setShowCollectSettings(true);
-    }
 
     const handleRemixClick = () => {
         router.push(`/meme/${meme.id}/edit`)
@@ -69,6 +50,33 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     }
 
     const memeSrc = parseIpfs(meme.metadata.media[0].original.url)
+
+    /*
+
+    Waiting for the lens api to be ready
+
+    const { data: signer } = useSigner()
+    const user = useSelector<RootState, User | null>(state => state.user.selectedUser)
+
+    const pubId = meme.id.split('-')[1]
+
+    const collectModuleContract = useContract({
+        addressOrName: selectedEnvironment.collectModuleAddress,
+        contractInterface: CollectModuleAbi,
+        signerOrProvider: signer
+    })
+
+    const collectModuleSettings = useContractRead({
+        addressOrName: selectedEnvironment.collectModuleAddress,
+        contractInterface: CollectModuleAbi}, 'getPublicationData', { args: [user?.id, pubId]
+    })
+
+    const [showCollectSettings, setShowCollectSettings] = useState(false)
+
+    const handleUpdateSettings = () => {
+        setShowCollectSettings(true);
+    }
+
     const initialModuleData = useMemo(() => {
         if(collectModuleSettings.data) {
             const decodedData = collectModuleSettings.data
@@ -89,6 +97,7 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
             setShowCollectSettings(false)
         })
     }
+    */
 
     return (
         <>
@@ -115,12 +124,15 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
                     <div className="flex gap-[16px]">
                         <RemixCount handleClick={() => setRemixesOpen(true)} count={commentsPageData?.publications.pageInfo.totalCount || 0} />
                         {
+                            /*
+                            Waiting for the lens api to be ready
                             user?.id === meme.profile.id && initialModuleData && (
                                 <>
                                     <UpdateCollectButton onUpdateCollectClicked={handleUpdateSettings} />
                                     <UpdateCollectSettingsModal onSubmit={onSubmitModuleChanges} show={showCollectSettings} setShow={setShowCollectSettings} initialValues={initialModuleData} />
                                 </>
                             )
+                            */
                         }
                     </div>
                 </div>

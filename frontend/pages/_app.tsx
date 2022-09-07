@@ -47,6 +47,7 @@ import { RefreshData } from '../models/Auth/auth.model';
 import { setTokens } from '../store/reducers/auth.reducer';
 import PageLayout from '../components/Layout';
 import { selectedEnvironment } from '../config/environments';
+import result from '../models/lensApi.model';
 
 interface RefreshJwt {
   id: string
@@ -93,8 +94,11 @@ const client = new ApolloClient({
     httpLink
   ]),
   cache: new InMemoryCache({
-    possibleTypes: {
-      CollectModule: ["FreeCollectModuleSettings", "FeeCollectModuleSettings", "LimitedFeeCollectModuleSettings", "LimitedTimedFeeCollectModuleSettings", "RevertCollectModuleSettings", "TimedFeeCollectModuleSettings", "UnknownCollectModuleSettings"]
+    possibleTypes: result.possibleTypes,
+    typePolicies: {
+      PublicationsQueryRequest: {
+        queryType: true
+      }
     }
   })
 });

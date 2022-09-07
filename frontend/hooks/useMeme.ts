@@ -1,19 +1,21 @@
-import { useLazyQuery, useQuery } from "@apollo/client";
-import { useEffect, useMemo, useState } from "react";
+import { ApolloError, useLazyQuery, useQuery } from "@apollo/client";
+import { useEffect, useState, useMemo } from "react";
 import { ExplorePublicationsData, ExplorePublicationsParams, GetPublicationData, GetPublicationParams, GetPublicationsData, HasTxBeenIndexedData, HasTxBeenIndexedParams, PublicationData } from "../models/Publication/publication.model";
 import { EXPLORE_PUBLICATIONS, GET_PUBLICATION, HAS_TX_BEEN_INDEXED } from "../queries/publication";
 import axios from 'axios';
-import { resolve } from "path";
+import { selectedEnvironment } from "../config/environments";
 
-interface UseMemeReturn {
+interface UseMemeFromPublicationIdReturn {
     publication?: PublicationData
+    loading: boolean
 }
 
-type UseMemeFromPublicationId = (publicationId?: string, isLoading?: boolean) => UseMemeReturn
+type UseMemeFromPublicationId = (publicationId?: string, isLoading?: boolean) => UseMemeFromPublicationIdReturn
 
 export const useMemeFromPublicationId : UseMemeFromPublicationId = (publicationId, isLoading) => {
 
     const [ publication, setPublication ]  = useState<PublicationData>()
+    const [ loading, setLoading ] = useState<boolean>(false)
 
     const [ getPublication ] = useLazyQuery<GetPublicationData, GetPublicationParams>(GET_PUBLICATION, {
         variables: {
@@ -25,57 +27,79 @@ export const useMemeFromPublicationId : UseMemeFromPublicationId = (publicationI
 
     useEffect(() => {
         if(!isLoading) {
+            setLoading(true)
             if(publicationId) {
                 getPublication().then(data => {
                     setPublication(data.data?.publication)
+                    setLoading(false)
                 })
             }
         }
     }, [getPublication, publicationId, isLoading])
 
-    return { publication }
+    return { publication, loading }
 }
 
-type UseRandomMeme = () => UseMemeReturn
+interface UseRandomMemeReturn {
+    publication?: PublicationData
+    loading: boolean
+    error?: ApolloError
+}
+
+type UseRandomMeme = () => UseRandomMemeReturn
 
 const sortCriterias = ['TOP_COMMENTED', 'TOP_COLLECTED', 'LATEST']
 
 const getRandomNumber = (max: number) => Math.floor(Math.random() * max)
 
+const blackListed = async (id) => {
+    const response = await axios.get(`/api/blacklist/`, {params: {postId: id}}).then((response) => response.data.blacklisted)
+    return response
+}
+
 export const useRandomMeme : UseRandomMeme = () => {
 
     const [publication, setPublication] = useState<PublicationData>()
+    const [loading, setLoading] = useState<boolean>(true)
 
-    const [ getPublication ] = useLazyQuery<ExplorePublicationsData, ExplorePublicationsParams>(EXPLORE_PUBLICATIONS)
+    const initialVariables = useMemo(() => ({
+        request: {
+            sortCriteria: sortCriterias[getRandomNumber(sortCriterias.length)],
+            sources: [selectedEnvironment.appId],
+            limit: 50,
+            timestamp: 1654052400,
+            publicationTypes: ['COMMENT', 'POST']
+        }
+    }), [])
 
-    const blackListed = async (id) => {
-        const response = await axios.get(`/api/blacklist/`, {params: {postId: id}}).then((response) => response.data.blacklisted)
-        return response
-    }
+    const { data, error } = useQuery<ExplorePublicationsData, ExplorePublicationsParams>(EXPLORE_PUBLICATIONS, {
+        variables: initialVariables
+    })
 
     useEffect(() => {
-        getPublication({
-            variables: {
-                request: {
-                    sortCriteria: sortCriterias[getRandomNumber(sortCriterias.length)],
-                    sources: [process.env.NEXT_PUBLIC_APP_ID || ''],
-                    limit: 50,
-                    timestamp: 1654052400
+        if(data) {
+            const poolBlacklist = async () => {
+                const itemsLength = data.explorePublications.items.length
+                if(!error && itemsLength) {
+                    var publcId = data.explorePublications.items[getRandomNumber(itemsLength)]
+                    if(!process.env.NEXT_PUBLIC_BLACKLIST_OFF) {
+                        let isBlacklisted = await blackListed(publcId.id)
+                        while(isBlacklisted){
+                            console.log(1)
+                            isBlacklisted = await blackListed(data.explorePublications.items[getRandomNumber(itemsLength)].id)
+                        }
+                    }
+                    setPublication(publcId)
+                    setLoading(false)
+                } else {
+                    setLoading(false)
                 }
             }
-        }).then(async data =>{
-            var publcId = data.data?.explorePublications.items[getRandomNumber(data.data.explorePublications.items.length)]
+            poolBlacklist()
+        }
+    }, [data, error])
 
-            if(!process.env.NEXT_PUBLIC_BLACKLIST_OFF) {
-                while(await blackListed(publcId?.id)){
-                    publcId = data.data?.explorePublications.items[getRandomNumber(data.data.explorePublications.items.length)]
-                }
-            }
-             setPublication(publcId)
-            })
-    }, [getPublication])
-
-    return { publication }
+    return { publication, loading, error }
 }
 
 interface UseMemeFromTxHashReturn {
