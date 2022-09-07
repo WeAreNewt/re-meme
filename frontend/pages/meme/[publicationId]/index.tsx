@@ -33,6 +33,7 @@ const MemePage: React.FC<MemePageProps> = ({ publication }) => {
         <Head>
           <meta property="og:url" content={`${selectedEnvironment.appUrl}/meme/${publication?.id}`} />
           <meta property="og:image" content={parseIpfs(publication?.metadata.media[0].original.url || '')} />
+          <meta property="twitter:image" content={parseIpfs(publication?.metadata.media[0].original.url || '')} />
         </Head>
         <Container fluid="md" className='h-full'>
           <Row className='mt-auto'>
