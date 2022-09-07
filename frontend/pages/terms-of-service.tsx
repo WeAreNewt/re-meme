@@ -20,9 +20,9 @@ export default function TermsOfService() {
           </p>
           <p>
             To ensure you know what&apos;s intended by this Agreement, here&apos;s a quick TL;DR. We also have set out the key “takeaways” from each relevant provision to make it easier for you to understand. Using our Services should be simple, as should the terms around your use! You should read the entirety of these Terms before using the Services.
-          </p>
+          </p></em>
           <ul className="list-disc">
-            <li>
+            <em><li>
               The Terms of Service include important information related to permissionless blockchains that you should know about. You should read these terms carefully.
             </li>
             <li>
@@ -81,10 +81,10 @@ export default function TermsOfService() {
             </li>
             <li>
               Unless you provide a timely arbitration opt-out notice to us at legal@aave.com, you agree that you and we are each waiving the right to a trial by jury or to participate as a plaintiff or class member in any purported class action or representative proceeding.
-            </li>
+            </li></em>
             <p>
               Please note, that these TL;DRs do not form a part of these Terms of Service. The TL;DR is provided merely for your convenience and should not replace your review of the Terms of Service before using the Site and Services.
-            </p></em>
+            </p>
             <p>
               By visiting the Site and/or using the Services, you agree to be bound by the following terms and conditions (“Terms”), including those additional terms and conditions and policies referenced herein and/or available by hyperlink (collectively, the “Agreement”). The Agreement applies to all users of the Site and the Services, including without limitation users who are browsers and/or contributors of content.
             </p>

@@ -7,13 +7,12 @@ export default function PrivacyPolicy() {
       <span className="w-full flex justify-center text-lg mb-5">Effective Date: September 7, 2022</span>
 
       <ol>
-        <em>
-        <p>We know that privacy policies on websites can be long (really long!), full of legal jargon, and confusing. </p>
+        <p><em>We know that privacy policies on websites can be long (really long!), full of legal jargon, and confusing.</em></p>
         <p>
-          To ensure you know what&apos;s intended by this Privacy Policy, here&apos;s a quick TL;DR. We also have set out the key “takeaways” from each relevant provision to make it easier for you to understand. Using our Services should be simple, as should the terms around your use! You should read the entirety of the Privacy Policy before using the Services.
+          <em>To ensure you know what&apos;s intended by this Privacy Policy, here&apos;s a quick TL;DR. We also have set out the key “takeaways” from each relevant provision to make it easier for you to understand. Using our Services should be simple, as should the terms around your use! You should read the entirety of the Privacy Policy before using the Services.</em>
         </p>
         <ul className="list-disc">
-          <li>
+          <em><li>
             This Privacy Policy provides information about how we process any of your personal information. You should also read our Terms of Service.
           </li>
           <li>
@@ -29,7 +28,7 @@ export default function PrivacyPolicy() {
             We may share or give information to our affiliates (other entities in our company group), service providers and professional advisors or in connection with a corporate deal. We may also need to share information to comply with the law or other legal processes. We may share information about you at your request or if you agree to let us do so.  We can share information about you that does not identify you specifically (this is called “anonymized data”).
           </li>
           <li>
-            Relax. We don’t use Google Analytics (or other analytics services).
+            Relax. We don&apos;t use Google Analytics (or other analytics services).
           </li>
           <li>
             By using the Services, you agree that your data may be transferred to countries other than your home country. Where we do, we do so in accordance with this Policy and applicable laws.
@@ -40,8 +39,7 @@ export default function PrivacyPolicy() {
           <li>
             The fastest way to get in touch is via email at privacy@avaralabsui.com.
           </li>
-          <p>Please note that this TL;DR does not form a part of the Privacy Policy. The TL;DR is provided merely for your convenience and should not replace your review of the Privacy Policy before using the Site and Services.</p>
-          </em>
+          <p>Please note that this TL;DR does not form a part of the Privacy Policy. The TL;DR is provided merely for your convenience and should not replace your review of the Privacy Policy before using the Site and Services.</p></em>
         </ul>
         <br></br>
         <li>
@@ -231,7 +229,7 @@ export default function PrivacyPolicy() {
               <b>Analytics.</b>
             </u>
           </h3>
-          <p><em>Relax. We don't use Google Analytics (or other analytics services).</em></p>
+          <p><em>Relax. We don&apos;t use Google Analytics (or other analytics services).</em></p>
           <p>We do not use analytics services for this Site.</p>
         </li>
         <li>
@@ -354,7 +352,7 @@ export default function PrivacyPolicy() {
             </u>
           </h3>
           <p><em>
-            Read this section if you’re a resident of California.
+            Read this section if you&apos;re a resident of California.
           </em></p>
           <p>
             These additional disclosures apply only to California residents. The California Consumer Privacy Act of 2018 (“CCPA”) provides additional rights to know, delete, and opt-out, and requires businesses collecting or disclosing personal information to provide notices and the means to exercise consumer rights.
@@ -445,7 +443,7 @@ export default function PrivacyPolicy() {
             </u>
           </h3>
           <p><em>
-            Read this section if you’re a resident of the EEA or the UK.
+            Read this section if you&apos;re a resident of the EEA or the UK.
           </em></p>
           <ol>
             <li>
