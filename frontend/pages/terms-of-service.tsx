@@ -152,7 +152,7 @@ export default function TermsOfService() {
             A widespread belief is that entries and transactions involving blockchains are anonymous. In fact, a central feature of blockchains and thus, blockchain-based transactions and entries, is that they are transparent. Your public key and your wallet address, which you need to interact with the Site, are visible to anyone. To the extent your public key or wallet address can be linked back to you, it would be possible for someone to determine your identity.
           </p>
           <p>
-          All transactions and blockchain entries accessed through the Services are irreversible, final, and without refunds.
+            All transactions and blockchain entries accessed through the Services are irreversible, final, and without refunds.
           </p>
           <p>
             <b>Any content uploaded to our Site will be hosted by IPFS, a third-party hosting service.</b>
@@ -180,7 +180,7 @@ export default function TermsOfService() {
           <p>
             <b>You acknowledge the risks of using the Services.</b>
           </p>
-          <p><em>>You bear sole responsibility for evaluating the Services before using them.</em></p>
+          <p><em>You bear sole responsibility for evaluating the Services before using them.</em></p>
           <p>
             You bear sole responsibility for evaluating the Services before using them, and all transactions and blockchain entries accessed through the Services are irreversible, final, and without refunds. The Services may be disabled, disrupted or adversely impacted as a result of sophisticated cyber-attacks, surges in activity, computer viruses, and/or other operational or technical challenges, among other things. We disclaim any ongoing obligation to notify you of all of the potential risks of using and accessing our Services. You agree to (defined below) accept these risks and agree that you will not seek to hold any Avara UI Labs Indemnified Party responsible for any consequent losses.
           </p>
