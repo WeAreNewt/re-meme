@@ -4,6 +4,7 @@ const Document = () => {
   return (
     <Html>
       <Head>
+        <meta name="twitter:card" content="summary_large_image" />
         <meta property="og:title" content="re:meme - the on-chain meme remixer" />
         <meta property="og:description" content="Create memes, remix memes, and give recognition to all meme creators. The on-chain meme source of truth, thanks to the power of the Lens Protocol." />
         <link rel="icon" href="/favicon.ico" />
