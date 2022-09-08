@@ -28,6 +28,7 @@ interface MemixerStats {
     totalMirrors?: number;
     totalPublications?: number;
     totalCollects?: number;
+    publicationsTotal?: number;
 }
 
 export interface User {

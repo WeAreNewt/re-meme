@@ -1,13 +1,15 @@
 import { useLazyQuery } from "@apollo/client";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
+import { selectedEnvironment } from "../config/environments";
 import { User } from "../models/User/user.model";
 import { GET_PROFILES } from "../queries/getProfiles";
 
 interface GetProfilesVariables {
     request: {
         ownedBy: string
-    }
+    },
+    forSources: string[]
 }
 
 interface GetProfilesData {
@@ -22,7 +24,7 @@ const useLensProfiles = () => {
 
     useEffect(() => {
         if(data?.address) {
-            getProfiles({variables: { request: { ownedBy: data.address }}})
+            getProfiles({variables: { request: { ownedBy: data.address }, forSources: [selectedEnvironment.appId]}})
         }
     }, [data?.address, getProfiles])
 
