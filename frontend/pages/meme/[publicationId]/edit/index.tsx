@@ -1,28 +1,28 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import EditStep from "../../../../components/EditStep";
-import FeedbackStep from "../../../../components/FeedbackStep";
 import { ConnectionBox } from "../../../../components/Layout/ConnectionBox";
+import Loader from "../../../../components/Loader";
 import { useMemeFromPublicationId } from "../../../../hooks/useMeme";
-import useWindowDimensions from "../../../../hooks/window-dimensions.hook";
 import { PublicationData } from "../../../../models/Publication/publication.model";
 import { User } from "../../../../models/User/user.model";
 
 const Edit = () => {
-    const [ newPublication, setNewPublication ] = useState<PublicationData>();
     const router = useRouter()
     const { publicationId } = router.query
-    const { width } = useWindowDimensions();
     const user : User = useSelector((state: any) => state.user.selectedUser);
-    const [ step, setStep ] = useState(0)
-    const { publication } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
+    const { publication, error, loading } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
 
     const onUpload = (newPublication: PublicationData) => {
-        setNewPublication(newPublication)
-        setStep(1)
-      }
+        router.push(`/meme/${newPublication.id}/success`)
+    }
+
+    useEffect(() => {
+        // this should be handled server side
+        if(error) router.push('/404')
+    }, [error, router])
 
     return (
         <Container fluid="md" className='h-full'>
@@ -30,15 +30,22 @@ const Edit = () => {
             <Col>
                 <article className='space-y-10'>
                 {
-                    width > 850 && !user ?
-                    <header>
-                        <ConnectionBox />
-                    </header>
-                    : null
+                    !user && (
+                        <header className="hidden lg:block">
+                            <ConnectionBox />
+                        </header>
+                    )
                 }
                 <Row>
-                    { publication && step == 0 && <EditStep publication={publication} onUpload={onUpload} /> }
-                    { step === 1 && newPublication && <FeedbackStep publication={newPublication} />}
+                    {
+                        loading ? (
+                        <div className="h-20 flex w-full items-center justify-center">
+                            <Loader />
+                        </div>
+                        ) : (
+                            publication && <EditStep publication={publication} onUpload={onUpload} />
+                        )
+                    }
                 </Row>
                 </article>
             </Col>

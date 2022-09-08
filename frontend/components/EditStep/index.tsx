@@ -175,8 +175,8 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         if(canvas) {
             const image = images[index]
             canvas.remove(image)
-            setImages(images => images.slice(0, index).concat(images.slice(index+1)) )
             canvas.renderAll()
+            setImages(images => images.slice(0, index).concat(images.slice(index+1)) )
         }
     }
 
@@ -406,7 +406,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             const scaleY = canvasNewHeight / canvasCreation.getHeight()
                             canvasCreation.setWidth(canvasNewWidth)
                             canvasCreation.setHeight(canvasNewHeight)
-                            console.log(canvasCreation.getZoom())
                             canvasCreation.getObjects().map(object => {
                                 object.scaleX = (object.scaleX || 0) * scaleX
                                 object.scaleY = (object.scaleY || 0) * scaleY
@@ -422,7 +421,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                                 else if(object.type === 'path') {
                                     newDrawings.push(object as fabric.Path)
                                 }
-                                canvasCreation.add(object)
                                 setTexts(newTexts)
                                 setImages(newImages)
                                 setDrawings(newDrawings)
@@ -516,7 +514,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     useEffect(() => {
         if(newPublication) {
             onUpload(newPublication)
-            setLoading(false)
         }
     }, [newPublication, onUpload])
 
