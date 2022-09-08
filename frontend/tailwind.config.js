@@ -41,6 +41,7 @@ module.exports = {
       },
       orange: {
         200: "#FFE3B0",
+        DEFAULT: "#FEC32C",
         800: "#664200"
       },
       alert: {

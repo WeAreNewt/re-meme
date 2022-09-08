@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import EditStep from "../../../../components/EditStep";
@@ -11,11 +12,16 @@ const Edit = () => {
     const router = useRouter()
     const { publicationId } = router.query
     const user : User = useSelector((state: any) => state.user.selectedUser);
-    const { publication } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
+    const { publication, error } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
 
     const onUpload = (newPublication: PublicationData) => {
         router.push(`/meme/${newPublication.id}/success`)
     }
+
+    useEffect(() => {
+        // this should be handled server side
+        if(error) router.push('/404')
+    }, [error, router])
 
     return (
         <Container fluid="md" className='h-full'>
