@@ -29,6 +29,8 @@ yarn install # Install dependencies
 yarn dev # Start development server
 ```
 
+See step-by-step guidance on /frontend/readme.md
+
 ### Lens API
 
 re:meme uses the [Lens API](https://docs.lens.xyz/docs/introduction) in order to interact with the Lens Protocol. This allows the frontend to post memes as publications on Lens.
