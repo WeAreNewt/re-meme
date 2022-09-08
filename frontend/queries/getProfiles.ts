@@ -62,6 +62,7 @@ export const GET_PROFILES = gql`
           totalPublications
           totalCollects
           publicationsTotal(forSources: $forSources)
+          commentsTotal(forSources: $forSources)
         }
         followModule {
           ... on FeeFollowModuleSettings {
