@@ -29,7 +29,7 @@ yarn install # Install dependencies
 yarn dev # Start development server
 ```
 
-See step-by-step guidance on /frontend/readme.md
+See step-by-step guidance on [/frontend/readme.md](/frontend/README.md)
 
 ### Lens API
 
