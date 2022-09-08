@@ -39,6 +39,10 @@ module.exports = {
         200: '#F3E7FF',
         100: '#FAF4FF'
       },
+      orange: {
+        200: "#FFE3B0",
+        800: "#664200"
+      },
       alert: {
         'red': {
           DEFAULT: '#D91A1A'

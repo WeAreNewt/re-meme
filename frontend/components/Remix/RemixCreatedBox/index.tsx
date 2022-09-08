@@ -1,13 +1,15 @@
 import { selectedEnvironment } from "../../../config/environments";
 import { PublicationData } from "../../../models/Publication/publication.model";
 import { parseIpfs } from "../../../utils/link";
+import FileSaver from 'file-saver'
+import { useRouter } from "next/router";
 
 interface RemixShareBoxProps {
     meme: PublicationData
 }
 
 export const RemixCreatedBox : React.FC<RemixShareBoxProps> = ({ meme }) => {
-
+    const router = useRouter()
     const memeSrc = parseIpfs(meme.metadata.media[0].original.url)
 
     const handleShareLenster = () => {
@@ -31,17 +33,13 @@ export const RemixCreatedBox : React.FC<RemixShareBoxProps> = ({ meme }) => {
         {
             src: "/assets/icons/download.svg",
             handleClick: () => {
-                const a = document.createElement('a')
-                a.href = memeSrc
-                a.download = 'meme.svg'
-                document.body.appendChild(a)
-                a.click()
-                document.body.removeChild(a)
+                FileSaver.saveAs(memeSrc, 'meme.svg')
             }
         },
     ]
 
     const handleRemixAgain = () => {
+        router.push(`/meme/${meme.id}/edit`)
     }
 
     return (

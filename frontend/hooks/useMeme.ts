@@ -5,9 +5,16 @@ import { EXPLORE_PUBLICATIONS, GET_PUBLICATION, HAS_TX_BEEN_INDEXED } from "../q
 import axios from 'axios';
 import { selectedEnvironment } from "../config/environments";
 
+const blackListed = async (id) => {
+    const response = await axios.get(`/api/blacklist/`, {params: {postId: id}}).then((response) => response.data.blacklisted)
+    return response
+}
+
+
 interface UseMemeFromPublicationIdReturn {
     publication?: PublicationData
     loading: boolean
+    error?: Error
 }
 
 type UseMemeFromPublicationId = (publicationId?: string, isLoading?: boolean) => UseMemeFromPublicationIdReturn
@@ -16,8 +23,9 @@ export const useMemeFromPublicationId : UseMemeFromPublicationId = (publicationI
 
     const [ publication, setPublication ]  = useState<PublicationData>()
     const [ loading, setLoading ] = useState<boolean>(false)
+    const [ customError, setCustomError ] = useState<Error>()
 
-    const [ getPublication ] = useLazyQuery<GetPublicationData, GetPublicationParams>(GET_PUBLICATION, {
+    const [ getPublication, { error, data } ] = useLazyQuery<GetPublicationData, GetPublicationParams>(GET_PUBLICATION, {
         variables: {
             request: {
                 publicationId: publicationId
@@ -26,18 +34,43 @@ export const useMemeFromPublicationId : UseMemeFromPublicationId = (publicationI
     })
 
     useEffect(() => {
-        if(!isLoading) {
+        if(!isLoading && publicationId) {
             setLoading(true)
-            if(publicationId) {
-                getPublication().then(data => {
-                    setPublication(data.data?.publication)
-                    setLoading(false)
-                })
-            }
+            getPublication()
         }
     }, [getPublication, publicationId, isLoading])
 
-    return { publication, loading }
+    useEffect(() => {
+        if(data && !error) {
+            if(!process.env.NEXT_PUBLIC_BLACKLIST_OFF) {
+                const checkBlackList = async () => {
+                    blackListed(data.publication.id).then(isBlackListed => {
+                        if(!isBlackListed) {
+                            setPublication(data.publication)
+                        } else {
+                            setCustomError(new Error("Blacklisted"))
+                        }
+                    })
+                    .catch(() => {
+                        setCustomError(new Error("Failed to check blacklist"))
+                    })
+                    .finally(() => {
+                        setLoading(true)
+                    })
+                }
+                checkBlackList()
+            }
+            else {
+                setLoading(false)
+                setPublication(data.publication)
+            }
+        } else if(error) {
+            setLoading(false)
+            setCustomError(error)
+        }
+    }, [data, error])
+
+    return { publication, loading, error: customError }
 }
 
 interface UseRandomMemeReturn {
@@ -51,11 +84,6 @@ type UseRandomMeme = () => UseRandomMemeReturn
 const sortCriterias = ['TOP_COMMENTED', 'TOP_COLLECTED', 'LATEST']
 
 const getRandomNumber = (max: number) => Math.floor(Math.random() * max)
-
-const blackListed = async (id) => {
-    const response = await axios.get(`/api/blacklist/`, {params: {postId: id}}).then((response) => response.data.blacklisted)
-    return response
-}
 
 export const useRandomMeme : UseRandomMeme = () => {
 
@@ -78,14 +106,13 @@ export const useRandomMeme : UseRandomMeme = () => {
 
     useEffect(() => {
         if(data) {
-            const poolBlacklist = async () => {
+            const pollBlacklist = async () => {
                 const itemsLength = data.explorePublications.items.length
                 if(!error && itemsLength) {
                     var publcId = data.explorePublications.items[getRandomNumber(itemsLength)]
                     if(!process.env.NEXT_PUBLIC_BLACKLIST_OFF) {
                         let isBlacklisted = await blackListed(publcId.id)
                         while(isBlacklisted){
-                            console.log(1)
                             isBlacklisted = await blackListed(data.explorePublications.items[getRandomNumber(itemsLength)].id)
                         }
                     }
@@ -95,7 +122,7 @@ export const useRandomMeme : UseRandomMeme = () => {
                     setLoading(false)
                 }
             }
-            poolBlacklist()
+            pollBlacklist()
         }
     }, [data, error])
 

@@ -19,9 +19,6 @@ const MemePage = () => {
     const handleRemixMeme = () => {
       router.push(`/meme/${publication?.id}/edit`)
     }
-
-    console.log(loading)
-  
     return (
       <>
         <Head>

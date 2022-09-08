@@ -406,7 +406,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             const scaleY = canvasNewHeight / canvasCreation.getHeight()
                             canvasCreation.setWidth(canvasNewWidth)
                             canvasCreation.setHeight(canvasNewHeight)
-                            console.log(canvasCreation.getZoom())
                             canvasCreation.getObjects().map(object => {
                                 object.scaleX = (object.scaleX || 0) * scaleX
                                 object.scaleY = (object.scaleY || 0) * scaleY
@@ -516,7 +515,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     useEffect(() => {
         if(newPublication) {
             onUpload(newPublication)
-            setLoading(false)
         }
     }, [newPublication, onUpload])
 
