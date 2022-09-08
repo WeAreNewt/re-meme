@@ -43,7 +43,7 @@ export const SelectProfile = ({ show, onClose, onProfileSelected }: SelectProfil
                         {
                             data?.profiles.items.map((prof, index) => (
                                 <div key={"profile-select-" + index} onClick={() => {handleProfileSelected(prof)}} className="border-b-[1px] border-neutral-400 border-solid pb-2 mb-2 cursor-pointer w-full">
-                                    <ProfileCard profile={prof} subText={`${prof.stats.totalPosts} memes created`} selected={selectedProfile === prof} />
+                                    <ProfileCard profile={prof} subText={`${prof.stats.publicationsTotal} memes created`} selected={selectedProfile === prof} />
                                 </div>
                             ))
                         }

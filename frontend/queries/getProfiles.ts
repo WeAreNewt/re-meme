@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const GET_PROFILES = gql`
-  query($request: ProfileQueryRequest!) {
+  query($request: ProfileQueryRequest!, $forSources: [Sources!]!) {
     profiles(request: $request) {
       items {
         id
@@ -61,6 +61,7 @@ export const GET_PROFILES = gql`
           totalMirrors
           totalPublications
           totalCollects
+          publicationsTotal(forSources: $forSources)
         }
         followModule {
           ... on FeeFollowModuleSettings {

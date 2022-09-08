@@ -5,11 +5,12 @@ import { Col, Container, Row } from "react-bootstrap";
 import { GoBackButton } from "../../../components/Buttons/GoBackBtn";
 import CreateStep from "../../../components/CreateStep";
 import EditStep from "../../../components/EditStep";
+import Loader from "../../../components/Loader";
 import { useRandomMeme } from "../../../hooks/useMeme";
 import { PublicationData } from "../../../models/Publication/publication.model";
 
 const CreateMemePage: NextPage = () => {
-    const { publication } = useRandomMeme()
+    const { publication, loading } = useRandomMeme()
 
     const [ step, setStep ] = useState(0);
     const [initialImage, setInitialImage] = useState<string>();
@@ -37,8 +38,18 @@ const CreateMemePage: NextPage = () => {
                 </Col>
             </Row>
             <Row>
-                { step === 0 && publication && <CreateStep meme={publication} setInitialImage={setInitialImage} goNext={goNext} /> }
-                { step === 1 && <EditStep initialImage={initialImage} onUpload={handleUpload} /> }
+                {
+                    loading ? (
+                    <div className="h-20 flex w-full items-center justify-center">
+                        <Loader />
+                    </div>
+                    ) : (
+                        <>
+                            { step === 0 && publication && <CreateStep meme={publication} setInitialImage={setInitialImage} goNext={goNext} /> }
+                            { step === 1 && <EditStep initialImage={initialImage} onUpload={handleUpload} /> }
+                        </>
+                    )
+                }
             </Row>
         </Container>
     )
