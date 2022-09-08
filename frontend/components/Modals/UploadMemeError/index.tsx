@@ -44,11 +44,11 @@ const UploadMemeError = ({ error, setError, onRetry }: UploadMemeErrorProps) => 
                         {selectedTexts.marquee}
                     </span>
                 </Marquee>
-                <div className="comic-border rounded-4xl bg-white n:p-4 lg:p-10">
-                    <p className="text-lg text-center whitespace-pre-line px-0 lg:px-8">{selectedTexts.body}</p>
+                <div className="main-container">
+                    <p className="text-subtitle-2">{selectedTexts.body}</p>
                     <div className="flex justify-center items-center space-x-4 mt-8">
-                        <button onClick={handleCancel} className="comic-border-mini rounded-full bg-white px-6 py-2 font-bold">Cancel</button>
-                        <button onClick={handleTryAgain} className="comic-border-mini rounded-full bg-purple px-6 py-2 font-bold">Try Again</button>
+                        <button onClick={handleCancel} className="btn-medium-secondary">Cancel</button>
+                        <button onClick={handleTryAgain} className="btn-medium">Try Again</button>
                     </div>
                 </div>
             </div>
