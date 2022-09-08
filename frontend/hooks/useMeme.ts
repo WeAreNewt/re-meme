@@ -55,7 +55,7 @@ export const useMemeFromPublicationId : UseMemeFromPublicationId = (publicationI
                         setCustomError(new Error("Failed to check blacklist"))
                     })
                     .finally(() => {
-                        setLoading(true)
+                        setLoading(false)
                     })
                 }
                 checkBlackList()
