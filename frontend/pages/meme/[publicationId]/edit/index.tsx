@@ -4,6 +4,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import EditStep from "../../../../components/EditStep";
 import { ConnectionBox } from "../../../../components/Layout/ConnectionBox";
+import Loader from "../../../../components/Loader";
 import { useMemeFromPublicationId } from "../../../../hooks/useMeme";
 import { PublicationData } from "../../../../models/Publication/publication.model";
 import { User } from "../../../../models/User/user.model";
@@ -12,7 +13,7 @@ const Edit = () => {
     const router = useRouter()
     const { publicationId } = router.query
     const user : User = useSelector((state: any) => state.user.selectedUser);
-    const { publication, error } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
+    const { publication, error, loading } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
 
     const onUpload = (newPublication: PublicationData) => {
         router.push(`/meme/${newPublication.id}/success`)
@@ -36,7 +37,15 @@ const Edit = () => {
                     )
                 }
                 <Row>
-                    { publication && <EditStep publication={publication} onUpload={onUpload} /> }
+                    {
+                        loading ? (
+                        <div className="h-20 flex w-full items-center justify-center">
+                            <Loader />
+                        </div>
+                        ) : (
+                            publication && <EditStep publication={publication} onUpload={onUpload} />
+                        )
+                    }
                 </Row>
                 </article>
             </Col>

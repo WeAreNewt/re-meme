@@ -175,8 +175,8 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         if(canvas) {
             const image = images[index]
             canvas.remove(image)
-            setImages(images => images.slice(0, index).concat(images.slice(index+1)) )
             canvas.renderAll()
+            setImages(images => images.slice(0, index).concat(images.slice(index+1)) )
         }
     }
 
@@ -421,7 +421,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                                 else if(object.type === 'path') {
                                     newDrawings.push(object as fabric.Path)
                                 }
-                                canvasCreation.add(object)
                                 setTexts(newTexts)
                                 setImages(newImages)
                                 setDrawings(newDrawings)
