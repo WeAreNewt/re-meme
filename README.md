@@ -51,16 +51,6 @@ The custom collect module is called `UpdatableOwnableFeeCollectModule`. You can 
 
 Contract address: [0x432960b3209686cc69e2eec1dbbab52a1c0bf938](https://polygonscan.com/address/0x432960b3209686cc69e2eec1dbbab52a1c0bf938)
 
-1. Install [Foundry](https://github.com/gakonst/foundry#installation)
-
-```bash
-cd packages/contracts
-
-foundry install # Install dependencies as git submodules
-foundry build # Build smart contracts
-foundry test # Run tests
-```
-
 ## User guide
 
 We uploaded a step-by-step user guide for anyone (technical and non-technical peeps) to use re:meme. Check them out on Lenstube:
