@@ -23,6 +23,7 @@ import { selectedEnvironment } from "../../config/environments";
 import useLensModuleEnabledCurrencies from "../../hooks/useLensModuleEnabledCurrencies";
 import { BROADCAST_MUTATION } from "../../queries/broadcast";
 import { BroadcastData, BroadcastParams } from "../../models/Broadcast/broadcast.model";
+import { base64 } from "ethers/lib/utils";
 
 interface PathEvent {
     path?: fabric.Path
@@ -71,9 +72,11 @@ const DEFAULT_TEXT_CONFIG = {
     shadow: new fabric.Shadow("0px 0px 6px rgb(256,256,256)")
 }
 
-const uploadImageAndMetadata = (svgImage: string, canvasJson: string) => {
-    const imageBlob = new Blob([svgImage], { type: 'image/svg+xml'})
-    const imageFile = new File([imageBlob], 'meme.svg')
+const uploadImageAndMetadata = (image: string, canvasJson: string) => {
+    const prunedInitialData = image.replace('data:image/jpeg;base64,', '')
+    const decodedImage = base64.decode(prunedInitialData)
+    const imageBlob = new Blob([decodedImage], { type: 'image/jpeg'})
+    const imageFile = new File([imageBlob], 'meme')
     const canvasJsonBlob = new Blob([canvasJson], { type: 'application/json'})
     const canvasJsonFile = new File([canvasJsonBlob], 'canvas_state.json')
     return web3StorageClient.put([imageFile, canvasJsonFile]).then(cid => {
@@ -82,12 +85,12 @@ const uploadImageAndMetadata = (svgImage: string, canvasJson: string) => {
             metadata_id: uuidv4(),
             name: 'Created in re:meme',
             attributes: [],
-            image: `ipfs://${cid}/meme.svg`,
-            imageMimeType: 'image/svg+xml',
+            image: `ipfs://${cid}/meme`,
+            imageMimeType: 'image/jpeg',
             media: [
                 {
-                    item: `ipfs://${cid}/meme.svg`,
-                    type: 'image/svg+xml'
+                    item: `ipfs://${cid}/meme`,
+                    type: 'image/jpeg'
                 }
             ],
             appId: selectedEnvironment.appId
@@ -97,10 +100,6 @@ const uploadImageAndMetadata = (svgImage: string, canvasJson: string) => {
         const metadataFile = new File([metadataBlob], 'meme-metadata.json')
         return web3StorageClient.put([metadataFile], { wrapWithDirectory: false })
     })
-}
-
-var getImages = (canvas: fabric.Canvas) => {
-    return canvas.getObjects().filter(o => o.get('type') === 'image') as fabric.Image[]
 }
 
 const disableMiddleResizeButtons = (object: fabric.Object) => {
@@ -219,9 +218,9 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     const handleConfirm = () => {
         setShowConfirm(false)
         setLoading(true)
-        const svgMeme = canvas?.toSVG(undefined)
-        if(svgMeme && user) {
-            uploadImageAndMetadata(svgMeme, JSON.stringify(canvas?.toJSON(['width', 'height']))).then(metadataResult => {
+        const jpegMeme = canvas?.toDataURL({ format: 'jpeg' })
+        if(jpegMeme && user) {
+            uploadImageAndMetadata(jpegMeme, JSON.stringify(canvas?.toJSON(['width', 'height']))).then(metadataResult => {
                 const mutationPostParams = {
                     profileId: user.id || '',                        
                     contentURI: `ipfs://${metadataResult}`,
@@ -389,7 +388,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     useLayoutEffect(() => {
         if(containerRef.current) {
-            const canvasCreation = new fabric.Canvas('meme-editor')
+            const canvasCreation = new fabric.Canvas('meme-editor', { backgroundColor: 'white' })
             canvasCreation.freeDrawingBrush.color = 'black'
             canvasCreation.freeDrawingBrush.width = 2
             if(publication) {
@@ -397,7 +396,8 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                 const newImages : fabric.Image[] = []
                 const newDrawings : fabric.Path[] = []
                 const ipfsLink = parseIpfs(publication.metadata.media[0].original.url)
-                fetch(ipfsLink.replace('/meme.svg', '/canvas_state.json'))
+                console.log(ipfsLink.replace(/\/meme.svg|\/meme/, 'a'))
+                fetch(ipfsLink.replace(/\/meme.svg|\/meme/, '/canvas_state.json'))
                     .then(response => response.json()).then(canvasState => {
                         canvasCreation.loadFromJSON(canvasState, () => {
                             const canvasNewWidth = containerRef.current?.clientWidth || 0
@@ -434,6 +434,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                                 }
                                 setBackgroundImage(canvasCreation.backgroundImage)
                             }
+                            canvasCreation.setBackgroundColor('white', () => {})
                         })
                     }).catch(() => {
                         fabric.loadSVGFromURL(ipfsLink, objects => {

@@ -444,12 +444,6 @@ fragment ProfileFields on Profile {
       original {
         ...MediaFields
       }
-      small {
-        ...MediaFields
-      }
-      medium {
-        ...MediaFields
-      }
     }
   }
   coverPicture {
@@ -461,12 +455,6 @@ fragment ProfileFields on Profile {
     }
     ... on MediaSet {
       original {
-        ...MediaFields
-      }
-      small {
-       ...MediaFields
-      }
-      medium {
         ...MediaFields
       }
     }
@@ -519,12 +507,6 @@ fragment MetadataOutputFields on MetadataOutput {
   content
   media {
     original {
-      ...MediaFields
-    }
-    small {
-      ...MediaFields
-    }
-    medium {
       ...MediaFields
     }
   }
@@ -787,12 +769,6 @@ export const EXPLORE_PUBLICATIONS = gql`
         original {
           ...MediaFields
         }
-        small {
-          ...MediaFields
-        }
-        medium {
-          ...MediaFields
-        }
       }
     }
     coverPicture {
@@ -804,12 +780,6 @@ export const EXPLORE_PUBLICATIONS = gql`
       }
       ... on MediaSet {
         original {
-          ...MediaFields
-        }
-        small {
-         ...MediaFields
-        }
-        medium {
           ...MediaFields
         }
       }
@@ -862,12 +832,6 @@ export const EXPLORE_PUBLICATIONS = gql`
     content
     media {
       original {
-        ...MediaFields
-      }
-      small {
-        ...MediaFields
-      }
-      medium {
         ...MediaFields
       }
     }
