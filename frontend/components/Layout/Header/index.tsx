@@ -11,6 +11,7 @@ import { AuthSlice, deleteTokens, setTokens } from '../../../store/reducers/auth
 import { removeUser, setUser } from '../../../store/reducers/user.reducer'
 import { RootState } from '../../../store/store'
 import { CreateNewMemeBtn } from '../../Buttons/CreateNewMemeButton'
+import { RefreshNewMemeBtn } from '../../Buttons/RefreshNewMemeButton'
 import { CustomConnectButton } from '../../Buttons/CustomConnectButton/index'
 import { ProfileButton } from '../../Buttons/ProfileButton'
 import { SelectProfile } from '../../Modals/SelectProfile'
@@ -52,6 +53,7 @@ export const Header: React.FC<{}> = () => {
                     <Image className="cursor-pointer w-1/2 h-auto" src="/logo.svg" alt="me" width={width > 850 ? "188.5": "120.25"} height={width > 850 ? "60.1" : "40.5"} />
                 </Link>
                 <div className='flex ml-auto items-center gap-[20px]'>
+                    <RefreshNewMemeBtn/>
                     <CreateNewMemeBtn disabled={!user} />
                     <CustomConnectButton />
                     <ProfileButton disabled={!user} />

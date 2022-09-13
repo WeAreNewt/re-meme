@@ -77,6 +77,7 @@ interface UseRandomMemeReturn {
     publication?: PublicationData
     loading: boolean
     error?: ApolloError
+    refetch?: () => void
 }
 
 type UseRandomMeme = () => UseRandomMemeReturn
@@ -100,7 +101,7 @@ export const useRandomMeme : UseRandomMeme = () => {
         }
     }), [])
 
-    const { data, error } = useQuery<ExplorePublicationsData, ExplorePublicationsParams>(EXPLORE_PUBLICATIONS, {
+    const { data, error, refetch } = useQuery<ExplorePublicationsData, ExplorePublicationsParams>(EXPLORE_PUBLICATIONS, {
         variables: initialVariables
     })
 
@@ -126,7 +127,7 @@ export const useRandomMeme : UseRandomMeme = () => {
         }
     }, [data, error])
 
-    return { publication, loading, error }
+    return { publication, loading, error, refetch }
 }
 
 interface UseMemeFromTxHashReturn {
