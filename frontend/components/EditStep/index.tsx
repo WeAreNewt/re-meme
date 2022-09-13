@@ -24,6 +24,7 @@ import useLensModuleEnabledCurrencies from "../../hooks/useLensModuleEnabledCurr
 import { BROADCAST_MUTATION } from "../../queries/broadcast";
 import { BroadcastData, BroadcastParams } from "../../models/Broadcast/broadcast.model";
 import { base64 } from "ethers/lib/utils";
+import useRefSizes from "../../hooks/useRefSizes";
 
 interface PathEvent {
     path?: fabric.Path
@@ -113,11 +114,12 @@ const disableMiddleResizeButtons = (object: fabric.Object) => {
 
 const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUpload }) => {
     const containerRef = useRef<HTMLDivElement>(null)
+    const { width, height } = useRefSizes(containerRef.current)
     const [ uploadError, setUploadError ] = useState<UploadError | undefined>()
     const [ showConfirm, setShowConfirm ] = useState(false)
     const [ txHash, setTxHash ]= useState<string>()
     const [ loading, setLoading ] = useState(false)
-    const { width } = useWindowDimensions();
+    // const { width } = useWindowDimensions();
     const isSmallScreen = width < 1024
     const [ canvas, setCanvas ] = useState<fabric.Canvas>();
     const [ texts, setTexts ] = useState<fabric.Text[]>([])
@@ -396,12 +398,12 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                 const newImages : fabric.Image[] = []
                 const newDrawings : fabric.Path[] = []
                 const ipfsLink = parseIpfs(publication.metadata.media[0].original.url)
-                console.log(ipfsLink.replace(/\/meme.svg|\/meme/, 'a'))
                 fetch(ipfsLink.replace(/\/meme.svg|\/meme/, '/canvas_state.json'))
                     .then(response => response.json()).then(canvasState => {
                         canvasCreation.loadFromJSON(canvasState, () => {
+                            const ratio = canvasCreation.getWidth() / canvasCreation.getHeight()
                             const canvasNewWidth = containerRef.current?.clientWidth || 0
-                            const canvasNewHeight = containerRef.current?.clientHeight || 0
+                            const canvasNewHeight = canvasNewWidth * ratio
                             const scaleX = canvasNewWidth / canvasCreation.getWidth()
                             const scaleY = canvasNewHeight / canvasCreation.getHeight()
                             canvasCreation.setWidth(canvasNewWidth)
@@ -469,11 +471,10 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             top: 0,
                             left: 0
                         })
-                        if(fabricImage.getScaledWidth() > fabricImage.getScaledHeight()) {
-                            fabricImage.scaleToWidth(containerRef.current.clientWidth)
-                        } else {
-                            fabricImage.scaleToHeight(containerRef.current.clientHeight)
-                        }
+
+                        fabricImage.scaleToWidth(containerRef.current.clientWidth)
+                        canvasCreation.setWidth(containerRef.current.clientWidth)
+                        canvasCreation.setHeight(fabricImage.getScaledHeight())
                         canvasCreation.setBackgroundImage(fabricImage, () => {})
                         const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
                         disableMiddleResizeButtons(newText)
@@ -495,11 +496,24 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     }, [initialImage, publication])
 
     useEffect(() => {
+        /*
         if(containerRef.current && canvas) {
             canvas.setWidth(containerRef.current.clientWidth)
             canvas.setHeight(containerRef.current.clientWidth)
         }
+        */
     }, [width, canvas])
+
+    useEffect(() => {
+        if(canvas && containerRef.current) {
+            canvas.setWidth(containerRef.current?.clientWidth)
+            canvas.setHeight(containerRef.current?.clientHeight)
+            if(canvas.backgroundImage && canvas.backgroundImage instanceof fabric.Image) {
+                canvas.backgroundImage.scaleToWidth(containerRef.current?.clientWidth)
+            }
+            console.log(canvas.backgroundImage)
+        }
+    }, [width, canvas, height])
 
     useEffect(() => {
         if(canvas) {
@@ -556,10 +570,10 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             <ConfirmModal show={showConfirm} setShow={setShowConfirm} onConfirm={handleConfirm} />
             <FeedbackModal show={loading} />
             <div className="flex flex-col lg:flex-row gap-10 items-start">
-                <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative w-full lg:w-3/5 aspect-square'>
+                <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative w-full lg:w-3/5'>
                     <div
-                        className="overflow-hidden aspect-square"
-                        ref={containerRef }
+                        className="overflow-hidden resize-y border-1 rounded-lg border-neutral-400 max-w-full"
+                        ref={containerRef}
                     >
                         <canvas id="meme-editor" />
                     </div>
