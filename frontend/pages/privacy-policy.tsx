@@ -110,10 +110,6 @@ export default function PrivacyPolicy() {
                 <b>Log Files</b>
                 , which are files that record events that occur in connection with your use of the Avara UI Labs Services. Log files are created when you view content or otherwise interact with the Services.
               </li>
-              <li>
-                <b>Cookies</b>
-                , which are small data files stored on your device that act as a unique tag to identify your browser. We will only use strictly necessary cookies in connection with the Site and Services. For the avoidance of doubt, the cookies that we include are essential for you to browse the Site and use its features, including accessing secure areas of the Site.
-              </li>
             </ul>
             <p>
               For further information on how we use tracking technologies for analytics, and your rights and choices regarding them, please see the “Analytics” and “Your Rights and Choices” sections below.
@@ -240,10 +236,6 @@ export default function PrivacyPolicy() {
             </u>
           </h3>
           <ul className="list-disc">
-            <li>
-              <b>Cookies. </b>
-              We will only use strictly necessary cookies. These cookies are essential for you to browse the Site and use its features, including accessing secure areas of the Site.
-            </li>
             <li>
               <b>Do Not Track. </b>
               Your browser settings may allow you to automatically transmit a “Do Not Track” signal to the online services you visit. Note, however, there is no industry consensus as to what site and app operators should do with regard to these signals. Accordingly, unless and until the law is interpreted to require us to do so, we do not monitor or take action with respect to “Do Not Track” signals. For more information on “Do Not Track,” visit
