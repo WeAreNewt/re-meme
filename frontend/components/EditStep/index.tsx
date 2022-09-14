@@ -151,10 +151,12 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     const handleMemeText = (e, index) => {
         if(e.target.value.length > 100) return
-        texts[index].text = e.target.value
+        texts[index].set({
+            text: e.target.value
+        })
         canvas?.setActiveObject(texts[index])
-        setTexts(texts => [...texts])
         canvas?.renderAll()
+        setTexts(texts => [...texts])
     }
 
     const openEditTextModal = (index: number) => {
@@ -176,7 +178,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         if(canvas) {
             const image = images[index]
             canvas.remove(image)
-            canvas.renderAll()
             setImages(images => images.slice(0, index).concat(images.slice(index+1)) )
         }
     }
@@ -191,8 +192,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     const onDeleteDraw = (index: number) => {
         if(canvas) {
-            const draw = drawings[index]
-            canvas.remove(draw)
             setDrawings(draw => draw.slice(0, index).concat(draw.slice(index+1)) )
         }
     }
@@ -375,7 +374,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                         }
                         canvas.add(fabricImage)
                         setImages(images => images.concat([fabricImage]))
-                        canvas.renderAll()
                     }
                 }
             };
@@ -401,9 +399,13 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                 fetch(ipfsLink.replace(/\/meme.svg|\/meme/, '/canvas_state.json'))
                     .then(response => response.json()).then(canvasState => {
                         canvasCreation.loadFromJSON(canvasState, () => {
-                            const ratio = canvasCreation.getWidth() / canvasCreation.getHeight()
+                            console.log(containerRef.current?.clientWidth)
+                            console.log(canvasCreation.width)
+                            console.log(canvasCreation.height)
+                            const ratio = canvasCreation.getHeight() / canvasCreation.getWidth()
                             const canvasNewWidth = containerRef.current?.clientWidth || 0
                             const canvasNewHeight = canvasNewWidth * ratio
+                            console.log(canvasNewHeight)
                             const scaleX = canvasNewWidth / canvasCreation.getWidth()
                             const scaleY = canvasNewHeight / canvasCreation.getHeight()
                             canvasCreation.setWidth(canvasNewWidth)
@@ -475,12 +477,13 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                         fabricImage.scaleToWidth(containerRef.current.clientWidth)
                         canvasCreation.setWidth(containerRef.current.clientWidth)
                         canvasCreation.setHeight(fabricImage.getScaledHeight())
-                        canvasCreation.setBackgroundImage(fabricImage, () => {})
-                        const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
-                        disableMiddleResizeButtons(newText)
-                        canvasCreation.add(newText)
-                        setTexts([newText])
-                        setBackgroundImage(fabricImage)
+                        canvasCreation.setBackgroundImage(fabricImage, () => {
+                            const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
+                            disableMiddleResizeButtons(newText)
+                            canvasCreation.add(newText)
+                            setTexts([newText])
+                            setBackgroundImage(fabricImage)
+                        })
                     }
                 }
             }
@@ -511,6 +514,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             if(canvas.backgroundImage && canvas.backgroundImage instanceof fabric.Image) {
                 canvas.backgroundImage.scaleToWidth(containerRef.current?.clientWidth)
             }
+            canvas.renderAll()
             console.log(canvas.backgroundImage)
         }
     }, [width, canvas, height])
