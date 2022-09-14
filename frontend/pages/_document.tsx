@@ -4,7 +4,6 @@ const Document = () => {
   return (
     <Html>
       <Head>
-        <title>re:meme</title>
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="og:title" content="re:meme - the on-chain meme remixer" />
         <meta property="twitter:title" content="re:meme - the on-chain meme remixer" />
