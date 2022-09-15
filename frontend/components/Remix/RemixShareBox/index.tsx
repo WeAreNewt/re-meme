@@ -21,7 +21,7 @@ export const RemixShareBox : React.FC<RemixShareBoxProps> = ({ publication }) =>
     }
 
     const handleDownload = () => {
-        FileSaver.saveAs(memeUrl, 'meme.svg')
+        FileSaver.saveAs(memeUrl, 'meme.jpeg')
     }
 
     return (
