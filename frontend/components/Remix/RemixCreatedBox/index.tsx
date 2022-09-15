@@ -33,7 +33,7 @@ export const RemixCreatedBox : React.FC<RemixShareBoxProps> = ({ meme }) => {
         {
             src: "/assets/icons/download.svg",
             handleClick: () => {
-                FileSaver.saveAs(memeSrc, 'meme.svg')
+                FileSaver.saveAs(memeSrc, 'meme.jpeg')
             }
         },
     ]

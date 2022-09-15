@@ -53,7 +53,9 @@ Contract address: [0x432960b3209686cc69e2eec1dbbab52a1c0bf938](https://polygonsc
 
 ## User guide
 
-We uploaded a step-by-step user guide for anyone (technical and non-technical peeps) to use re:meme. Check them out on Lenstube:
+We uploaded a [step-by-step user guide](https://wearenewt.xyz/roadmap/lens-memixer/rememe-user-guide) for anyone to use re:meme.
+
+You can also check out user guide videos on Lenstube:
 
 1. How to [discover and share memes](https://lenstube.xyz/watch/0xf803-0x02)
 1. How to [remix memes](https://lenstube.xyz/watch/0xf803-0x03)
