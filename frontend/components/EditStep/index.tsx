@@ -677,7 +677,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                                 <img className="icon-md" src={`${ isDrawingMode ? '/assets/icons/edit-meme-3-reverse.svg' : '/assets/icons/edit-meme-3.svg'}`}/>
                             </button>
                     </div>
-                    <button onClick={onRemix} className={"btn-large-tertiary absolute -bottom-10 " + (false ? "opacity-30" : "comic-border-mini")}>
+                    <button disabled={!user} onClick={onRemix} className={"btn-large-tertiary absolute -bottom-10"}>
                         { publication ? 'REMIX' : 'CREATE' }
                     </button>
                 </div>

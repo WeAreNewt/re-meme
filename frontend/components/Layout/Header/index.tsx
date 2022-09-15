@@ -19,8 +19,8 @@ import { useRouter } from 'next/router'
 
 export const Header: React.FC<{}> = () => {
     const { width } = useWindowDimensions();
-    const  { address }  = useAccount();
     const [show, setShow] = useState(false);
+    const  { address }  = useAccount();
     const user: User | null = useSelector((state: RootState) => state.user.selectedUser);
     const auth: AuthSlice = useSelector((state: RootState) => state.auth)
     const { haveAuth } = useLensAuth(address)
@@ -38,6 +38,7 @@ export const Header: React.FC<{}> = () => {
         dispatch(setUser(profile));
         setShow(false);
     }
+    
     const router = useRouter()
     useEffect(() => {
         if(haveAuth && !user && profilesData) {
@@ -47,10 +48,16 @@ export const Header: React.FC<{}> = () => {
 
     useEffect(() => {
         if(!address) {
+            console.log('borrar')
             dispatch(setUser(null))
             dispatch(deleteTokens())
         }
-    })
+    }, [address, dispatch])
+
+    const onClose = () => {
+        setShow(false)
+        dispatch(deleteTokens())
+    }
 
     return (
         <>

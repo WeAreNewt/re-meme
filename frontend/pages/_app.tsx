@@ -26,7 +26,9 @@ const Disclaimer: DisclaimerComponent = ({ Text, Link }) => (
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={apolloClient}>
-      <Head><title>re:meme</title></Head>
+      <Head>
+        <title>re:meme</title>
+      </Head>
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider coolMode chains={chains} appInfo={{appName: 're:meme', disclaimer: Disclaimer }}>
           <Provider store={store}>

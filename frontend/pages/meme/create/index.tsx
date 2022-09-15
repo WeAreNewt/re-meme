@@ -30,29 +30,16 @@ const CreateMemePage: NextPage = () => {
         router.push(`/meme/${newPublication.id}/success`)
     }
 
-    return (
-        <Container fluid="md" className='h-full'>
-            <Row className='mb-4'>
-                <Col>
-                    <GoBackButton onClick={onBackClick} />
-                </Col>
-            </Row>
-            <Row>
-                {
-                    loading ? (
-                    <div className="h-20 flex w-full items-center justify-center">
-                        <Loader />
-                    </div>
-                    ) : (
-                        <>
-                            { step === 0 && publication && <CreateStep meme={publication} setInitialImage={setInitialImage} goNext={goNext} /> }
-                            { step === 1 && <EditStep initialImage={initialImage} onUpload={handleUpload} /> }
-                        </>
-                    )
-                }
-            </Row>
-        </Container>
-    )
+    return loading ? (
+        <div className="h-20 flex w-full items-center justify-center">
+            <Loader />
+        </div>
+        ) : (
+            <>
+                { step === 0 && publication && <CreateStep meme={publication} setInitialImage={setInitialImage} goNext={goNext} /> }
+                { step === 1 && <EditStep initialImage={initialImage} onUpload={handleUpload} /> }
+            </>
+        )
 }
 
 export default CreateMemePage;

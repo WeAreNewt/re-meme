@@ -33,32 +33,15 @@ const MemePage = () => {
           <meta property="og:image" content={parseIpfs(publication?.metadata.media[0].original.url || '')} />
           <meta property="twitter:image" content={parseIpfs(publication?.metadata.media[0].original.url || '')} />
         </Head>
-        <Container fluid="md" className='h-full'>
-          <Row className='mt-auto'>
-            <Col>
-              <article className='space-y-10'>
-                {
-                  !user && (
-                    <header className="hidden lg:block">
-                      <ConnectionBox />
-                    </header>
-                  )
-                }
-              <Row>
-                {
-                  loading ? (
-                    <div className="h-20 flex w-full items-center justify-center">
-                      <Loader />
-                    </div>
-                  ) : (
-                    publication && <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />
-                  )
-                }
-              </Row>
-              </article>
-            </Col>
-          </Row>
-        </Container>
+          {
+            loading ? (
+              <div className="h-20 flex w-full items-center justify-center">
+                <Loader />
+              </div>
+            ) : (
+              <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />
+            )
+          }
       </>
     )
 }
