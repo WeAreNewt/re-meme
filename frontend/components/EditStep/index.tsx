@@ -25,6 +25,7 @@ import { BROADCAST_MUTATION } from "../../queries/broadcast";
 import { BroadcastData, BroadcastParams } from "../../models/Broadcast/broadcast.model";
 import { base64 } from "ethers/lib/utils";
 import useRefSizes from "../../hooks/useRefSizes";
+import { Resizable } from "re-resizable";
 
 interface PathEvent {
     path?: fabric.Path
@@ -119,8 +120,8 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     const [ showConfirm, setShowConfirm ] = useState(false)
     const [ txHash, setTxHash ]= useState<string>()
     const [ loading, setLoading ] = useState(false)
-    // const { width } = useWindowDimensions();
-    const isSmallScreen = width < 1024
+    const { width: windowWidth } = useWindowDimensions();
+    const isSmallScreen = windowWidth < 1024
     const [ canvas, setCanvas ] = useState<fabric.Canvas>();
     const [ texts, setTexts ] = useState<fabric.Text[]>([])
     const [ images, setImages ] = useState<fabric.Image[]>([])
@@ -575,12 +576,31 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             <FeedbackModal show={loading} />
             <div className="flex flex-col lg:flex-row gap-10 items-start">
                 <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative w-full lg:w-3/5'>
-                    <div
-                        className="overflow-hidden resize-y border-1 rounded-lg border-neutral-400 max-w-full"
-                        ref={containerRef}
+                    <Resizable
+                        enable={{
+                            top: false,
+                            right: false,
+                            bottom: true,
+                            left: false,
+                            topRight: false,
+                            bottomRight: false,
+                            bottomLeft: false,
+                            topLeft: false
+                        }}
+                        handleComponent={{
+                            bottom: <button className="icon-btn-small">ᐃᐁ</button>
+                        }}
+                        handleClasses={{
+                            bottom: 'flex items-center justify-center'
+                        }}
                     >
-                        <canvas id="meme-editor" />
-                    </div>
+                        <div
+                            className="overflow-hidden border-1 rounded-lg border-neutral-400 h-full"
+                            ref={containerRef}
+                        >
+                            <canvas id="meme-editor" />
+                        </div>
+                    </Resizable>
                 </div>
                 {
                     isSmallScreen && openTextModal.open && (
