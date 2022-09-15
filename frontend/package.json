@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.6.4",
-    "@rainbow-me/rainbowkit": "^0.1.0",
+    "@rainbow-me/rainbowkit": "^0.4.8",
     "@reduxjs/toolkit": "^1.8.1",
     "@types/file-saver": "^2.0.5",
     "aws-sdk": "^2.1189.0",
@@ -43,7 +43,7 @@
     "redux-persist": "^6.0.0",
     "typeface-jetbrains-mono": "^2.0.1",
     "uuid": "^8.3.2",
-    "wagmi": "^0.3.5",
+    "wagmi": "^0.5.12",
     "web3.storage": "^4.3.0"
   },
   "devDependencies": {
