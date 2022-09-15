@@ -21,12 +21,12 @@ export const RemixShareBox : React.FC<RemixShareBoxProps> = ({ publication }) =>
     }
 
     const handleDownload = () => {
-        FileSaver.saveAs(memeUrl, 'meme.svg')
+        FileSaver.saveAs(memeUrl, 'meme.jpeg')
     }
 
     return (
         <div className="main-container">
-            <a target="_blank" rel="noreferrer" href={`${selectedEnvironment.lensterUrl}/posts/${publication.id}`} className="btn-medium-secondary no-underline hover:text-neutral-black w-full mb-[16px]">Collect/comment on Lenster</a>
+            <a target="_blank" rel="noreferrer" href={`${selectedEnvironment.lensterUrl}/posts/${publication.id}`} className="btn-medium-secondary no-underline hover:text-neutral-black w-full mb-[16px]">Comment on Lenster</a>
             <div className="flex justify-center gap-[12px]">
                 <div key={"sicon-share"} onClick={handleShare} className="icon-btn-medium-secondary">
                     <img className="icon-md" src="/assets/icons/share-icon.svg" alt="share" />
