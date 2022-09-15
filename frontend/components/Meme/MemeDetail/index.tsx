@@ -111,7 +111,7 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
                     </div>
                     : null
                 }   
-                <div className="relative w-full border-1 rounded-2xl border-neutral-400 mb-[16px]">
+                <div className="relative w-full border-[1px] rounded-[12px] border-neutral-400 mb-[16px]">
                     <img src={memeSrc} onMouseOver={onImageHover} onMouseOut={onImageHoverOut} className="w-full rounded-xl" />
 
                     <button onClick={() => setShowConfirm(true)} onMouseOver={onImageHover} className={`btn-with-icon-small-secondary ${imageHover ? "!opacity-100" : "opacity-0" } absolute top-3 right-3`}>

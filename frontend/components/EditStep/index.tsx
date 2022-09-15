@@ -588,14 +588,18 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             topLeft: false
                         }}
                         handleComponent={{
-                            bottom: <button className="icon-btn-small">ᐃᐁ</button>
+                            bottom: (
+                            <button className="w-[24px] h-[24px] bg-primary-600 border-[2px] border-neutral-black rounded-full">
+                                <img className="icon-sm" src="/assets/icons/resize.svg" alt="resize" />
+                            </button>
+                            )
                         }}
                         handleClasses={{
                             bottom: 'flex items-center justify-center'
                         }}
                     >
                         <div
-                            className="overflow-hidden border-1 rounded-lg border-neutral-400 h-full"
+                            className="overflow-hidden border-[1px] rounded-[12px] border-neutral-400 h-full"
                             ref={containerRef}
                         >
                             <canvas id="meme-editor" />
