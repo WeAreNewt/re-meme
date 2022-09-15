@@ -26,7 +26,7 @@ type MemeDetailProps = {
 
 export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     const router = useRouter()
-    const data  = useAccount();
+    const { address }  = useAccount();
     const [disabled, setDisabled] = useState(false);
     const [remixesOpen, setRemixesOpen] = useState(false)
     const [imageHover, setImageHover] = useState(false)
@@ -34,8 +34,8 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     const { data: commentsPageData } = useComments(meme.id)
 
     useEffect(() => {
-        setDisabled(!data ? true : false)
-    }, [data])
+        setDisabled(!address ? true : false)
+    }, [address])
 
     const handleRemixClick = () => {
         router.push(`/meme/${meme.id}/edit`)

@@ -6,12 +6,12 @@ type RemixBtnBoxProps = {
 }
 
 export const RemixBtnBox : React.FC<RemixBtnBoxProps> = ({ onRemixBtnClicked }) => {
-    const data = useAccount();
+    const { address } = useAccount();
     const [disabled, setDisabled] = useState(false);
 
     useEffect(() => {
-        setDisabled(!data ? true : false)
-    }, [data])
+        setDisabled(!address ? true : false)
+    }, [address])
 
     return (
         <div className="main-container items-center">
