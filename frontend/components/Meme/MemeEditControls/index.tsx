@@ -23,7 +23,7 @@ const defaultMemixerText = {
 }
 
 export const MemeEditControls = ({onRemixClicked}: MemeEditControlsProps) => {
-    const { data } = useAccount();
+    const data = useAccount();
     const [disabled, setDisabled] = useState(false);
     const [ texts, setTexts ] = useState<MemixerText[]>([defaultMemixerText])
 

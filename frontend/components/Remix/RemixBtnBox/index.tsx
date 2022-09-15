@@ -6,7 +6,7 @@ type RemixBtnBoxProps = {
 }
 
 export const RemixBtnBox : React.FC<RemixBtnBoxProps> = ({ onRemixBtnClicked }) => {
-    const { data } = useAccount();
+    const data = useAccount();
     const [disabled, setDisabled] = useState(false);
 
     useEffect(() => {

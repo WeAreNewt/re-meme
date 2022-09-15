@@ -18,7 +18,7 @@ type ProfileProps = {
 }
 
 const Profile: NextPage = (props: any) => {
-    const { data } = useAccount();
+    const { address } = useAccount();
     const user = useSelector((state: RootState) => state.user.selectedUser);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -78,7 +78,7 @@ const Profile: NextPage = (props: any) => {
                                         <Row>
                                             <Col>
                                                 <h2 className='font-medium text-4xl'>{user?.name}</h2>
-                                                <p className='font-medium text-xs'>{getSimplifiedAddress(data?.address || "")} • {user?.posts?.length || 0} memes created</p>
+                                                <p className='font-medium text-xs'>{getSimplifiedAddress(address || "")} • {user?.posts?.length || 0} memes created</p>
                                             </Col>
                                         </Row>
                                         <Row>

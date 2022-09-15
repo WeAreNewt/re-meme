@@ -427,8 +427,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             })
                             if(canvasCreation.backgroundImage) {
                                 const publicationBackgroundImage = canvasCreation.backgroundImage as fabric.Image
-                                console.log(publicationBackgroundImage.width)
-                                console.log(publicationBackgroundImage.height)
                                 if(publicationBackgroundImage.getScaledWidth() > publicationBackgroundImage.getScaledHeight()) {
                                     publicationBackgroundImage.scaleToWidth(containerRef.current?.clientWidth || 0)
                                 } else {

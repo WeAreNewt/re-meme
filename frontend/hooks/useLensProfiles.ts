@@ -19,14 +19,14 @@ interface GetProfilesData {
 }
 
 const useLensProfiles = () => {
-    const { data } = useAccount()
+    const { address } = useAccount()
     const [getProfiles, { loading, data: profiles }] = useLazyQuery<GetProfilesData, GetProfilesVariables>(GET_PROFILES)
 
     useEffect(() => {
-        if(data?.address) {
-            getProfiles({variables: { request: { ownedBy: data.address }, forSources: [selectedEnvironment.appId]}})
+        if(address) {
+            getProfiles({variables: { request: { ownedBy: address }, forSources: [selectedEnvironment.appId]}})
         }
-    }, [data?.address, getProfiles])
+    }, [address, getProfiles])
 
     return { data: profiles, loading }
 }

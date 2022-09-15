@@ -4,7 +4,7 @@ import { useAccount } from "wagmi";
 import useLensProfiles from "../../../hooks/useLensProfiles";
 
 export const ConnectionBox: React.FC = () => {
-    const { data } = useAccount()
+    const data = useAccount()
     const { loading } = useLensProfiles()
 
     return (

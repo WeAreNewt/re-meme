@@ -3,7 +3,6 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Col, Container, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { useAccount } from 'wagmi'
 import { GoBackButton } from '../../components/Buttons/GoBackBtn'
 import PageLayout from '../../components/Layout'
 import { ConnectionBox } from '../../components/Layout/ConnectionBox'
@@ -20,7 +19,6 @@ type ProfileProps = {
 
 const Profile: NextPage = (props: any) => {
     const { height, width } = useWindowDimensions();
-    const { data } = useAccount();
     const user: User = useSelector((state: any) => state.user.selectedUser);
     const dispatch = useDispatch();
     

@@ -26,7 +26,7 @@ type MemeDetailProps = {
 
 export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     const router = useRouter()
-    const { data } = useAccount();
+    const data  = useAccount();
     const [disabled, setDisabled] = useState(false);
     const [remixesOpen, setRemixesOpen] = useState(false)
     const [imageHover, setImageHover] = useState(false)

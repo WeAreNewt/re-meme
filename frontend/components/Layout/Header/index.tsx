@@ -17,11 +17,11 @@ import { SelectProfile } from '../../Modals/SelectProfile'
 
 export const Header: React.FC<{}> = () => {
     const { width } = useWindowDimensions();
-    const { data: account } = useAccount();
+    const  { address }  = useAccount();
     const [show, setShow] = useState(false);
     const user: User | null = useSelector((state: RootState) => state.user.selectedUser);
     const auth: AuthSlice = useSelector((state: RootState) => state.auth)
-    const { haveAuth } = useLensAuth(account?.address)
+    const { haveAuth } = useLensAuth(address)
     const dispatch = useDispatch();
 
     const { data: profilesData } = useLensProfiles()
@@ -38,7 +38,7 @@ export const Header: React.FC<{}> = () => {
     }, [ haveAuth, profilesData, user])
 
     useEffect(() => {
-        if(!account) {
+        if(!address) {
             dispatch(setUser(null))
             dispatch(deleteTokens())
         }
