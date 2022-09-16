@@ -8,7 +8,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import PageLayout from '../components/Layout';
 import wagmiClient, { chains } from '../config/wagmi';
 import apolloClient from '../config/apollo';
-
+import Head from 'next/head'
 import '../styles/globals.css'
 import '../styles/main.css'
 import '@rainbow-me/rainbowkit/styles.css';
@@ -17,6 +17,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={apolloClient}>
+      <Head><title>re:meme</title></Head>
       <WagmiProvider client={wagmiClient}>
         <RainbowKitProvider coolMode chains={chains}>
           <Provider store={store}>
