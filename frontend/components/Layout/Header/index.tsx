@@ -12,9 +12,11 @@ import { removeUser, setUser } from '../../../store/reducers/user.reducer'
 import { setImage } from '../../../store/reducers/image.reducer'
 import { RootState } from '../../../store/store'
 import { CreateNewMemeBtn } from '../../Buttons/CreateNewMemeButton'
+import { RefreshNewMemeBtn } from '../../Buttons/RefreshNewMemeButton'
 import { CustomConnectButton } from '../../Buttons/CustomConnectButton/index'
 import { ProfileButton } from '../../Buttons/ProfileButton'
 import { SelectProfile } from '../../Modals/SelectProfile'
+import { useRouter } from 'next/router'
 
 export const Header: React.FC<{}> = () => {
     const { width } = useWindowDimensions();
@@ -27,11 +29,17 @@ export const Header: React.FC<{}> = () => {
 
     const { data: profilesData } = useLensProfiles()
 
+    const reloadPage = () => {
+        if(router.pathname === '/'){
+            window.location.reload();
+        }
+     }
+
     const handleProfileSelected = (profile: User) => {
         dispatch(setUser(profile));
         setShow(false);
     }
-
+    const router = useRouter()
     useEffect(() => {
         if(haveAuth && !user && profilesData) {
             setShow(true)
@@ -50,9 +58,10 @@ export const Header: React.FC<{}> = () => {
             <SelectProfile onClose={() => { setShow(false) }} onProfileSelected={handleProfileSelected} show={show} />
             <nav className="flex w-full p-4 sm:p-4 lg:p-12">
                 <Link href="/">
-                    <Image className="cursor-pointer w-1/2 h-auto" src="/logo.svg" alt="me" width={width > 850 ? "188.5": "120.25"} height={width > 850 ? "60.1" : "40.5"} />
+                    <Image onClick={reloadPage} className="cursor-pointer w-1/2 h-auto" src="/logo.svg" alt="me" width={width > 850 ? "188.5": "120.25"} height={width > 850 ? "60.1" : "40.5"} />
                 </Link>
-                <div className='flex ml-auto items-center gap-[20px]'>
+                <div className='flex ml-auto items-center gap-[10px] lg:gap-[20px]'>
+                    {router.pathname === '/' ? <RefreshNewMemeBtn/> : ''}
                     <CreateNewMemeBtn disabled={!user} />
                     <CustomConnectButton />
                     <ProfileButton disabled={!user} />
