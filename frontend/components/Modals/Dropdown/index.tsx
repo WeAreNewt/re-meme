@@ -38,12 +38,14 @@ const Dropdown: React.FC<DropdownModalProps> = (props) => {
             };
             reader.readAsDataURL(input.target.files[0]);
         }
+        setOpen({ open: false })
         router.push("/meme/create");
     }
     const router = useRouter();
 
     const startFromBlank = () => {
         dispatch(removeImage())
+        setOpen({ open: false })
         router.push("/meme/create");
     }
 
