@@ -37,14 +37,12 @@ export const CreateNewMemeBtn = ({ disabled }: CreateNewMemeBtnProps) => {
     }
 
     return (
-        <div>
+        <div className="">
             <button onClick={() => openDropdownModal()} disabled={disabled} className='icon-btn-medium-tertiary lg:w-auto lg:btn-with-icon-medium-tertiary'>
                 <img src="/assets/icons/create.svg" className='icon-md lg:icon-sm' />
                 <span className='hidden lg:block'>Create new meme</span>
-                
             </button>
             {dropdownModal.open && (<Dropdown setOpen={setdropdownModal} open={dropdownModal.open} setInitialImage={setInitialImage} goNext={goNext} />)}
-            
         </div>
     )
 }

@@ -48,15 +48,15 @@ const Dropdown: React.FC<DropdownModalProps> = (props) => {
     }
 
     return (
-        <div onMouseDown={() => setOpen({ open: false })} className={`${open ? "block " : "hidden"} absolute h-full w-full z-20 top-0 left-0`}>
-            <div onMouseDown={(e) => e.stopPropagation()} className={`${open ? "block " : "hidden"} comic-border rounded-4xl bg-white p-4  w-1/5 lg:w-1/5  `}>
+        <>
+            <div onMouseDown={(e) => e.stopPropagation()} className={`${open ? "block " : "hidden"} absolute comic-border rounded-4xl bg-white p-4 w-[350px] z-20 mt-2 right-2 lg:right-auto`}>
 
                 <button onClick={uploadMeme} className="btn-medium w-full mb-[16px]">Upload image</button>
                 <button onClick={startFromBlank} className="btn-medium w-full">Start from blank canvas</button>
                 <input id='select-meme' accept="image/*" hidden type="file" onChange={fileSelectHandler} />
-
             </div>
-        </div>
+            <div onMouseDown={() => setOpen({ open: false })} className={`${open ? "block " : "hidden"} absolute h-full w-full top-0 left-0`} />
+        </>
     )
 
 }
