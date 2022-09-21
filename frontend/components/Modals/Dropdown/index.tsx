@@ -2,6 +2,10 @@
 import { ChangeEventHandler } from "react";
 import { TextConfig } from "../EditTextModal";
 import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from 'react-redux'
+import { setImage, removeImage } from '../../../store/reducers/image.reducer'
+import { RootState } from "../../../store/store";
+
 interface State {
     open: boolean
 }
@@ -16,9 +20,12 @@ interface DropdownModalProps {
 
 const Dropdown: React.FC<DropdownModalProps> = (props) => {
     const { open, setOpen, setInitialImage, goNext } = props
+    const dispatch = useDispatch();
+
     const uploadMeme = () => {
         document.getElementById("select-meme")!.click()
     }
+    const image = useSelector((state: RootState) => state.image.selectedImage);
 
     const fileSelectHandler: ChangeEventHandler<HTMLInputElement> = (input) => {
         if (input.target.files && input.target.files[0]) {
@@ -26,20 +33,23 @@ const Dropdown: React.FC<DropdownModalProps> = (props) => {
             reader.onload = (e) => {
                 if (!e.target?.result) return;
                 setInitialImage(e.target.result?.toString())
-                goNext()
+                dispatch(setImage(e.target.result?.toString()))
+                
             };
             reader.readAsDataURL(input.target.files[0]);
         }
+        router.push("/meme/create");
     }
     const router = useRouter();
 
     const startFromBlank = () => {
+        dispatch(removeImage())
         router.push("/meme/create");
     }
 
     return (
-        <div onMouseDown={() => setOpen({ open: false })} className={`${open ? "block " : "hidden"} absolute h-full w-full z-40 top-0 left-0`}>
-            <div onMouseDown={(e) => e.stopPropagation()} className={`${open ? "block " : "hidden"} comic-border rounded-4xl bg-white p-4 flex flex-col w-full lg:w-1/5  `}>
+        <div onMouseDown={() => setOpen({ open: false })} className={`${open ? "block " : "hidden"} absolute h-full w-full z-20 top-0 left-0`}>
+            <div onMouseDown={(e) => e.stopPropagation()} className={`${open ? "block " : "hidden"} comic-border rounded-4xl bg-white p-4  w-1/5 lg:w-1/5  `}>
 
                 <button onClick={uploadMeme} className="btn-medium w-full mb-[16px]">Upload image</button>
                 <button onClick={startFromBlank} className="btn-medium w-full">Start from blank canvas</button>
