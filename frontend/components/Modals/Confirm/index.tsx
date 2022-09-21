@@ -20,7 +20,7 @@ export const ConfirmModal = ({ show, setShow, onConfirm, publication }: ConfirmM
                 <p className="text-body-2-medium mb-[32px] text-center">{publication ? "This remix will live on Lens forever" : "This meme will live on Lens forever"}</p>
                 <div className="flex justify-center items-center gap-[24px]">
                     <button onClick={handleCancel} className="btn-medium-secondary">Cancel</button>
-                    <button onClick={onConfirm} className="btn-medium">Remix</button>
+                    <button onClick={onConfirm} className="btn-medium">{publication ? 'Remix' : 'Create'}</button>
                 </div>
             </div>
         </div>
