@@ -389,6 +389,9 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     useLayoutEffect(() => {
         if(containerRef.current) {
+            if(canvas){
+                canvas.clear()
+            }
             const canvasCreation = new fabric.Canvas('meme-editor', { backgroundColor: 'white' })
             canvasCreation.freeDrawingBrush.color = 'black'
             canvasCreation.freeDrawingBrush.width = 2

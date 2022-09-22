@@ -25,7 +25,6 @@ const Dropdown: React.FC<DropdownModalProps> = (props) => {
     const uploadMeme = () => {
         document.getElementById("select-meme")!.click()
     }
-    const image = useSelector((state: RootState) => state.image.selectedImage);
 
     const fileSelectHandler: ChangeEventHandler<HTMLInputElement> = (input) => {
         if (input.target.files && input.target.files[0]) {
@@ -40,7 +39,6 @@ const Dropdown: React.FC<DropdownModalProps> = (props) => {
         }
         setOpen({ open: false })
         router.push("/meme/create");
-        setOpen({ open: false })
     }
     const router = useRouter();
 

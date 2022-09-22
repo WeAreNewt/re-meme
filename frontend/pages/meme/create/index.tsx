@@ -49,8 +49,7 @@ const CreateMemePage: NextPage = () => {
                     </div>
                     ) : (
                         <>
-                            {/* { step === 0 && publication && <CreateStep meme={publication} setInitialImage={setInitialImage} goNext={goNext} /> } */}
-                            { <EditStep initialImage={image} onUpload={handleUpload} /> }
+                            <EditStep initialImage={image} onUpload={handleUpload} /> 
                         </>
                     )
                 }
