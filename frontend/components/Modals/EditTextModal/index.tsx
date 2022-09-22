@@ -45,16 +45,6 @@ export const EditText : React.FC<EditTextModalProps> = ({ index, setOpen, delete
         )
     }
 
-    // const setTextColor: ChangeEventHandler<HTMLInputElement> = e => {
-    //     setConfig({
-    //         textColor: e.target.value,
-    //         shadowColor: e.target.value,
-    //         font: text.fontFamily
-    //     }, 
-    //     index
-    //     )  
-    // }
-
     const onToggle = () => {
         
         const font = newFont
