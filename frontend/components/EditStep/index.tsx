@@ -640,7 +640,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                                     value={text.text}
                                 />
                                 <button className="w-4 flex items-center" onClick={() => openEditTextModal(index)}>
-                                    <img src="/assets/icons/pencil.svg" />
+                                    <span role="img" aria-label="palette">🎨</span>
                                 </button>
                             </div>
                         )
