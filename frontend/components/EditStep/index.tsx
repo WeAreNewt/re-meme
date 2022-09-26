@@ -145,6 +145,15 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         signerOrProvider: signer
     })
 
+    const clearCanvas = () => {
+        if(canvas) {
+            canvas.clear()
+            setBackgroundImage(undefined)
+            setFabricObjects([])
+            setIsDrawingMode(false)
+        }
+    }
+
     const [ postTypedData ] = useMutation<CreatePostTypedData, CreatePostTypedDataParams>(CREATE_POST_TYPED_DATA)
     const [ commentTypedData ] = useMutation<CreateCommentTypedData, CreateCommentTypedDataParams>(CREATE_COMMENT_TYPED_DATA)
     const [ broadcast ] = useMutation<BroadcastData, BroadcastParams>(BROADCAST_MUTATION)
@@ -378,7 +387,14 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     useLayoutEffect(() => {
         if(containerRef.current) {
-            const canvasCreation = new fabric.Canvas('meme-editor', { backgroundColor: 'white', preserveObjectStacking: true })
+            let canvasCreation
+            if(canvas) {
+                clearCanvas()
+                canvasCreation = canvas
+            }
+            else {
+                canvasCreation = new fabric.Canvas('meme-editor', { backgroundColor: 'white', preserveObjectStacking: true })
+            }
             canvasCreation.freeDrawingBrush.color = 'black'
             canvasCreation.freeDrawingBrush.width = 2
             if(publication) {

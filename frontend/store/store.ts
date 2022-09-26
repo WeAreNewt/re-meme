@@ -5,6 +5,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import { combineReducers } from "redux"
 import storage from 'redux-persist/lib/storage';
 import authReducer, { AuthSlice } from './reducers/auth.reducer';
+import imageReducer, { ImageSlice } from './reducers/image.reducer';
 
 /* export const transformCircular = createTransform(
   (inboundState, key) => JSON.stringify(inboundState),
@@ -20,10 +21,11 @@ export const persistConfig = {
 
 export interface RootState {
   user: UserSlice,
-  auth: AuthSlice
+  auth: AuthSlice,
+  image: ImageSlice
 }
 
-const rootReducer = combineReducers({ user: userReducer, auth: authReducer})
+const rootReducer = combineReducers({ user: userReducer, auth: authReducer, image: imageReducer})
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const store = configureStore({

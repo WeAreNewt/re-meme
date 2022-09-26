@@ -8,6 +8,8 @@ import EditStep from "../../../components/EditStep";
 import Loader from "../../../components/Loader";
 import { useRandomMeme } from "../../../hooks/useMeme";
 import { PublicationData } from "../../../models/Publication/publication.model";
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from "../../../store/store";
 
 const CreateMemePage: NextPage = () => {
     const { publication, loading } = useRandomMeme()
@@ -15,6 +17,8 @@ const CreateMemePage: NextPage = () => {
     const [ step, setStep ] = useState(0);
     const [initialImage, setInitialImage] = useState<string>();
     const router = useRouter();
+    const image = useSelector((state: RootState) => state.image.selectedImage);
+
 
     const goNext = () => setStep(step => step + 1)
 
@@ -45,8 +49,7 @@ const CreateMemePage: NextPage = () => {
                     </div>
                     ) : (
                         <>
-                            { step === 0 && publication && <CreateStep meme={publication} setInitialImage={setInitialImage} goNext={goNext} /> }
-                            { step === 1 && <EditStep initialImage={initialImage} onUpload={handleUpload} /> }
+                            <EditStep initialImage={image} onUpload={handleUpload} /> 
                         </>
                     )
                 }
