@@ -1,5 +1,4 @@
-import { v4 as uuidv4 } from 'uuid'
-import { ChangeEvent, forwardRef, useEffect, useState } from "react";
+import { ChangeEvent } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 
 interface TextProps {

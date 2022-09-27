@@ -1,4 +1,4 @@
-import { PublicationData } from "../../../models/Publication/publication.model";
+import { PublicationData } from "../../../lib/models/Publication/publication.model";
 
 type ConfirmModalProps = {
     show: boolean;
