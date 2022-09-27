@@ -43,7 +43,7 @@ const Edit = () => {
                             <Loader />
                         </div>
                         ) : (
-                            publication && <EditStep publication={publication} onUpload={onUpload} />
+                            typeof window !== 'undefined' && publication && <EditStep publication={publication} onUpload={onUpload} />
                         )
                     }
                 </Row>

@@ -37,7 +37,7 @@ const CreateMemePage: NextPage = () => {
                 </Col>
             </Row>
             <Row>
-                <EditStep initialImage={image} onUpload={handleUpload} /> 
+              { typeof window !== 'undefined' && <EditStep initialImage={image} onUpload={handleUpload} /> }
             </Row>
         </Container>
     )
