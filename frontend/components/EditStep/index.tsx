@@ -658,13 +658,13 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                     }
                     <div className="flex gap-[12px] mb-4">
                         <input id='upload-file' accept="image/*" hidden type="file" onChange={addImage} onClick={clearFileCache} />
-                            <button disabled={fabricObjects.length >= 10} key="mbicon-text" onClick={onAddText} className="icon-btn-large-secondary">
+                            <button disabled={fabricObjects.length >= 10} key="mbicon-text" onClick={onAddText} className="icon-btn-large-secondary" title="Add text">
                                 <img className="icon-md" src="/assets/icons/edit-meme-1.svg" />
                             </button>
                             <button key="mbicon-image" onClick={uploadFileHandler} className="icon-btn-large-secondary">
-                                <img className="icon-md" src="/assets/icons/edit-meme-2.svg" />
+                                <img className="icon-md" src="/assets/icons/edit-meme-2.svg"/>
                             </button>
-                            <button key="mbicon-draw" onClick={onDraw} className={`icon-btn-large-secondary ${isDrawingMode && 'bg-neutral-black shadow-none hover:bg-neutral-black'}`}>
+                            <button key="mbicon-draw" onClick={onDraw} className={`icon-btn-large-secondary ${isDrawingMode && 'bg-neutral-black shadow-none hover:bg-neutral-black'}`} title="Free hand draw mode">
                                 <img className="icon-md" src={`${ isDrawingMode ? '/assets/icons/edit-meme-3-reverse.svg' : '/assets/icons/edit-meme-3.svg'}`}/>
                             </button>
                     </div>
