@@ -22,12 +22,16 @@ module.exports = {
         '3': '3px',
       },
       fontFamily: {
-        'mono': ['JetBrains Mono']
+        'serif': ['JetBrains Mono']
       }
     },
     colors: {
       'lens-default': '#ABFE2C',
       'purple': '#D2A6FF',
+      'lime': '#ABFE2C',
+      'lime-transparent': '#ABFE2CE6',
+      'blue': '#002F66',
+      'light-green' :'#A6E5B4',
       primary: {
         900: '#6322A5',
         800: '#844DBB',

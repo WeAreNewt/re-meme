@@ -4,12 +4,11 @@ import React, { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { GoBackButton } from "../../../components/Buttons/GoBackBtn";
 import EditStep from "../../../components/EditStep";
-import Loader from "../../../components/Loader";
-import { useRandomMeme } from "../../../lib/hooks/useMeme";
 import { PublicationData } from "../../../lib/models/Publication/publication.model";
 import { useDispatch, useSelector } from 'react-redux'
 import { removeImage } from "../../../lib/redux/slices/image";
 import { RootState } from "../../../lib/redux/store";
+import NoSsrWrapper from "../../../components/NoSsrWrapper";
 
 const CreateMemePage: NextPage = () => {
     const [ step, setStep ] = useState(0);
@@ -37,7 +36,9 @@ const CreateMemePage: NextPage = () => {
                 </Col>
             </Row>
             <Row>
-              { typeof window !== 'undefined' && <EditStep initialImage={image} onUpload={handleUpload} /> }
+                <NoSsrWrapper>
+                    <EditStep initialImage={image} onUpload={handleUpload} />
+                </NoSsrWrapper>
             </Row>
         </Container>
     )

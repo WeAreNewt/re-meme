@@ -8,7 +8,6 @@ import wagmiClient, { chains } from '../lib/config/wagmi';
 import apolloClient from '../lib/config/apollo';
 import Head from 'next/head'
 import '../styles/globals.css'
-import '../styles/main.css'
 import '@rainbow-me/rainbowkit/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { wrapper } from '../lib/redux/store';
