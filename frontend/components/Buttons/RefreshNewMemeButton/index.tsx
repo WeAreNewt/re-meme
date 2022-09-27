@@ -1,13 +1,12 @@
-export const RefreshNewMemeBtn = () => {
+import Link from "next/link";
 
-    const reloadMeme = () => {
-       window.location.reload();
-    }
-    
+export const RefreshNewMemeBtn = () => {
     return (
-        <button onClick={reloadMeme} className='icon-btn-medium lg:w-auto lg:btn-with-icon-medium'>
-            <img src="/assets/icons/refresh.svg" className='icon-md lg:icon-sm' />
-            <span className='hidden lg:block'>Refresh meme</span>
-        </button>
+        <Link href="/" passHref={true}>
+            <a className='icon-btn-medium lg:w-auto lg:btn-with-icon-medium no-underline hover:text-neutral-black'>
+                <img src="/assets/icons/refresh.svg" className='icon-md lg:icon-sm' />
+                <span className='hidden lg:block'>Refresh meme</span>
+            </a>
+        </Link>
     )
 }

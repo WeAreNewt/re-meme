@@ -1,13 +1,15 @@
 import { useQuery } from "@apollo/client";
+import { selectedEnvironment } from "../config/environments";
 import { GetPublicationsData, GetPublicationsParams } from "../models/Publication/publication.model";
 import { GET_PUBLICATIONS } from "../queries/publication";
 
 export const useComments = (publicationId: string) => {
+    console.log(publicationId)
     const { data } = useQuery<GetPublicationsData, GetPublicationsParams>(GET_PUBLICATIONS, {
         variables: {
             request: {
                 commentsOf: publicationId,
-                sources: [process.env.NEXT_PUBLIC_APP_ID || ''],
+                sources: [selectedEnvironment.appId],
                 limit: 10
             }
         }

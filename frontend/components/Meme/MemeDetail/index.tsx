@@ -30,6 +30,7 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     const [remixesOpen, setRemixesOpen] = useState(false)
     const [imageHover, setImageHover] = useState(false)
     const [showConfirm, setShowConfirm] = useState(false);
+    console.log(meme)
     const { data: commentsPageData } = useComments(meme.id)
 
     useEffect(() => {

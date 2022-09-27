@@ -405,7 +405,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             const ratio = canvasCreation.getHeight() / canvasCreation.getWidth()
                             const canvasNewWidth = containerRef.current?.clientWidth || 0
                             const canvasNewHeight = canvasNewWidth * ratio
-                            console.log(canvasNewHeight)
                             const scaleX = canvasNewWidth / canvasCreation.getWidth()
                             const scaleY = canvasNewHeight / canvasCreation.getHeight()
                             canvasCreation.setWidth(canvasNewWidth)
@@ -518,7 +517,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                 canvas.backgroundImage.scaleToWidth(containerRef.current?.clientWidth)
             }
             canvas.renderAll()
-            console.log(canvas.backgroundImage)
         }
     }, [width, canvas, height])
 

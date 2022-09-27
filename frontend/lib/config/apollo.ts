@@ -30,7 +30,6 @@ const authLink = setContext(() => {
   let refreshToken : string | null = null
   if(window) {
     const tokens = store.getState().auth
-    console.log(tokens)
     if(tokens) {
       accessToken = tokens.accessToken
       refreshToken = tokens.refreshToken
