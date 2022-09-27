@@ -1,11 +1,9 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import EditStep from "../../../../components/EditStep";
 import Loader from "../../../../components/Loader";
 import { useMemeFromPublicationId } from "../../../../hooks/useMeme";
 import { PublicationData } from "../../../../models/Publication/publication.model";
-import { User } from "../../../../models/User/user.model";
 
 const Edit = () => {
     const router = useRouter()
