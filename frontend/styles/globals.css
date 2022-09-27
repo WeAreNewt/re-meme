@@ -2,66 +2,471 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: 'JetBrains Mono' !important;
+@layer base {
+
+    html {
+        font-family: 'JetBrains Mono'
+    }
+
+    body {
+        @apply text-neutral-black m-0 p-0 font-mono
+    }
+
+    a {
+        color: inherit;
+        text-decoration: none;
+      }
+      
+      * {
+        box-sizing: border-box;
+      }
+      
+      .home-bg {
+        background-image: url("/assets/layout/background-1.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+      
+      .profile-bg {
+        background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+    /* TYPOGRAPHY */
+
+    .text-heading-1 {
+        @apply font-bold text-[60px] leading-[72px] tracking-[0.0075em]
+    }
+
+    .text-heading-2 {
+        @apply font-bold text-[48px] leading-[64px]
+    }
+
+    .text-heading-3 {
+        @apply font-medium text-[40px] leading-[48px]
+    }
+
+    .text-subtitle-1 {
+        @apply font-bold text-[28px] leading-[32px]
+    }
+
+    .text-subtitle-2 {
+        @apply font-bold text-[18px] leading-[28px] tracking-[0.4px]
+    }
+
+    .text-body-1-semibold {
+        @apply font-bold text-[18px] leading-[28px]
+    }
+
+    .text-body-1-medium {
+        @apply font-medium text-[18px] leading-[28px]
+    }
+
+    .text-body-2-semibold {
+        @apply font-bold text-[16px] leading-[24px]
+    }
+
+    .text-body-2-medium {
+        @apply font-medium text-[16px] leading-[24px]
+    }
+
+    .text-description-bold {
+        @apply font-bold text-[12px] leading-[18px]
+    }
+    .text-description-regular {
+        @apply font-medium text-[12px] leading-[18px]
+    }
+
+    /* COLORS THAT CANT GO IN TAILWIND CONFIG */
+
+    .bg-memixer-gradient-light {
+        background: linear-gradient(135deg, #DCB9FF 0%, #FFC5C5 51.82%, #E1FF7C 100%);
+    }
+
+    .bg-memixer-gradient-default {
+        background: linear-gradient(135deg, #CFA8F7 0%, #FCBBBB 51.82%, #D4F26C 100%);
+    }
+    
+    .bg-memixer-gradient-dark {
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), linear-gradient(135deg, #CFA8F7 0%, #FCBBBB 51.82%, #D4F26C 100%);
+    }
+
+    .create-btn-gradient {
+        background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
+      }
+      
+      .create-btn-gradient-transparent {
+        background: linear-gradient(135deg, #D2A6FFE6 0%, #D8F968E6 100%);
+      }
+      
+      .bg-share-gradient {
+        background: linear-gradient(90deg, rgba(100, 203, 172, 0.8) 0%, rgba(239, 185, 105, 0.8) 22.92%, rgba(235, 116, 156, 0.8) 49.48%, rgba(102, 167, 228, 0.8) 76.56%, rgba(157, 122, 201, 0.8) 100%), #FFFFFF;
+      }
+      
+    .bg-gradient-default-transparent {
+        background: linear-gradient(135deg, rgba(207, 168, 247, 0.94) 0%, rgba(252, 187, 187, 0.94) 51.82%, rgba(212, 242, 108, 0.94) 100%);
+    }
+
+    /* MISCELLANEOUS */
+
+    .comic-border-mini {
+        @apply border-[2px] border-neutral-black shadow-[2px_2px_0px_#101112]
+    }
+
+    .comic-border {
+        @apply border-[2px] border-neutral-black shadow-[5px_5px_0px_#101112]
+    }
+
+    .comic-border-lg {
+        @apply border-[3px] border-neutral-black shadow-[6px_6px_0px_#101112]
+    }
+
+    .comic-border-xl {
+        @apply border-[3px] border-neutral-black shadow-[7px_7px_0px_#101112]
+    }
+
+    .comic-border-xxl {
+        @apply border-[3px] border-neutral-black shadow-[8px_8px_0px_#101112]
+    }
+
+    .base-btn {
+        @apply
+            text-neutral-black
+            flex
+            items-center
+            justify-center
+            cursor-pointer
+            rounded-[31px]
+            disabled:opacity-30
+            disabled:cursor-default
+            disabled:shadow-none
+            disabled:hover:shadow-none
+            disabled:active:shadow-none
+    }
+
+    .base-btn-primary {
+        @apply
+            base-btn
+            bg-primary-600
+            hover:bg-primary-500
+            active:bg-primary-bold
+            disabled:bg-primary-600
+    }
+
+    .base-btn-secondary {
+        @apply
+            base-btn
+            bg-neutral-white
+            hover:bg-neutral-white
+            active:bg-neutral-white
+            disabled:bg-neutral-white
+    }
+
+    .base-btn-tertiary {
+        @apply
+            base-btn
+            bg-memixer-gradient-default
+            hover:bg-memixer-gradient-light
+            active:bg-memixer-gradient-dark
+            disabled:bg-memixer-gradient-default
+    }
+
+    .base-btn-small {
+        @apply
+            text-body-2-medium
+            min-h-[32px]
+            px-[20px]
+            py-[2px]
+            comic-border-mini
+            hover:comic-border
+            active:shadow-[inset_4px_5px_0px_#101112]
+            transform
+            hover:translate-x-[-2px]
+            hover:translate-y-[-2px]
+            active:hover:transform-none
+            transition-all
+            active:disabled:hover:transform-none
+            disabled:transform-none
+    }
+
+    .base-btn-with-icon-small {
+        @apply
+            base-btn-small
+            pl-[16px]
+            pr-[20px]
+            gap-[8px]
+    }
+
+    .base-btn-medium {
+        @apply
+            text-body-2-medium
+            min-h-[40px]
+            px-[24px]
+            py-[6px]
+            comic-border-mini
+            hover:comic-border
+            active:shadow-[inset_4px_5px_0px_#101112]
+            transform
+            hover:translate-x-[-2px]
+            hover:translate-y-[-2px]
+            active:hover:transform-none
+            transition-all
+            disabled:transform-none
+    }
+
+    .base-btn-with-icon-medium {
+        @apply
+            base-btn-medium
+            pl-[16px]
+            pr-[20px]
+            gap-[8px]
+    }
+
+    .base-btn-large {
+        @apply
+            text-body-1-semibold
+            min-h-[64px]
+            px-[64px]
+            py-[15px]
+            comic-border-lg
+            hover:comic-border-xl
+            active:shadow-[inset_8px_8px_0px_#101112]
+            transform
+            hover:translate-x-[-1px]
+            hover:translate-y-[-1px]
+            active:hover:transform-none
+            transition-all
+            disabled:transform-none
+    }
+
+    .base-icon-btn {
+        @apply
+            flex
+            items-center
+            justify-center
+            cursor-pointer
+            rounded-[100px]
+            disabled:opacity-30
+            disabled:cursor-default
+            disabled:shadow-none
+            disabled:hover:shadow-none
+            disabled:active:shadow-none
+    }
+
+    .base-icon-btn-primary {
+        @apply
+            base-icon-btn
+            bg-primary-600
+            hover:bg-primary-500
+            active:bg-primary-bold
+            disabled:bg-primary-600
+    }
+
+    .base-icon-btn-secondary {
+        @apply
+            base-icon-btn
+            bg-neutral-white
+            hover:bg-neutral-white
+            active:bg-neutral-white
+            disabled:bg-neutral-white
+    }
+
+    .base-icon-btn-tertiary {
+        @apply
+            base-icon-btn
+            bg-memixer-gradient-default
+            hover:bg-memixer-gradient-light
+            active:bg-memixer-gradient-dark
+            disabled:bg-memixer-gradient-default
+    }
+
+    .base-icon-btn-small {
+        @apply
+            h-[32px]
+            w-[32px]
+            comic-border-mini
+            hover:comic-border
+            active:shadow-[inset_4px_5px_0px_#101112]
+            transform
+            hover:translate-x-[-2px]
+            hover:translate-y-[-2px]
+            active:hover:transform-none
+            transition-all
+            disabled:transform-none
+    }
+
+    .base-icon-btn-medium {
+        @apply
+            h-[40px]
+            w-[40px]
+            comic-border-mini
+            hover:comic-border
+            active:shadow-[inset_4px_5px_0px_#101112]
+            transform
+            hover:translate-x-[-2px]
+            hover:translate-y-[-2px]
+            active:hover:transform-none
+            transition-all
+            disabled:transform-none
+    }
+
+    .base-icon-btn-large {
+        @apply
+            h-[48px]
+            w-[48px]
+            comic-border-mini
+            hover:comic-border
+            active:shadow-[inset_4px_5px_0px_#101112]
+            transform
+            hover:translate-x-[-2px]
+            hover:translate-y-[-2px]
+            active:hover:transform-none
+            transition-all
+            disabled:transform-none
+    }
+
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@layer components {
+
+    .btn-small {
+        @apply
+            base-btn-primary
+            base-btn-small
+    }
+
+    .btn-with-icon-small {
+        @apply
+            base-btn-primary
+            base-btn-with-icon-small
+    }
+
+    .btn-small-secondary {
+        @apply
+            base-btn-secondary
+            base-btn-small
+    }
+
+    .btn-with-icon-small-secondary {
+        @apply
+            base-btn-secondary
+            base-btn-with-icon-small
+    }
+
+    .btn-small-tertiary {
+        @apply
+            base-btn-tertiary
+            base-btn-small
+    }
+
+    .btn-medium {
+        @apply
+            base-btn-primary
+            base-btn-medium
+    }
+
+    .btn-with-icon-medium {
+        @apply
+            base-btn-primary
+            base-btn-with-icon-medium
+    }
+
+    .btn-medium-secondary {
+        @apply
+            base-btn-secondary
+            base-btn-medium
+
+    }
+
+    .btn-with-icon-medium-secondary {
+        @apply
+            base-btn-secondary
+            base-btn-with-icon-medium
+    }
+
+    .btn-medium-tertiary {
+        @apply
+            base-btn-tertiary
+            base-btn-medium
+    }
+
+    .btn-with-icon-medium-tertiary {
+        @apply
+            base-btn-tertiary
+            base-btn-with-icon-medium
+    }
+
+    .btn-large-tertiary {
+        @apply
+            base-btn-tertiary
+            base-btn-large
+    }
+
+    .icon-sm {
+        @apply
+            w-[20px]
+            h-[20px]
+    }
+
+    .icon-btn-small {
+        @apply
+            base-icon-btn-small
+            base-icon-btn-primary 
+    }
+
+    .icon-md {
+        @apply
+            h-[24px]
+            w-[24px]
+    }
+
+    .icon-btn-medium {
+        @apply
+            base-icon-btn-medium
+            base-icon-btn-primary 
+    }
+
+    .icon-btn-medium-secondary {
+        @apply
+            base-icon-btn-medium
+            base-icon-btn-secondary  
+    }
+
+    .icon-btn-medium-tertiary {
+        @apply
+            base-icon-btn-medium
+            base-icon-btn-tertiary  
+    }
+
+    .icon-btn-large-secondary {
+        @apply
+            base-icon-btn-large
+            base-icon-btn-secondary  
+    }
+
+    .main-container {
+        @apply
+            comic-border-xxl
+            bg-neutral-white
+            p-[20px]
+            lg:p-[40px]
+            flex
+            flex-col
+            items-center
+            rounded-[30px]
+            w-full
+            lg:w-auto
+    }
 }
 
-* {
-  box-sizing: border-box;
-}
-
-.home-bg {
-  background-image: url("/assets/layout/background-1.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.profile-bg {
-  background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.create-btn-gradient {
-  background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
-}
-
-.create-btn-gradient-transparent {
-  background: linear-gradient(135deg, #D2A6FFE6 0%, #D8F968E6 100%);
-}
-
-.bg-lime {
-  background-color: #ABFE2C;
-}
-
-.bg-lime-transparent {
-  background-color: #ABFE2CE6;
-}
-
-.bg-purple {
-  background-color: #D2A6FF;
-}
-
-.bg-blue {
-  background-color: #002F66;
-}
-
-.bg-light-green {
-  background-color: #A6E5B4;
-}
-
-.bg-share-gradient {
-  background: linear-gradient(90deg, rgba(100, 203, 172, 0.8) 0%, rgba(239, 185, 105, 0.8) 22.92%, rgba(235, 116, 156, 0.8) 49.48%, rgba(102, 167, 228, 0.8) 76.56%, rgba(157, 122, 201, 0.8) 100%), #FFFFFF;
-}
-
-.bg-gradient-default-transparent {
-  background: linear-gradient(135deg, rgba(207, 168, 247, 0.94) 0%, rgba(252, 187, 187, 0.94) 51.82%, rgba(212, 242, 108, 0.94) 100%);
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
 }

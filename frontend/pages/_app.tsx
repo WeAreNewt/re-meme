@@ -3,33 +3,31 @@ import { WagmiProvider } from 'wagmi';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { ApolloProvider } from "@apollo/client";
 import { Provider } from 'react-redux';
-import { store, persistor } from '../store/store';
-import { PersistGate } from 'redux-persist/integration/react';
 import PageLayout from '../components/Layout';
-import wagmiClient, { chains } from '../config/wagmi';
-import apolloClient from '../config/apollo';
+import wagmiClient, { chains } from '../lib/config/wagmi';
+import apolloClient from '../lib/config/apollo';
 import Head from 'next/head'
 import '../styles/globals.css'
-import '../styles/main.css'
 import '@rainbow-me/rainbowkit/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { wrapper } from '../lib/redux/store';
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, ...rest }: AppProps) {
+
+  const { store, props } = wrapper.useWrappedStore(rest)
   return (
-    <ApolloProvider client={apolloClient}>
-      <Head><title>re:meme</title></Head>
-      <WagmiProvider client={wagmiClient}>
-        <RainbowKitProvider coolMode chains={chains}>
-          <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
+    <Provider store={store}>
+      <ApolloProvider client={apolloClient}>
+        <Head><title>re:meme</title></Head>
+        <WagmiProvider client={wagmiClient}>
+          <RainbowKitProvider coolMode chains={chains}>
               <PageLayout>
-                <Component {...pageProps} />
+                <Component {...props.pageProps} />
               </PageLayout>
-            </PersistGate> 
-          </Provider>
-        </RainbowKitProvider>
-      </WagmiProvider>
-    </ApolloProvider>
+          </RainbowKitProvider>
+        </WagmiProvider>
+      </ApolloProvider>
+    </Provider>
   )
 }
 

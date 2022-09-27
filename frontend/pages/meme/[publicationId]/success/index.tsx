@@ -5,13 +5,13 @@ import { useSelector } from "react-redux";
 import FeedbackStep from "../../../../components/FeedbackStep";
 import { ConnectionBox } from "../../../../components/Layout/ConnectionBox";
 import Loader from "../../../../components/Loader";
-import { useMemeFromPublicationId } from "../../../../hooks/useMeme";
-import { User } from "../../../../models/User/user.model";
+import { useMemeFromPublicationId } from "../../../../lib/hooks/useMeme";
+import { RootState } from "../../../../lib/redux/store";
 
 const Success : React.FC = () => {
     const router = useRouter()
     const { publicationId } = router.query
-    const user : User = useSelector((state: any) => state.user.selectedUser);
+    const selectedProfile = useSelector((store: RootState) => store.user.selectedProfile)
     const { publication, loading, error } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
 
 
@@ -26,7 +26,7 @@ const Success : React.FC = () => {
                 <Col>
                     <article className='space-y-10'>
                         {
-                            !user && (
+                            !selectedProfile && (
                                 <header className="hidden lg:block">
                                     <ConnectionBox />
                                 </header>

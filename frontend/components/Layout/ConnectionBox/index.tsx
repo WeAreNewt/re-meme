@@ -1,27 +1,29 @@
-import { LoginStatus } from "../../../models/Connection/connection.model"
 import Marquee from "react-fast-marquee";
 import { useAccount } from "wagmi";
-import useLensProfiles from "../../../hooks/useLensProfiles";
+import useLensProfiles from "../../../lib/hooks/useLensProfiles";
+import NoSsrWrapper from "../../NoSsrWrapper";
 
 export const ConnectionBox: React.FC = () => {
     const { data } = useAccount()
     const { loading } = useLensProfiles()
 
     return (
-        <div className={'w-full h-24 rounded-full meme-header comic-border flex items-center justify-center ' + (data ? 'bg-lime' : 'bg-purple')}>
-            {
-                loading ?
-                    <span className="text-xl font-bold">Detecting Lens Profile</span> :
-                    <Marquee direction="left" speed={175} play gradient={false} className="flex h-full items-center">
-                        <span className="text-xl font-bold">
-                            {
-                                data ?
-                                "Please sign in with your Lens Profile." : 
-                                "Please connect your wallet."
-                            }
-                        </span>
-                    </Marquee>
-            }
-        </div>
+        <NoSsrWrapper>
+            <div className={'w-full h-24 rounded-full meme-header comic-border flex items-center justify-center ' + (data ? 'bg-lime' : 'bg-purple')}>
+                {
+                    loading ?
+                        <span className="text-xl font-bold">Detecting Lens Profile</span> :
+                        <Marquee direction="left" speed={175} play gradient={false} className="flex h-full items-center">
+                            <span className="text-xl font-bold">
+                                {
+                                    data ?
+                                    "Please sign in with your Lens Profile." : 
+                                    "Please connect your wallet."
+                                }
+                            </span>
+                        </Marquee>
+                }
+            </div>
+        </NoSsrWrapper>
     )
 }

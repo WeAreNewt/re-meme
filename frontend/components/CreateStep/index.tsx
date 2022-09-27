@@ -1,6 +1,6 @@
 import { ChangeEventHandler } from "react";
 import { MemeDetail } from "../Meme/MemeDetail";
-import { PublicationData } from "../../models/Publication/publication.model";
+import { PublicationData } from "../../lib/models/Publication/publication.model";
 
 interface CreateStepProps {
     meme: PublicationData
