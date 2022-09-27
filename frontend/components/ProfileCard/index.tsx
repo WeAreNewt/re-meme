@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { isNftImage, User } from "../../models/User/user.model";
-import { parseIpfs } from "../../utils/link";
+import { isNftImage, User } from "../../lib/models/User/user.model";
+import { parseIpfs } from "../../lib/utils/link";
 
 type ProfileCardProps = {
     profile: User;

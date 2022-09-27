@@ -1,8 +1,8 @@
 import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { ChangeEventHandler, useEffect, useState } from "react";
-import useLensModuleEnabledCurrencies from "../../../hooks/useLensModuleEnabledCurrencies";
-import { Currency } from "../../../models/Module/module.mode";
+import useLensModuleEnabledCurrencies from "../../../lib/hooks/useLensModuleEnabledCurrencies";
+import { Currency } from "../../../lib/models/Module/module.mode";
 
 export interface FormData {
     amount: BigNumber,

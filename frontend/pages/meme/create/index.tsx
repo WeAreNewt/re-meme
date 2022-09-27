@@ -1,27 +1,25 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { GoBackButton } from "../../../components/Buttons/GoBackBtn";
-import CreateStep from "../../../components/CreateStep";
 import EditStep from "../../../components/EditStep";
-import Loader from "../../../components/Loader";
-import { useRandomMeme } from "../../../hooks/useMeme";
-import { PublicationData } from "../../../models/Publication/publication.model";
+import { PublicationData } from "../../../lib/models/Publication/publication.model";
+import { useDispatch, useSelector } from 'react-redux'
+import { removeImage } from "../../../lib/redux/slices/image";
+import { RootState } from "../../../lib/redux/store";
+import NoSsrWrapper from "../../../components/NoSsrWrapper";
 
 const CreateMemePage: NextPage = () => {
-    const { publication, loading } = useRandomMeme()
-
     const [ step, setStep ] = useState(0);
-    const [initialImage, setInitialImage] = useState<string>();
     const router = useRouter();
-
-    const goNext = () => setStep(step => step + 1)
+    const image = useSelector((state: RootState) => state.image.selectedImage);
+    const dispatch = useDispatch()
 
     const onBackClick = () => {
         if(step === 0) router.push('/')
         else {
-            setInitialImage(undefined)
+            dispatch(removeImage())
             setStep(step => step-1)
         }
     }
@@ -30,16 +28,20 @@ const CreateMemePage: NextPage = () => {
         router.push(`/meme/${newPublication.id}/success`)
     }
 
-    return loading ? (
-        <div className="h-20 flex w-full items-center justify-center">
-            <Loader />
-        </div>
-        ) : (
-            <>
-                { step === 0 && publication && <CreateStep meme={publication} setInitialImage={setInitialImage} goNext={goNext} /> }
-                { step === 1 && <EditStep initialImage={initialImage} onUpload={handleUpload} /> }
-            </>
-        )
+    return (
+        <>
+            <Row className='mb-4'>
+                <Col>
+                    <GoBackButton onClick={onBackClick} />
+                </Col>
+            </Row>
+            <Row>
+                <NoSsrWrapper>
+                    <EditStep initialImage={image} onUpload={handleUpload} />
+                </NoSsrWrapper>
+            </Row>
+        </>
+    )
 }
 
 export default CreateMemePage;

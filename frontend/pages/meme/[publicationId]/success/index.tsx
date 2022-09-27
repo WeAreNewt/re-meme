@@ -1,12 +1,8 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { Col, Container, Row } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import FeedbackStep from "../../../../components/FeedbackStep";
-import { ConnectionBox } from "../../../../components/Layout/ConnectionBox";
 import Loader from "../../../../components/Loader";
-import { useMemeFromPublicationId } from "../../../../hooks/useMeme";
-import { User } from "../../../../models/User/user.model";
+import { useMemeFromPublicationId } from "../../../../lib/hooks/useMeme";
 
 const Success = () => {
     const router = useRouter()

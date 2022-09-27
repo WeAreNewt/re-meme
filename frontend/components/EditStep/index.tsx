@@ -1,31 +1,32 @@
 import { ChangeEventHandler, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { fabric } from 'fabric';
-import useWindowDimensions from "../../hooks/window-dimensions.hook";
+import useWindowDimensions from "../../lib/hooks/window-dimensions.hook";
 import EditTextModal, { EditText, TextConfig } from "../Modals/EditTextModal";
-import web3StorageClient from "../../config/web3Storage";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import { User } from "../../models/User/user.model";
+import web3StorageClient from "../../lib/config/web3Storage";
 import { useMutation } from "@apollo/client";
-import { CREATE_COMMENT_TYPED_DATA, CREATE_POST_TYPED_DATA } from "../../queries/publication";
-import { CreateCommentTypedData, CreateCommentTypedDataParams, CreatePostTypedData, CreatePostTypedDataParams, PublicationData } from "../../models/Publication/publication.model";
+import { CREATE_COMMENT_TYPED_DATA, CREATE_POST_TYPED_DATA } from "../../lib/queries/publication";
+import { CreateCommentTypedData, CreateCommentTypedDataParams, CreatePostTypedData, CreatePostTypedDataParams, PublicationData } from "../../lib/models/Publication/publication.model";
 import { useContract, useSigner, useSignTypedData } from "wagmi";
 import { ethers, utils } from "ethers";
-import LensHubAbi from '../../utils/contracts/abis/LensHub.json'
-import { v4 as uuidv4 } from 'uuid'
+import LensHubAbi from '../../lib/utils/contracts/abis/LensHub.json'
 import { ConfirmModal } from "../Modals/Confirm";
 import { FeedbackModal } from "../Modals/Feedback";
 import omitDeep from 'omit-deep'
-import { parseIpfs } from "../../utils/link";
+import { parseIpfs } from "../../lib/utils/link";
 import UploadMemeError, { UploadError } from "../Modals/UploadMemeError";
-import { useMemeFromTxHash } from "../../hooks/useMeme";
-import { selectedEnvironment } from "../../config/environments";
-import useLensModuleEnabledCurrencies from "../../hooks/useLensModuleEnabledCurrencies";
-import { BROADCAST_MUTATION } from "../../queries/broadcast";
-import { BroadcastData, BroadcastParams } from "../../models/Broadcast/broadcast.model";
+import { useMemeFromTxHash } from "../../lib/hooks/useMeme";
+import { selectedEnvironment } from "../../lib/config/environments";
+import useLensModuleEnabledCurrencies from "../../lib/hooks/useLensModuleEnabledCurrencies";
+import { BROADCAST_MUTATION } from "../../lib/queries/broadcast";
+import { BroadcastData, BroadcastParams } from "../../lib/models/Broadcast/broadcast.model";
 import { base64 } from "ethers/lib/utils";
-import useRefSizes from "../../hooks/useRefSizes";
+import useRefSizes from "../../lib/hooks/useRefSizes";
 import { Resizable } from "re-resizable";
+import CanvasObjectList from "../CanvasObjectList";
+import { v4 as uuidv4 } from 'uuid'
+import { DropResult } from "react-beautiful-dnd";
+import { useSelector } from "react-redux";
+import { RootState } from "../../lib/redux/store";
 
 interface PathEvent {
     path?: fabric.Path
@@ -62,7 +63,7 @@ interface PublicationMetadata {
 
 interface EditStepProps {
     publication?: PublicationData
-    initialImage?: string,
+    initialImage?: string | null,
     onUpload: (newPublication: PublicationData) => void
 }
 
@@ -123,12 +124,10 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     const { width: windowWidth } = useWindowDimensions();
     const isSmallScreen = windowWidth < 1024
     const [ canvas, setCanvas ] = useState<fabric.Canvas>();
-    const [ texts, setTexts ] = useState<fabric.Text[]>([])
-    const [ images, setImages ] = useState<fabric.Image[]>([])
+    const [ fabricObjects, setFabricObjects ] = useState<fabric.Object[]>([])
     const [ backgroundImage, setBackgroundImage ] = useState<fabric.Image | string>()
-    const [ drawings, setDrawings ] = useState<fabric.Path[]>([])
     const [ isDrawingMode, setIsDrawingMode ] = useState<boolean>(false)
-    const user = useSelector<RootState, User | null>(state => state.user.selectedUser)
+    const selectedProfile = useSelector((store: RootState) => store.user.selectedProfile)
     const { signTypedDataAsync } = useSignTypedData()
     const [ openTextModal, setOpenTextModal ] = useState({
         open: false,
@@ -145,6 +144,15 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         signerOrProvider: signer
     })
 
+    const clearCanvas = () => {
+        if(canvas) {
+            canvas.clear()
+            setBackgroundImage(undefined)
+            setFabricObjects([])
+            setIsDrawingMode(false)
+        }
+    }
+
     const [ postTypedData ] = useMutation<CreatePostTypedData, CreatePostTypedDataParams>(CREATE_POST_TYPED_DATA)
     const [ commentTypedData ] = useMutation<CreateCommentTypedData, CreateCommentTypedDataParams>(CREATE_COMMENT_TYPED_DATA)
     const [ broadcast ] = useMutation<BroadcastData, BroadcastParams>(BROADCAST_MUTATION)
@@ -152,12 +160,13 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     const handleMemeText = (e, index) => {
         if(e.target.value.length > 100) return
-        texts[index].set({
+        const selectedText = fabricObjects[index] as fabric.Text
+        selectedText.set({
             text: e.target.value
         })
-        canvas?.setActiveObject(texts[index])
+        canvas?.setActiveObject(selectedText)
         canvas?.renderAll()
-        setTexts(texts => [...texts])
+        setFabricObjects(oldObjects => [...oldObjects])
     }
 
     const openEditTextModal = (index: number) => {
@@ -167,19 +176,11 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         })
     }
 
-    const deleteText = (index: number) => {
+    const onDeleteObject = (index: number) => {
         if(canvas) {
-            const text = texts[index]
-            canvas.remove(text)
-            setTexts(texts => texts.slice(0, index).concat(texts.slice(index+1)) )
-        }
-    }
-
-    const onDeleteImage = (index: number) => {
-        if(canvas) {
-            const image = images[index]
-            canvas.remove(image)
-            setImages(images => images.slice(0, index).concat(images.slice(index+1)) )
+            const selectedObject = fabricObjects[index]
+            canvas.remove(selectedObject)
+            setFabricObjects(fabricObjects => fabricObjects.filter((fabricObject) => fabricObject !== selectedObject ) )
         }
     }
 
@@ -188,12 +189,6 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             canvas.backgroundImage = undefined
             setBackgroundImage(undefined)
             canvas.renderAll()
-        }
-    }
-
-    const onDeleteDraw = (index: number) => {
-        if(canvas) {
-            setDrawings(draw => draw.slice(0, index).concat(draw.slice(index+1)) )
         }
     }
 
@@ -221,10 +216,10 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         setShowConfirm(false)
         setLoading(true)
         const jpegMeme = canvas?.toDataURL({ format: 'jpeg' })
-        if(jpegMeme && user) {
+        if(jpegMeme && selectedProfile) {
             uploadImageAndMetadata(jpegMeme, JSON.stringify(canvas?.toJSON(['width', 'height']))).then(metadataResult => {
                 const mutationPostParams = {
-                    profileId: user.id || '',                        
+                    profileId: selectedProfile.id || '',                        
                     contentURI: `ipfs://${metadataResult}`,
                     collectModule: {
                         unknownCollectModule: {
@@ -345,14 +340,14 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     }
 
     const setConfig = (newConfig: TextConfig, index: number) => {
-        const selectedText = texts[index]
+        const selectedText = fabricObjects[index] as fabric.Text
         selectedText.set({
             fontFamily: newConfig.font,
             fill: newConfig.textColor,
             shadow: newConfig.shadowColor
         })
         canvas?.renderAll()
-        setTexts(texts => [...texts])
+        setFabricObjects(fabricObjects => [...fabricObjects])
     }
 
     const addImage: ChangeEventHandler<HTMLInputElement> = (input) => {
@@ -366,15 +361,17 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                     if(containerRef.current && canvas) {
                         const fabricImage = new fabric.Image(img, {
                             top: 0,
-                            left: 0
+                            left: 0,
                         })
+                        fabricImage.id = `image_${fabricObjects.length}`
+                        fabricImage.typeIndex = fabricObjects.length
                         if(fabricImage.getScaledWidth() > fabricImage.getScaledHeight()) {
                             fabricImage.scaleToWidth(containerRef.current.clientWidth / 2 >> 0)
                         } else {
                             fabricImage.scaleToHeight(containerRef.current.clientHeight / 2 >> 0)
                         }
                         canvas.add(fabricImage)
-                        setImages(images => images.concat([fabricImage]))
+                        setFabricObjects(images => images.concat([fabricImage]))
                     }
                 }
             };
@@ -389,20 +386,22 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     useLayoutEffect(() => {
         if(containerRef.current) {
-            const canvasCreation = new fabric.Canvas('meme-editor', { backgroundColor: 'white' })
+            let canvasCreation
+            if(canvas) {
+                clearCanvas()
+                canvasCreation = canvas
+            }
+            else {
+                canvasCreation = new fabric.Canvas('meme-editor', { backgroundColor: 'white', preserveObjectStacking: true })
+            }
             canvasCreation.freeDrawingBrush.color = 'black'
             canvasCreation.freeDrawingBrush.width = 2
             if(publication) {
-                const newTexts : fabric.Text[] = []
-                const newImages : fabric.Image[] = []
-                const newDrawings : fabric.Path[] = []
+                const newObjects : fabric.Object[] = []
                 const ipfsLink = parseIpfs(publication.metadata.media[0].original.url)
                 fetch(ipfsLink.replace(/\/meme.svg|\/meme/, '/canvas_state.json'))
                     .then(response => response.json()).then(canvasState => {
                         canvasCreation.loadFromJSON(canvasState, () => {
-                            console.log(containerRef.current?.clientWidth)
-                            console.log(canvasCreation.width)
-                            console.log(canvasCreation.height)
                             const ratio = canvasCreation.getHeight() / canvasCreation.getWidth()
                             const canvasNewWidth = containerRef.current?.clientWidth || 0
                             const canvasNewHeight = canvasNewWidth * ratio
@@ -411,24 +410,28 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             const scaleY = canvasNewHeight / canvasCreation.getHeight()
                             canvasCreation.setWidth(canvasNewWidth)
                             canvasCreation.setHeight(canvasNewHeight)
-                            canvasCreation.getObjects().map(object => {
+                            canvasCreation.getObjects().map((object: fabric.Object) => {
                                 object.scaleX = (object.scaleX || 0) * scaleX
                                 object.scaleY = (object.scaleY || 0) * scaleY
                                 object.left = (object.left || 0) * scaleX
                                 object.top = (object.top || 0) * scaleY
                                 if(object.type === 'text') {
                                     disableMiddleResizeButtons(object)
-                                    newTexts.push(object as fabric.Text)
+                                    object.id = `text_${newObjects.length}`
+                                    object.typeIndex = newObjects.length
+                                    newObjects.push(object as fabric.Text)
                                 }
                                 else if(object.type === 'image') {
-                                    newImages.push(object as fabric.Image)
+                                    object.id = `image_${newObjects.length}`
+                                    object.typeIndex = newObjects.length
+                                    newObjects.push(object as fabric.Image)
                                 }
                                 else if(object.type === 'path') {
-                                    newDrawings.push(object as fabric.Path)
+                                    object.id = `drawing_${newObjects.length}`
+                                    object.typeIndex = newObjects.length
+                                    newObjects.push(object as fabric.Path)
                                 }
-                                setTexts(newTexts)
-                                setImages(newImages)
-                                setDrawings(newDrawings)
+                                setFabricObjects(newObjects)
                             })
                             if(canvasCreation.backgroundImage) {
                                 const publicationBackgroundImage = canvasCreation.backgroundImage as fabric.Image
@@ -446,19 +449,23 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             objects.map(object => {
                                 if(object.type === 'text') {
                                     disableMiddleResizeButtons(object)
-                                    newTexts.push(object as fabric.Text)
+                                    object.id = `text_${newObjects.length}`
+                                    object.typeIndex = newObjects.length
+                                    newObjects.push(object as fabric.Text)
                                 }
                                 else if(object.type === 'image') {
-                                    newImages.push(object as fabric.Image)
+                                    object.id = `image_${newObjects.length}`
+                                    object.typeIndex = newObjects.length
+                                    newObjects.push(object as fabric.Image)
                                 }
                                 else if(object.type === 'path') {
-                                    newDrawings.push(object as fabric.Path)
+                                    object.id = `drawing_${newObjects.length}`
+                                    object.typeIndex = newObjects.length
+                                    newObjects.push(object as fabric.Path)
                                 }
                                 canvasCreation.add(object)
                             })
-                            setTexts(newTexts)
-                            setImages(newImages)
-                            setDrawings(newDrawings)
+                            setFabricObjects(newObjects)
                             canvasCreation.renderAll()
                         })
                     }).finally(() => {
@@ -480,9 +487,11 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                         canvasCreation.setHeight(fabricImage.getScaledHeight())
                         canvasCreation.setBackgroundImage(fabricImage, () => {
                             const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
+                            newText.id = 'text_0'
+                            newText.typeIndex = 0
                             disableMiddleResizeButtons(newText)
                             canvasCreation.add(newText)
-                            setTexts([newText])
+                            setFabricObjects([newText])
                             setBackgroundImage(fabricImage)
                         })
                     }
@@ -490,23 +499,16 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             }
             else {
                 const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
+                newText.id = 'text_0'
+                newText.typeIndex = 0
                 canvasCreation.add(newText)
                 disableMiddleResizeButtons(newText)
-                setTexts([newText])
+                setFabricObjects([newText])
             }
             setCanvas(canvasCreation)
 
         }
     }, [initialImage, publication])
-
-    useEffect(() => {
-        /*
-        if(containerRef.current && canvas) {
-            canvas.setWidth(containerRef.current.clientWidth)
-            canvas.setHeight(containerRef.current.clientWidth)
-        }
-        */
-    }, [width, canvas])
 
     useEffect(() => {
         if(canvas && containerRef.current) {
@@ -525,7 +527,9 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
             canvas.on('path:created', (e) => {
                 const newPath = (e as PathEvent).path
                 if(newPath) {
-                    setDrawings(oldDrawings => oldDrawings.concat([newPath]))
+                    newPath.id = `drawing_${fabricObjects.length}`
+                    newPath.typeIndex = fabricObjects.length
+                    setFabricObjects(oldDrawings => oldDrawings.concat([newPath]))
                 }
             })
         }
@@ -545,9 +549,11 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
 
     const onAddText = () => {
         const newText = new fabric.Text('', DEFAULT_TEXT_CONFIG)
+        newText.id = `text_${fabricObjects.length}`
+        newText.typeIndex = fabricObjects.length
         disableMiddleResizeButtons(newText)
         canvas?.add(newText)
-        setTexts(texts => texts.concat(newText))
+        setFabricObjects(texts => texts.concat(newText))
     }
 
     const onDraw = () => {
@@ -557,16 +563,27 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         }
     }
 
+    const reorder = (result: DropResult) => {
+        if(canvas && result.destination && result.destination.index !== result.source.index) {
+            const newObjects = Array.from(fabricObjects);
+            const [removed] = newObjects.splice(result.source.index, 1);
+            newObjects.splice(result.destination.index, 0, removed);
+            setFabricObjects(newObjects)
+            canvas.moveTo(removed, result.destination.index)
+            canvas.renderAll()
+        }
+    }
+
     return (
         <>
             {
                 !isSmallScreen && openTextModal.open && (
                     <EditTextModal
-                        deleteText={deleteText}
+                        deleteText={onDeleteObject}
                         setOpen={setOpenTextModal}
                         index={openTextModal.index}
                         open={openTextModal.open}
-                        text={texts[openTextModal.index]}
+                        text={fabricObjects[openTextModal.index] as fabric.Text}
                         setConfig={setConfig}
                     />
                 )
@@ -609,11 +626,11 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                 {
                     isSmallScreen && openTextModal.open && (
                         <EditText 
-                            deleteText={deleteText}
+                            deleteText={onDeleteObject}
                             setOpen={setOpenTextModal}
                             index={openTextModal.index}
                             open={openTextModal.open}
-                            text={texts[openTextModal.index]}
+                            text={fabricObjects[openTextModal.index] as fabric.Text}
                             setConfig={setConfig}
                         />
                     )
@@ -630,44 +647,18 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                             </div>
                         )
                     }
-                    {
-                        texts.map((text, index) =>
-                            <div key={`memixer_text_${index}`} className="border-2 border-black border-solid rounded-xl mb-[16px] flex p-2 gap-2 w-full">
-                                <input
-                                    onChange={e => handleMemeText(e, index)}
-                                    className="w-full focus:outline-none"
-                                    placeholder={`Text #${index + 1}`}
-                                    value={text.text}
-                                />
-                                <button className="w-4 flex items-center" onClick={() => openEditTextModal(index)}>
-                                    <img src="/assets/icons/pencil.svg" />
-                                </button>
-                            </div>
-                        )
-                    }
-                    {
-                        images.map((image, index) => (
-                            <div className="flex justify-between w-full px-[16px] py-[12px] bg-neutral-200 rounded-[12px] mb-[16px]" key={`memixer_image_${index}`}>
-                                <span>{`Image ${index + 1}`}</span>
-                                <button onClick={() => onDeleteImage(index)}>
-                                    <img src="/assets/icons/x.png"/>
-                                </button>
-                            </div>
-                        ))
-                    }
-                                        {
-                        drawings.map((draw, index) => (
-                            <div className="flex justify-between w-full px-[16px] py-[12px] bg-neutral-200 rounded-[12px] mb-[16px]" key={`drawing_${index}`}>
-                                <span>{`Drawing ${index + 1}`}</span>
-                                <button onClick={() => onDeleteDraw(index)}>
-                                    <img  src="/assets/icons/x.png"/>
-                                </button>
-                            </div>
-                        ))
+                    { canvas &&
+                        <CanvasObjectList
+                            onDeleteObject={onDeleteObject}
+                            onOpenTextModal={openEditTextModal}
+                            canvas={canvas}
+                            handleTextChange={handleMemeText}
+                            reorder={reorder}
+                        />
                     }
                     <div className="flex gap-[12px] mb-4">
                         <input id='upload-file' accept="image/*" hidden type="file" onChange={addImage} onClick={clearFileCache} />
-                            <button disabled={texts.length >= 10} key="mbicon-text" onClick={onAddText} className="icon-btn-large-secondary">
+                            <button disabled={fabricObjects.length >= 10} key="mbicon-text" onClick={onAddText} className="icon-btn-large-secondary">
                                 <img className="icon-md" src="/assets/icons/edit-meme-1.svg" />
                             </button>
                             <button key="mbicon-image" onClick={uploadFileHandler} className="icon-btn-large-secondary">
