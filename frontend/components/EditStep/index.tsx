@@ -589,7 +589,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                 )
             }
             <UploadMemeError error={uploadError} setError={setUploadError} onRetry={handleConfirm} />
-            <ConfirmModal show={showConfirm} setShow={setShowConfirm} onConfirm={handleConfirm} />
+            <ConfirmModal show={showConfirm} setShow={setShowConfirm} onConfirm={handleConfirm} publication={publication} />        
             <FeedbackModal show={loading} />
             <div className="flex flex-col lg:flex-row gap-10 items-start">
                 <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative w-full lg:w-3/5'>
