@@ -2,8 +2,6 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import EditStep from "../../../../components/EditStep";
 import Loader from "../../../../components/Loader";
-import { useMemeFromPublicationId } from "../../../../hooks/useMeme";
-import { PublicationData } from "../../../../models/Publication/publication.model";
 import { useMemeFromPublicationId } from "../../../../lib/hooks/useMeme";
 import { PublicationData } from "../../../../lib/models/Publication/publication.model";
 

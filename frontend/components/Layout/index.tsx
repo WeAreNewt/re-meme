@@ -1,10 +1,9 @@
 import { Header } from "./Header";
 import { Footer } from "../Footer/Footer"
 import { Container } from "react-bootstrap";
-import { RootState } from "../../store/store";
-import { User } from "../../models/User/user.model";
 import { useSelector } from "react-redux";
 import { ConnectionBox } from "./ConnectionBox";
+import { RootState } from "../../lib/redux/store";
 
 type PageLayoutProps = {
     children: React.ReactNode,
@@ -12,7 +11,7 @@ type PageLayoutProps = {
 
 const PageLayout = ({ children }: PageLayoutProps) => {
 
-    const user = useSelector<RootState, User | null>((state) => state.user.selectedUser);
+    const selectedProfile = useSelector<RootState>((state) => state.user.selectedProfile);
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -20,7 +19,7 @@ const PageLayout = ({ children }: PageLayoutProps) => {
             <main className="mb-[120px]">
                 <Container fluid="md" className='h-full'>
                     {
-                        !user && (
+                        !selectedProfile && (
                             <header className="hidden lg:block mb-[40px]">
                                 <ConnectionBox />
                             </header>
