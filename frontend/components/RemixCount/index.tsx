@@ -1,5 +1,5 @@
 import Image from "next/image";
-import useWindowDimensions from "../../hooks/window-dimensions.hook";
+import useWindowDimensions from "../../lib/hooks/window-dimensions.hook";
 
 type RemixCountProps = {
     count: number,

@@ -3,29 +3,27 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Col, Container, Row } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
-import { useAccount } from 'wagmi'
 import { GoBackButton } from '../../components/Buttons/GoBackBtn'
 import PageLayout from '../../components/Layout'
 import { ConnectionBox } from '../../components/Layout/ConnectionBox'
 import { MemePreview } from '../../components/Meme/MemePreview'
-import useWindowDimensions from '../../hooks/window-dimensions.hook'
-import { LoginStatus } from '../../models/Connection/connection.model'
-import { User } from '../../models/User/user.model'
-import { removeUser } from '../../store/reducers/user.reducer'
-import { getSimplifiedAddress } from '../../utils/text'
+import useWindowDimensions from '../../lib/hooks/window-dimensions.hook'
+import { User } from '../../lib/models/User/user.model'
+import { getSimplifiedAddress } from '../../lib/utils/text'
+import { RootState } from '../../lib/redux/store'
+import { removeSelectedProfile } from '../../lib/redux/slices/user'
 
 type ProfileProps = {
     profile: User;
 }
 
 const Profile: NextPage = (props: any) => {
-    const { height, width } = useWindowDimensions();
-    const { data } = useAccount();
-    const user: User = useSelector((state: any) => state.user.selectedUser);
+    const { width } = useWindowDimensions();
+    const selectedProfile = useSelector((store: RootState) => store.user.selectedProfile)
     const dispatch = useDispatch();
     
     const handleLogout = () => {
-        dispatch(removeUser());
+        dispatch(removeSelectedProfile());
     }
 
     return (
@@ -43,10 +41,10 @@ const Profile: NextPage = (props: any) => {
                     <Row className='mb-4 mt-4 lg:mt-0'>
                         <Col>
                             {
-                                width > 850 && user ?
+                                width > 850 && selectedProfile ?
                                     <GoBackButton route="/" />
                                     :
-                                    width > 850 && !user ? <ConnectionBox /> : null
+                                    width > 850 && !selectedProfile ? <ConnectionBox /> : null
                             }
                         </Col>
                     </Row>

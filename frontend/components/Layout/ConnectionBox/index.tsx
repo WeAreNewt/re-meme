@@ -1,7 +1,7 @@
-import { LoginStatus } from "../../../models/Connection/connection.model"
+import { LoginStatus } from "../../../lib/models/Connection/connection.model"
 import Marquee from "react-fast-marquee";
 import { useAccount } from "wagmi";
-import useLensProfiles from "../../../hooks/useLensProfiles";
+import useLensProfiles from "../../../lib/hooks/useLensProfiles";
 
 export const ConnectionBox: React.FC = () => {
     const { data } = useAccount()

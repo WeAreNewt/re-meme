@@ -1,9 +1,8 @@
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
-import { isNftImage } from '../../../models/User/user.model';
-import { RootState } from '../../../store/store';
-import { parseIpfs } from '../../../utils/link';
+import { isNftImage } from '../../../lib/models/User/user.model';
+import { RootState } from '../../../lib/redux/store';
+import { parseIpfs } from '../../../lib/utils/link';
 
 
 type ProfileButtonProps = {
@@ -11,10 +10,10 @@ type ProfileButtonProps = {
 }
 
 export const ProfileButton = ({disabled}: ProfileButtonProps) => {
-    const user = useSelector((state: RootState) => state.user.selectedUser);
+    const selectedProfile = useSelector((state: RootState) => state.user.selectedProfile)
     const router = useRouter();
 
-    const profilePicture = user?.picture && !isNftImage(user.picture) && parseIpfs(user.picture.original.url)
+    const profilePicture = selectedProfile?.picture && !isNftImage(selectedProfile.picture) && parseIpfs(selectedProfile.picture.original.url)
 
     const handleClick = () => {
         router.push(`/profile`);

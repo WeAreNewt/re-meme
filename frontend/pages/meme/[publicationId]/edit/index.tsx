@@ -5,14 +5,14 @@ import { useSelector } from "react-redux";
 import EditStep from "../../../../components/EditStep";
 import { ConnectionBox } from "../../../../components/Layout/ConnectionBox";
 import Loader from "../../../../components/Loader";
-import { useMemeFromPublicationId } from "../../../../hooks/useMeme";
-import { PublicationData } from "../../../../models/Publication/publication.model";
-import { User } from "../../../../models/User/user.model";
+import { useMemeFromPublicationId } from "../../../../lib/hooks/useMeme";
+import { PublicationData } from "../../../../lib/models/Publication/publication.model";
+import { RootState } from "../../../../lib/redux/store";
 
 const Edit = () => {
     const router = useRouter()
     const { publicationId } = router.query
-    const user : User = useSelector((state: any) => state.user.selectedUser);
+    const selectedProfile = useSelector((store: RootState) => store.user.selectedProfile)
     const { publication, error, loading } = useMemeFromPublicationId(Array.isArray(publicationId) ? publicationId[0] : publicationId, !router.isReady)
 
     const onUpload = (newPublication: PublicationData) => {
@@ -30,7 +30,7 @@ const Edit = () => {
             <Col>
                 <article className='space-y-10'>
                 {
-                    !user && (
+                    !selectedProfile && (
                         <header className="hidden lg:block">
                             <ConnectionBox />
                         </header>

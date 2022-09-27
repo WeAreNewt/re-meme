@@ -6,13 +6,12 @@ import {
   } from "@apollo/client";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
-import { RefreshData } from "../models/Auth/auth.model";
+import { JwtTokens, RefreshData } from "../models/Auth/auth.model";
 import { REFRESH_AUTHENTICATION } from "../queries/auth";
-import { setTokens } from "../store/reducers/auth.reducer";
-import { store } from "../store/store";
 import { selectedEnvironment } from "./environments";
 import { setContext } from "@apollo/client/link/context";
 import result from "../models/lensApi.model";
+import { store } from "../redux/store";
 
 
 interface RefreshJwt {
@@ -27,9 +26,19 @@ const httpLink = createHttpLink({
 })
 
 const authLink = setContext(() => {
-  const accessToken = store.getState().auth.accessToken
-  const refreshToken = store.getState().auth.refreshToken
-  if(!accessToken || !refreshToken) return Promise.resolve({})
+  let accessToken : string | null = null
+  let refreshToken : string | null = null
+  if(window) {
+    const tokens = store.getState().auth
+    console.log(tokens)
+    if(tokens) {
+      accessToken = tokens.accessToken
+      refreshToken = tokens.refreshToken
+    }
+  }
+  if(!accessToken || !refreshToken) {
+    return Promise.resolve({})
+  }
   const decoded = jwtDecode<RefreshJwt>(accessToken)
   if(Date.now() >= (decoded.exp - 10) * 1000) {
     return axios.post<RefreshData>(selectedEnvironment.lensApiUrl, {
@@ -39,7 +48,10 @@ const authLink = setContext(() => {
         }
     }, { headers: { 'Content-Type': 'application/json' } })
     .then(data => {
-      store.dispatch(setTokens(data.data.data.refresh))
+      if(window) {
+        window.localStorage.setItem("auth", JSON.stringify(data.data.data.refresh))
+        accessToken = data.data.data.refresh.accessToken
+      }
       return {
         headers: {
           'x-access-token': `Bearer ${data.data.data.refresh.accessToken}`

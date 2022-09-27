@@ -1,6 +1,6 @@
-import { selectedEnvironment } from "../../../config/environments";
-import { PublicationData } from "../../../models/Publication/publication.model";
-import { parseIpfs } from "../../../utils/link";
+import { selectedEnvironment } from "../../../lib/config/environments";
+import { PublicationData } from "../../../lib/models/Publication/publication.model";
+import { parseIpfs } from "../../../lib/utils/link";
 import FileSaver from 'file-saver'
 
 type RemixShareBoxProps = {

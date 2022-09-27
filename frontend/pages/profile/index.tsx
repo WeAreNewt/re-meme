@@ -8,10 +8,10 @@ import { useAccount } from 'wagmi'
 import { GoBackButton } from '../../components/Buttons/GoBackBtn'
 import PageLayout from '../../components/Layout'
 import { MemePreview } from '../../components/Meme/MemePreview'
-import { isNftImage, User } from '../../models/User/user.model'
-import { removeUser } from '../../store/reducers/user.reducer'
-import { RootState } from '../../store/store'
-import { getSimplifiedAddress } from '../../utils/text'
+import { isNftImage, User } from '../../lib/models/User/user.model'
+import { removeSelectedProfile } from '../../lib/redux/slices/user'
+import { RootState } from '../../lib/redux/store'
+import { getSimplifiedAddress } from '../../lib/utils/text'
 
 type ProfileProps = {
     createdMemmes: any[]
@@ -19,10 +19,11 @@ type ProfileProps = {
 
 const Profile: NextPage = (props: any) => {
     const { data } = useAccount();
-    const user = useSelector((state: RootState) => state.user.selectedUser);
+    // const user = useSelector((state: RootState) => state.user.selectedUser);
+    const selectedProfile = useSelector((store: RootState) => store.user.selectedProfile)
     const dispatch = useDispatch();
     const router = useRouter();
-    const profilePicture = user?.picture && !isNftImage(user.picture) ? user.picture.original.url : "/assets/icons/profile.svg"
+    const profilePicture = selectedProfile?.picture && !isNftImage(selectedProfile.picture) ? selectedProfile.picture.original.url : "/assets/icons/profile.svg"
 
     const mockMemes = [
         {
@@ -46,7 +47,7 @@ const Profile: NextPage = (props: any) => {
     ]
 
     const handleLogout = () => {
-        dispatch(removeUser());
+        dispatch(removeSelectedProfile());
         router.push('/')
     }
 
@@ -77,8 +78,8 @@ const Profile: NextPage = (props: any) => {
                                     <div className='flex items-center justify-between'>
                                         <Row>
                                             <Col>
-                                                <h2 className='font-medium text-4xl'>{user?.name}</h2>
-                                                <p className='font-medium text-xs'>{getSimplifiedAddress(data?.address || "")} • {user?.posts?.length || 0} memes created</p>
+                                                <h2 className='font-medium text-4xl'>{selectedProfile?.name}</h2>
+                                                <p className='font-medium text-xs'>{getSimplifiedAddress(data?.address || "")} • {selectedProfile?.posts?.length || 0} memes created</p>
                                             </Col>
                                         </Row>
                                         <Row>

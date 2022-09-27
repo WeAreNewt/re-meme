@@ -1,18 +1,17 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router";
 import { Col, Container, Row } from "react-bootstrap";
-import { TailSpin } from "react-loader-spinner";
 import { useSelector } from "react-redux";
 import CreateFromPublicationStep from "../components/CreateFromPublicationStep";
 import { ConnectionBox } from "../components/Layout/ConnectionBox";
 import Loader from "../components/Loader";
-import { useRandomMeme } from "../hooks/useMeme";
-import { RootState } from "../store/store";
+import { useRandomMeme } from "../lib/hooks/useMeme";
+import { RootState } from "../lib/redux/store";
 
 const Home : NextPage = () => {
     const router = useRouter()
     const { publication, loading } = useRandomMeme()
-    const user = useSelector((state: RootState) => state.user.selectedUser);
+    const selectedProfile = useSelector((store: RootState) => store.user.selectedProfile)
   
     const handleRemixMeme = () => {
       router.push(`/meme/${publication?.id}/edit`)
@@ -24,7 +23,7 @@ const Home : NextPage = () => {
           <Col>
             <article className='space-y-10'>
               {
-                !user && (
+                !selectedProfile && (
                   <header className="hidden lg:block">
                     <ConnectionBox />
                   </header>
@@ -46,6 +45,12 @@ const Home : NextPage = () => {
         </Row>
       </Container>
     )
+}
+
+export const getServerSideProps = async (context) => {
+  return {
+    props: {}
+  }
 }
 
 export default Home;
