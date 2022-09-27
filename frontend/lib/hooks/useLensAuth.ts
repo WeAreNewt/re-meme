@@ -1,7 +1,6 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useDisconnect, useSigner } from "wagmi";
 import { AuthenticateData, AuthenticateParams, ChallengeData, ChallengeParams } from "../models/Auth/auth.model";
 import { AUTHENTICATION, GET_CHALLENGE } from "../queries/auth";

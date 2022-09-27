@@ -13,10 +13,10 @@ import { ReportModal } from "../../Modals/ReportModal";
 import { UpdateCollectButton } from "../../UpdateCollectButton";
 import { FormData, UpdateCollectSettingsModal } from "../../../components/Modals/UpdateCollectSettings";
 import { useSelector } from "react-redux";
-import { User } from "../../../lib/models/User/user.model";
 import { BigNumber, ethers } from "ethers";
 import { selectedEnvironment } from "../../../lib/config/environments";
 import CollectModuleAbi from '../../../lib/utils/contracts/abis/UpdateOwnableFeeCollectModule.json'
+import { RootState } from "../../../lib/redux/store";
 
 type MemeDetailProps = {
     meme: PublicationData;
@@ -25,7 +25,7 @@ type MemeDetailProps = {
 
 export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     const router = useRouter()
-    const { data } = useAccount();
+    const selectedProfile = useSelector<RootState>((state) => state.user.selectedProfile);
     const [disabled, setDisabled] = useState(false);
     const [remixesOpen, setRemixesOpen] = useState(false)
     const [imageHover, setImageHover] = useState(false)
@@ -33,8 +33,8 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     const { data: commentsPageData } = useComments(meme.id)
 
     useEffect(() => {
-        setDisabled(!data ? true : false)
-    }, [data])
+        setDisabled(!selectedProfile ? true : false)
+    }, [selectedProfile])
 
     const handleRemixClick = () => {
         router.push(`/meme/${meme.id}/edit`)

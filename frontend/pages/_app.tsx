@@ -1,6 +1,6 @@
 import type { AppProps } from 'next/app'
-import { WagmiProvider } from 'wagmi';
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { WagmiConfig } from 'wagmi';
+import { RainbowKitProvider, DisclaimerComponent } from '@rainbow-me/rainbowkit';
 import { ApolloProvider } from "@apollo/client";
 import { Provider } from 'react-redux';
 import PageLayout from '../components/Layout';
@@ -12,6 +12,15 @@ import '@rainbow-me/rainbowkit/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { wrapper } from '../lib/redux/store';
 
+const Disclaimer: DisclaimerComponent = ({ Text, Link }) => (
+  <Text>
+    By connecting your wallet, you agree to the{' '}
+    <Link href="https://rememe.lol/terms-of-service">Terms of Service</Link> and
+    acknowledge you have read and understand the app{' '}
+    <Link href="https://rememe.lol/privacy-policy">Privacy Policy</Link>
+  </Text>
+);
+
 function MyApp({ Component, ...rest }: AppProps) {
 
   const { store, props } = wrapper.useWrappedStore(rest)
@@ -19,13 +28,13 @@ function MyApp({ Component, ...rest }: AppProps) {
     <Provider store={store}>
       <ApolloProvider client={apolloClient}>
         <Head><title>re:meme</title></Head>
-        <WagmiProvider client={wagmiClient}>
-          <RainbowKitProvider coolMode chains={chains}>
+        <WagmiConfig client={wagmiClient}>
+          <RainbowKitProvider coolMode chains={chains} appInfo={{appName: 're:meme', disclaimer: Disclaimer }}>
               <PageLayout>
                 <Component {...props.pageProps} />
               </PageLayout>
           </RainbowKitProvider>
-        </WagmiProvider>
+        </WagmiConfig>
       </ApolloProvider>
     </Provider>
   )

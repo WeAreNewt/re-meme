@@ -4,19 +4,19 @@ import useLensProfiles from "../../../lib/hooks/useLensProfiles";
 import NoSsrWrapper from "../../NoSsrWrapper";
 
 export const ConnectionBox: React.FC = () => {
-    const { data } = useAccount()
+    const { address } = useAccount()
     const { loading } = useLensProfiles()
 
     return (
         <NoSsrWrapper>
-            <div className={'w-full h-24 rounded-full meme-header comic-border flex items-center justify-center ' + (data ? 'bg-lime' : 'bg-purple')}>
+            <div className={'w-full h-24 rounded-full meme-header comic-border flex items-center justify-center ' + (address ? 'bg-lime' : 'bg-purple')}>
                 {
                     loading ?
                         <span className="text-xl font-bold">Detecting Lens Profile</span> :
                         <Marquee direction="left" speed={175} play gradient={false} className="flex h-full items-center">
                             <span className="text-xl font-bold">
                                 {
-                                    data ?
+                                    address ?
                                     "Please sign in with your Lens Profile." : 
                                     "Please connect your wallet."
                                 }

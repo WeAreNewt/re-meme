@@ -1,7 +1,7 @@
 import { NextPage } from "next"
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { GoBackButton } from "../../../components/Buttons/GoBackBtn";
 import EditStep from "../../../components/EditStep";
 import { PublicationData } from "../../../lib/models/Publication/publication.model";
@@ -29,7 +29,7 @@ const CreateMemePage: NextPage = () => {
     }
 
     return (
-        <Container fluid="md" className='h-full'>
+        <>
             <Row className='mb-4'>
                 <Col>
                     <GoBackButton onClick={onBackClick} />
@@ -40,7 +40,7 @@ const CreateMemePage: NextPage = () => {
                     <EditStep initialImage={image} onUpload={handleUpload} />
                 </NoSsrWrapper>
             </Row>
-        </Container>
+        </>
     )
 }
 
