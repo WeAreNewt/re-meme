@@ -1,5 +1,4 @@
-import { v4 as uuidv4 } from 'uuid'
-import { ChangeEvent, forwardRef, useEffect, useState } from "react";
+import { ChangeEvent } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 
 interface TextProps {
@@ -27,7 +26,7 @@ const DraggableText : React.FC<TextProps> = ({ object, index, onChange, onButton
                             value={object.text}
                         />
                         <button className="w-4 flex items-center" onClick={() => onButtonClick(index)}>
-                            <img src="/assets/icons/pencil.svg" />
+                            <span role="img" aria-label="palette">🎨</span>
                         </button>
                     </div>
                 )

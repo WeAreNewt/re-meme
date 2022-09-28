@@ -1,4 +1,4 @@
-import useWindowDimensions from "../../hooks/window-dimensions.hook";
+import useWindowDimensions from "../../lib/hooks/window-dimensions.hook";
 
 type UpdateCollectButtonProps = {
     onUpdateCollectClicked: () => void;

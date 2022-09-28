@@ -1,10 +1,8 @@
 
 import { ChangeEventHandler } from "react";
-import { TextConfig } from "../EditTextModal";
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux'
-import { setImage, removeImage } from '../../../store/reducers/image.reducer'
-import { RootState } from "../../../store/store";
+import { useDispatch } from 'react-redux'
+import { removeImage, setImage } from "../../../lib/redux/slices/image";
 
 interface State {
     open: boolean

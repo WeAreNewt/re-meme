@@ -2,10 +2,10 @@ import moment from "moment";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { useAccount, useContract, useContractRead, useSigner } from "wagmi";
-import useComments from "../../../hooks/useComments";
-import useWindowDimensions from "../../../hooks/window-dimensions.hook";
-import { PublicationData } from "../../../models/Publication/publication.model";
-import { parseIpfs } from "../../../utils/link";
+import useComments from "../../../lib/hooks/useComments";
+import useWindowDimensions from "../../../lib/hooks/window-dimensions.hook";
+import { PublicationData } from "../../../lib/models/Publication/publication.model";
+import { parseIpfs } from "../../../lib/utils/link";
 import Remixes from "../../Modals/Remixes";
 import { ProfileCard } from "../../ProfileCard";
 import { RemixCount } from "../../RemixCount";
@@ -13,11 +13,10 @@ import { ReportModal } from "../../Modals/ReportModal";
 import { UpdateCollectButton } from "../../UpdateCollectButton";
 import { FormData, UpdateCollectSettingsModal } from "../../../components/Modals/UpdateCollectSettings";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
-import { User } from "../../../models/User/user.model";
 import { BigNumber, ethers } from "ethers";
-import { selectedEnvironment } from "../../../config/environments";
-import CollectModuleAbi from '../../../utils/contracts/abis/UpdateOwnableFeeCollectModule.json'
+import { selectedEnvironment } from "../../../lib/config/environments";
+import CollectModuleAbi from '../../../lib/utils/contracts/abis/UpdateOwnableFeeCollectModule.json'
+import { RootState } from "../../../lib/redux/store";
 
 type MemeDetailProps = {
     meme: PublicationData;
@@ -26,7 +25,7 @@ type MemeDetailProps = {
 
 export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     const router = useRouter()
-    const { data } = useAccount();
+    const selectedProfile = useSelector<RootState>((state) => state.user.selectedProfile);
     const [disabled, setDisabled] = useState(false);
     const [remixesOpen, setRemixesOpen] = useState(false)
     const [imageHover, setImageHover] = useState(false)
@@ -34,8 +33,8 @@ export const MemeDetail = ({ meme, inspired }: MemeDetailProps) => {
     const { data: commentsPageData } = useComments(meme.id)
 
     useEffect(() => {
-        setDisabled(!data ? true : false)
-    }, [data])
+        setDisabled(!selectedProfile ? true : false)
+    }, [selectedProfile])
 
     const handleRemixClick = () => {
         router.push(`/meme/${meme.id}/edit`)

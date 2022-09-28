@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Marquee from "react-fast-marquee";
-import useLensProfiles from "../../../hooks/useLensProfiles";
-import { User } from "../../../models/User/user.model";
+import useLensProfiles from "../../../lib/hooks/useLensProfiles";
+import { User } from "../../../lib/models/User/user.model";
 import { ProfileCard } from "../../ProfileCard";
 
 type SelectProfileProps = {

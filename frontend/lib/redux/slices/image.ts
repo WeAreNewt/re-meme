@@ -1,24 +1,29 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export interface ImageSlice {
-  selectedImage: string | undefined
+  selectedImage: string | null
 }
 
 const initialState : ImageSlice = {
-  selectedImage: undefined
+  selectedImage: null
 }
 
 export const imageSlice = createSlice({
   name: 'image',
-  initialState: initialState,
+  initialState,
   reducers: {
-    setImage: (state: ImageSlice, action: PayloadAction<string | undefined>) => {
+    setImage: (state, action: PayloadAction<string>) => {
       state.selectedImage = action.payload;
     },
-    removeImage: (state: ImageSlice) => {
-      state.selectedImage = undefined
+    removeImage: (state) => {
+      state.selectedImage = null
     },
   },
+  extraReducers: {
+    'HYDRATE': (state, action) => {
+        return {...state, ...action.payload }
+    }
+    }
 })
 
 export const { setImage, removeImage } = imageSlice.actions

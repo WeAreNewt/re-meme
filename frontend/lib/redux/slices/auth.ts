@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AuthenticateData, JwtTokens } from '../../models/Auth/auth.model'
-import { User } from '../../models/User/user.model'
+import { JwtTokens } from '../../models/Auth/auth.model'
 
 export type AuthSlice = Partial<JwtTokens>
 

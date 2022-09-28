@@ -1,9 +1,6 @@
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import useWindowDimensions from '../../../hooks/window-dimensions.hook';
 import Dropdown from '../../Modals/Dropdown';
-import EditTextModal, { EditText } from "../../Modals/EditTextModal";
 
 
 type CreateNewMemeBtnProps = {

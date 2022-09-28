@@ -1,33 +1,32 @@
 import { ChangeEventHandler, useEffect, useLayoutEffect, useRef, useState } from "react"
 import { fabric } from 'fabric';
-import useWindowDimensions from "../../hooks/window-dimensions.hook";
+import useWindowDimensions from "../../lib/hooks/window-dimensions.hook";
 import EditTextModal, { EditText, TextConfig } from "../Modals/EditTextModal";
-import web3StorageClient from "../../config/web3Storage";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import { User } from "../../models/User/user.model";
+import web3StorageClient from "../../lib/config/web3Storage";
 import { useMutation } from "@apollo/client";
-import { CREATE_COMMENT_TYPED_DATA, CREATE_POST_TYPED_DATA } from "../../queries/publication";
-import { CreateCommentTypedData, CreateCommentTypedDataParams, CreatePostTypedData, CreatePostTypedDataParams, PublicationData } from "../../models/Publication/publication.model";
+import { CREATE_COMMENT_TYPED_DATA, CREATE_POST_TYPED_DATA } from "../../lib/queries/publication";
+import { CreateCommentTypedData, CreateCommentTypedDataParams, CreatePostTypedData, CreatePostTypedDataParams, PublicationData } from "../../lib/models/Publication/publication.model";
 import { useContract, useSigner, useSignTypedData } from "wagmi";
 import { ethers, utils } from "ethers";
-import LensHubAbi from '../../utils/contracts/abis/LensHub.json'
+import LensHubAbi from '../../lib/utils/contracts/abis/LensHub.json'
 import { ConfirmModal } from "../Modals/Confirm";
 import { FeedbackModal } from "../Modals/Feedback";
 import omitDeep from 'omit-deep'
-import { parseIpfs } from "../../utils/link";
+import { parseIpfs } from "../../lib/utils/link";
 import UploadMemeError, { UploadError } from "../Modals/UploadMemeError";
-import { useMemeFromTxHash } from "../../hooks/useMeme";
-import { selectedEnvironment } from "../../config/environments";
-import useLensModuleEnabledCurrencies from "../../hooks/useLensModuleEnabledCurrencies";
-import { BROADCAST_MUTATION } from "../../queries/broadcast";
-import { BroadcastData, BroadcastParams } from "../../models/Broadcast/broadcast.model";
+import { useMemeFromTxHash } from "../../lib/hooks/useMeme";
+import { selectedEnvironment } from "../../lib/config/environments";
+import useLensModuleEnabledCurrencies from "../../lib/hooks/useLensModuleEnabledCurrencies";
+import { BROADCAST_MUTATION } from "../../lib/queries/broadcast";
+import { BroadcastData, BroadcastParams } from "../../lib/models/Broadcast/broadcast.model";
 import { base64 } from "ethers/lib/utils";
-import useRefSizes from "../../hooks/useRefSizes";
+import useRefSizes from "../../lib/hooks/useRefSizes";
 import { Resizable } from "re-resizable";
 import CanvasObjectList from "../CanvasObjectList";
 import { v4 as uuidv4 } from 'uuid'
 import { DropResult } from "react-beautiful-dnd";
+import { useSelector } from "react-redux";
+import { RootState } from "../../lib/redux/store";
 
 interface PathEvent {
     path?: fabric.Path
@@ -64,7 +63,7 @@ interface PublicationMetadata {
 
 interface EditStepProps {
     publication?: PublicationData
-    initialImage?: string,
+    initialImage?: string | null,
     onUpload: (newPublication: PublicationData) => void
 }
 
@@ -128,7 +127,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
     const [ fabricObjects, setFabricObjects ] = useState<fabric.Object[]>([])
     const [ backgroundImage, setBackgroundImage ] = useState<fabric.Image | string>()
     const [ isDrawingMode, setIsDrawingMode ] = useState<boolean>(false)
-    const user = useSelector<RootState, User | null>(state => state.user.selectedUser)
+    const selectedProfile = useSelector((store: RootState) => store.user.selectedProfile)
     const { signTypedDataAsync } = useSignTypedData()
     const [ openTextModal, setOpenTextModal ] = useState({
         open: false,
@@ -217,10 +216,10 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
         setShowConfirm(false)
         setLoading(true)
         const jpegMeme = canvas?.toDataURL({ format: 'jpeg' })
-        if(jpegMeme && user) {
+        if(jpegMeme && selectedProfile) {
             uploadImageAndMetadata(jpegMeme, JSON.stringify(canvas?.toJSON(['width', 'height']))).then(metadataResult => {
                 const mutationPostParams = {
-                    profileId: user.id || '',                        
+                    profileId: selectedProfile.id || '',                        
                     contentURI: `ipfs://${metadataResult}`,
                     collectModule: {
                         unknownCollectModule: {
@@ -590,7 +589,7 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                 )
             }
             <UploadMemeError error={uploadError} setError={setUploadError} onRetry={handleConfirm} />
-            <ConfirmModal show={showConfirm} setShow={setShowConfirm} onConfirm={handleConfirm} />
+            <ConfirmModal show={showConfirm} setShow={setShowConfirm} onConfirm={handleConfirm} publication={publication} />        
             <FeedbackModal show={loading} />
             <div className="flex flex-col lg:flex-row gap-10 items-start">
                 <div className='comic-border bg-white n:p-4 lg:p-10 rounded-4xl relative w-full lg:w-3/5'>
@@ -659,17 +658,17 @@ const EditStep : React.FC<EditStepProps> = ({ publication, initialImage, onUploa
                     }
                     <div className="flex gap-[12px] mb-4">
                         <input id='upload-file' accept="image/*" hidden type="file" onChange={addImage} onClick={clearFileCache} />
-                            <button disabled={fabricObjects.length >= 10} key="mbicon-text" onClick={onAddText} className="icon-btn-large-secondary">
+                            <button disabled={fabricObjects.length >= 10} key="mbicon-text" onClick={onAddText} className="icon-btn-large-secondary" title="Add text">
                                 <img className="icon-md" src="/assets/icons/edit-meme-1.svg" />
                             </button>
                             <button key="mbicon-image" onClick={uploadFileHandler} className="icon-btn-large-secondary">
-                                <img className="icon-md" src="/assets/icons/edit-meme-2.svg" />
+                                <img className="icon-md" src="/assets/icons/edit-meme-2.svg"/>
                             </button>
-                            <button key="mbicon-draw" onClick={onDraw} className={`icon-btn-large-secondary ${isDrawingMode && 'bg-neutral-black shadow-none hover:bg-neutral-black'}`}>
+                            <button key="mbicon-draw" onClick={onDraw} className={`icon-btn-large-secondary ${isDrawingMode && 'bg-neutral-black shadow-none hover:bg-neutral-black'}`} title="Free hand draw mode">
                                 <img className="icon-md" src={`${ isDrawingMode ? '/assets/icons/edit-meme-3-reverse.svg' : '/assets/icons/edit-meme-3.svg'}`}/>
                             </button>
                     </div>
-                    <button onClick={onRemix} className={"btn-large-tertiary absolute -bottom-10 " + (false ? "opacity-30" : "comic-border-mini")}>
+                    <button disabled={!selectedProfile} onClick={onRemix} className={"btn-large-tertiary absolute -bottom-10"}>
                         { publication ? 'REMIX' : 'CREATE' }
                     </button>
                 </div>

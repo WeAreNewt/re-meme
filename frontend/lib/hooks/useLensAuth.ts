@@ -1,25 +1,25 @@
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { useEffect, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { useDisconnect, useSigner } from "wagmi";
 import { AuthenticateData, AuthenticateParams, ChallengeData, ChallengeParams } from "../models/Auth/auth.model";
 import { AUTHENTICATION, GET_CHALLENGE } from "../queries/auth";
-import { AuthSlice, setTokens } from "../store/reducers/auth.reducer";
-import { RootState } from "../store/store";
+import { setTokens } from "../redux/slices/auth";
+import { RootState } from "../redux/store";
 
 const useLensAuth = (address?: string | null) => {
 
     const { data: signer } = useSigner()
-    const auth = useSelector<RootState, AuthSlice>(state => state.auth)
-    const [ getChallenge, { client } ] = useLazyQuery<ChallengeData, ChallengeParams>(GET_CHALLENGE)
+    const auth = useSelector((state: RootState) => state.auth)
+    const [ getChallenge ] = useLazyQuery<ChallengeData, ChallengeParams>(GET_CHALLENGE, {
+        fetchPolicy: 'network-only'
+    })
     const [ postAuthentication ] = useMutation<AuthenticateData, AuthenticateParams>(AUTHENTICATION)
     const dispatch = useDispatch()
     const { disconnect } = useDisconnect()
 
-    const haveAuth = useMemo(() => auth.accessToken && auth.refreshToken, [auth])
-
     useEffect(() => {
-        if(address && signer && !auth.accessToken && !auth.refreshToken) {
+        if(address && signer && !auth.accessToken ) {
             getChallenge({ variables: { request: { address } }}).then(challengeData => {
                 const text = challengeData.data?.challenge.text
                 if(text) {
@@ -36,7 +36,7 @@ const useLensAuth = (address?: string | null) => {
         }
     }, [ address, signer, getChallenge, disconnect, dispatch, postAuthentication, auth ])
 
-    return { haveAuth }
+    return { haveAuth: auth }
 }
 
 export default useLensAuth;

@@ -101,7 +101,8 @@ export const useRandomMeme : UseRandomMeme = () => {
     }), [])
 
     const { data, error } = useQuery<ExplorePublicationsData, ExplorePublicationsParams>(EXPLORE_PUBLICATIONS, {
-        variables: initialVariables
+        variables: initialVariables,
+        fetchPolicy: 'cache-first'
     })
 
     useEffect(() => {
