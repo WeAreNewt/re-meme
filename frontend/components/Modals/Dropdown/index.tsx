@@ -3,6 +3,7 @@ import { ChangeEventHandler } from "react";
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux'
 import { removeImage, setImage } from "../../../lib/redux/slices/image";
+import { setImageSize } from "../../../lib/redux/slices/imagesize";
 
 interface State {
     open: boolean
@@ -26,18 +27,28 @@ const Dropdown: React.FC<DropdownModalProps> = (props) => {
 
     const fileSelectHandler: ChangeEventHandler<HTMLInputElement> = (input) => {
         if (input.target.files && input.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                if (!e.target?.result) return;
-                setInitialImage(e.target.result?.toString())
-                dispatch(setImage(e.target.result?.toString()))
-                
-            };
-            reader.readAsDataURL(input.target.files[0]);
+
+            if (input.target.files[0].size > 1000000 ) {
+                console.log('file size over 1 mb')
+                dispatch(setImageSize(true))
+            } else {
+                dispatch(setImageSize(false))
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    if (!e.target?.result) return;
+                    setInitialImage(e.target.result?.toString())
+                    dispatch(setImage(e.target.result?.toString()))
+
+                };
+                reader.readAsDataURL(input.target.files[0]);
+                setOpen({ open: false })
+                router.push("/meme/create");
+            }
+
         }
-        setOpen({ open: false })
-        router.push("/meme/create");
+        
     }
+
     const router = useRouter();
 
     const startFromBlank = () => {
