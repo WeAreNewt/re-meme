@@ -6,13 +6,16 @@ import {
   } from "@apollo/client";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
-import { JwtTokens, RefreshData } from "../models/Auth/auth.model";
+import { RefreshData } from "../models/Auth/auth.model";
 import { REFRESH_AUTHENTICATION } from "../queries/auth";
 import { selectedEnvironment } from "./environments";
 import { setContext } from "@apollo/client/link/context";
 import result from "../models/lensApi.model";
 import { store } from "../redux/store";
+import apolloLogger from 'apollo-link-logger'
 
+
+const isServer = typeof window === 'undefined'
 
 interface RefreshJwt {
     id: string
@@ -67,6 +70,7 @@ const authLink = setContext(() => {
 
 const client = new ApolloClient({
     link: ApolloLink.from([
+      apolloLogger,
       authLink,
       httpLink
     ]),
@@ -83,7 +87,10 @@ const client = new ApolloClient({
 export const ssrClient = new ApolloClient({
     ssrMode: true,
     cache: new InMemoryCache({}),
-    uri: selectedEnvironment.lensApiUrl
+    link: ApolloLink.from([
+      apolloLogger,
+      httpLink
+    ])
 })
 
 export default client;

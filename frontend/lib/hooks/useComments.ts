@@ -4,6 +4,7 @@ import { GetPublicationsData, GetPublicationsParams } from "../models/Publicatio
 import { GET_PUBLICATIONS } from "../queries/publication";
 
 export const useComments = (publicationId: string) => {
+    console.log(publicationId)
     const { data } = useQuery<GetPublicationsData, GetPublicationsParams>(GET_PUBLICATIONS, {
         variables: {
             request: {

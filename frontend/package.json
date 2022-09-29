@@ -15,6 +15,7 @@
     "@reduxjs/toolkit": "^1.8.5",
     "@types/file-saver": "^2.0.5",
     "@types/react-beautiful-dnd": "^13.1.2",
+    "apollo-link-logger": "^2.0.0",
     "aws-sdk": "^2.1189.0",
     "axios": "^0.27.2",
     "bootstrap": "^5.1.3",
