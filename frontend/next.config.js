@@ -13,7 +13,8 @@ if (
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false
+  reactStrictMode: false,
+  optimizeFonts: false
 }
 
 module.exports = nextConfig

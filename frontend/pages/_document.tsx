@@ -13,7 +13,7 @@ const Document = () => {
         <link rel="icon" href="/favicon.ico" />
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
       </Head>
-      <body className='home-bg min-h-screen text-neutral-black'>
+      <body className='home-bg min-h-screen'>
         <Main />
         <NextScript />
       </body>
