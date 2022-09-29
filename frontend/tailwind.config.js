@@ -20,6 +20,9 @@ module.exports = {
       },
       borderWidth: {
         '3': '3px',
+      },
+      fontFamily: {
+        'mono': ['JetBrains Mono']
       }
     },
     colors: {
