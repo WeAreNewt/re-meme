@@ -25,12 +25,6 @@ export const Header: React.FC<{}> = () => {
 
     const { data: profilesData } = useLensProfiles()
 
-    const reloadPage = () => {
-        if(router.pathname === '/'){
-            window.location.reload();
-        }
-     }
-
     const handleProfileSelected = (profile: User) => {
         dispatch(setSelectedProfile(profile))
         setShow(false);
@@ -60,7 +54,7 @@ export const Header: React.FC<{}> = () => {
             <SelectProfile onClose={onClose} onProfileSelected={handleProfileSelected} show={show} />
             <nav className="flex w-full items-center p-4 sm:p-4 lg:p-12">
                 <Link href="/">
-                    <img onClick={reloadPage} className="cursor-pointer w-1/2 h-auto w-[120px] lg:w-[188px] h-[40px] lg:h-[60px]" src="/logo.svg" alt="me" />
+                    <img className="cursor-pointer w-1/2 h-auto w-[120px] lg:w-[188px] h-[40px] lg:h-[60px]" src="/logo.svg" alt="me" />
                 </Link>
                 <div className='flex ml-auto items-center gap-[10px] lg:gap-[20px]'>
                     {router.pathname === '/' ? <RefreshNewMemeBtn/> : ''}

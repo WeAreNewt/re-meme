@@ -22,7 +22,7 @@ module.exports = {
         '3': '3px',
       },
       fontFamily: {
-        'serif': ['JetBrains Mono']
+        'mono': ['JetBrains Mono', 'monospace']
       }
     },
     colors: {
