@@ -1,15 +1,21 @@
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
 import CreateFromPublicationStep from "../components/CreateFromPublicationStep";
 import { ssrClient } from "../lib/config/apollo";
 import { selectedEnvironment } from "../lib/config/environments";
 import { ExplorePublicationsData, ExplorePublicationsParams } from "../lib/models/Publication/publication.model";
 import { EXPLORE_PUBLICATIONS } from "../lib/queries/publication";
+import { setImageSize } from "../lib/redux/slices/imagesize";
+import { RootState } from "../lib/redux/store";
 
 const Home = ({ publication }) => {
     const router = useRouter()
-  
+    const imagesize = useSelector((state: RootState) => state.imagesize.selectedImageSize);
+    const dispatch = useDispatch();
+    
     const handleRemixMeme = () => {
       router.push(`/meme/${publication?.id}/edit`)
+      dispatch(setImageSize(false))
     }
   
     return <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />

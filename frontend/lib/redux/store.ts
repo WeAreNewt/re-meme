@@ -14,17 +14,19 @@ import {
 import { createWrapper } from 'next-redux-wrapper'
 import imageSliceReducer, { ImageSlice } from './slices/image'
 import authSliceReducer, { AuthSlice } from './slices/auth'
+import ImageSizeSliceReducer, { ImageSizeSlice } from './slices/imagesize'
 
 const rootReducer = combineReducers({
     user: selectedUserReducer,
     image: imageSliceReducer,
-    auth: authSliceReducer
+    auth: authSliceReducer,
+    imagesize: ImageSizeSliceReducer
 })
 
 export let store;
 
 const makeStore = () => {
-    if(typeof window === 'undefined') {
+    if (typeof window === 'undefined') {
         store = configureStore({
             reducer: rootReducer
         })
@@ -39,9 +41,11 @@ const makeStore = () => {
         const persistedReducer = persistReducer(persistConfig, rootReducer)
         store = configureStore({
             reducer: persistedReducer,
-            middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: {
-                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER ]
-            }})
+            middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+                serializableCheck: {
+                    ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER]
+                }
+            })
         })
 
         store.__persistor = persistStore(store)
@@ -50,10 +54,11 @@ const makeStore = () => {
     }
 }
 
-export interface RootState  {
+export interface RootState {
     user: UserState,
     image: ImageSlice,
-    auth: AuthSlice
+    auth: AuthSlice,
+    imagesize: ImageSizeSlice
 }
 
 export const wrapper = createWrapper(makeStore, { debug: true })
