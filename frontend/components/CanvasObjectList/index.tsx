@@ -20,7 +20,6 @@ const DraggableText : React.FC<TextProps> = ({ object, index, onChange, onButton
                     <div
                         ref={provided.innerRef}
                         { ...provided.draggableProps }
-                        { ...provided.dragHandleProps }
                         className="w-full flex"
                     >
                         <div
@@ -104,7 +103,6 @@ const DraggableDrawing : React.FC<DrawingProps> = ({ index, onButtonClick, objec
                     <div 
                         ref={provided.innerRef}
                         { ...provided.draggableProps }
-                        { ...provided.dragHandleProps }
                         className="w-full flex"
                     >
                         <div
