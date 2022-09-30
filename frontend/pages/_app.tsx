@@ -5,12 +5,12 @@ import { ApolloProvider } from "@apollo/client";
 import { Provider } from 'react-redux';
 import PageLayout from '../components/Layout';
 import wagmiClient, { chains } from '../lib/config/wagmi';
-import apolloClient from '../lib/config/apollo';
 import Head from 'next/head'
-import '../styles/globals.css'
 import '@rainbow-me/rainbowkit/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/main.css'
 import { wrapper } from '../lib/redux/store';
+import { generateApolloClient } from '../lib/config/apollo';
 
 const Disclaimer: DisclaimerComponent = ({ Text, Link }) => (
   <Text>
@@ -23,6 +23,7 @@ const Disclaimer: DisclaimerComponent = ({ Text, Link }) => (
 
 function MyApp({ Component, ...rest }: AppProps) {
 
+  const apolloClient = generateApolloClient()
   const { store, props } = wrapper.useWrappedStore(rest)
   return (
     <Provider store={store}>

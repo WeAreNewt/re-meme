@@ -13,7 +13,19 @@ if (
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: false
+  reactStrictMode: false,
+  optimizeFonts: false,
+  images: {
+
+  },
+  images: {
+    domains: ['lens.infura-ipfs.io']
+  },
+  experimental: {
+    images: {
+      allowFutureImage: true
+    }
+  }
 }
 
 module.exports = nextConfig

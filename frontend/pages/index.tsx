@@ -1,16 +1,15 @@
+import axios from "axios";
 import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import CreateFromPublicationStep from "../components/CreateFromPublicationStep";
-import { ssrClient } from "../lib/config/apollo";
+import { generateApolloClient } from "../lib/config/apollo";
 import { selectedEnvironment } from "../lib/config/environments";
 import { ExplorePublicationsData, ExplorePublicationsParams } from "../lib/models/Publication/publication.model";
 import { EXPLORE_PUBLICATIONS } from "../lib/queries/publication";
 import { setImageSize } from "../lib/redux/slices/imagesize";
-import { RootState } from "../lib/redux/store";
 
 const Home = ({ publication }) => {
     const router = useRouter()
-    const imagesize = useSelector((state: RootState) => state.imagesize.selectedImageSize);
     const dispatch = useDispatch();
     
     const handleRemixMeme = () => {
@@ -23,10 +22,12 @@ const Home = ({ publication }) => {
 
 export const getServerSideProps = async () => {
 
+  const client = generateApolloClient()
+
   const getRandomNumber = (max: number) => Math.floor(Math.random() * max)
   const sortCriterias = ['TOP_COMMENTED', 'TOP_COLLECTED', 'LATEST']
 
-  const { data } = await ssrClient.query<ExplorePublicationsData, ExplorePublicationsParams>({
+  const { data } = await client.query<ExplorePublicationsData, ExplorePublicationsParams>({
     query: EXPLORE_PUBLICATIONS,
     variables: {
       request: {
@@ -38,11 +39,21 @@ export const getServerSideProps = async () => {
       }
     }
   })
-
+  const blackListed = async (id) => {
+    const response = await axios.get(`/api/blacklist/`, {params: {postId: id}}).then((response) => response.data.blacklisted)
+    return response
+  }
   const itemsLength = data.explorePublications.items.length
-
+  let selectedPublication = data.explorePublications.items[getRandomNumber(itemsLength)]
+  if(!process.env.NEXT_PUBLIC_BLACKLIST_OFF) {
+    let isBlacklisted = await blackListed(selectedPublication.id)
+    while(isBlacklisted) {
+      selectedPublication = data.explorePublications.items[getRandomNumber(itemsLength)]
+      isBlacklisted = await blackListed(selectedPublication.id)
+    }
+  }
   return { props: {
-    publication: data.explorePublications.items[getRandomNumber(itemsLength)]
+    publication: selectedPublication
   }}
 }
 
