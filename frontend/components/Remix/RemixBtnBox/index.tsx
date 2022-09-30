@@ -10,7 +10,7 @@ export const RemixBtnBox : React.FC<RemixBtnBoxProps> = ({ onRemixBtnClicked }) 
 
     return (
         <div className="main-container items-center">
-            <p className={"text-subtitle-2 text-center " + (!selectedProfile ? "opacity-30" : "")}>HAVE ANOTHER IDEA FOR THIS?</p>
+            <p className={"text-subtitle-2 text-center mb-[16px]" + (!selectedProfile ? "opacity-30" : "")}>HAVE ANOTHER IDEA FOR THIS?</p>
             <button disabled={!selectedProfile} onClick={onRemixBtnClicked} className="btn-large-tertiary w-full">REMIX THIS MEME</button>
         </div>
     )

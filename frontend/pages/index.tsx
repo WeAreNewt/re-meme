@@ -35,7 +35,7 @@ export const getServerSideProps = async () => {
         sortCriteria: sortCriterias[getRandomNumber(sortCriterias.length)],
         sources: [selectedEnvironment.appId],
         limit: 50,
-        timestamp: 1654052400,
+        timestamp: selectedEnvironment.startMemesTimestamp,
         publicationTypes: ['COMMENT', 'POST']
       }
     }
