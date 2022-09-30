@@ -29,7 +29,7 @@ const DraggableText : React.FC<TextProps> = ({ object, index, onChange, onButton
                             value={object.text}
                         />
                         <button className="w-4 flex items-center" onClick={() => onButtonClick(index)}>
-                            <span role="img" aria-label="palette">🎨</span>
+                            <img src="/assets/icons/settings.svg" />
                         </button>
                     </div>
                 )

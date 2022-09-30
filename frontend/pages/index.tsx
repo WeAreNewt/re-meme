@@ -1,16 +1,20 @@
 import axios from "axios";
 import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
 import CreateFromPublicationStep from "../components/CreateFromPublicationStep";
 import { generateApolloClient } from "../lib/config/apollo";
 import { selectedEnvironment } from "../lib/config/environments";
-import { ExplorePublicationsData, ExplorePublicationsParams, GetPublicationData, GetPublicationParams, GetPublicationsData, GetPublicationsParams } from "../lib/models/Publication/publication.model";
-import { EXPLORE_PUBLICATIONS, GET_PUBLICATIONS } from "../lib/queries/publication";
+import { ExplorePublicationsData, ExplorePublicationsParams } from "../lib/models/Publication/publication.model";
+import { EXPLORE_PUBLICATIONS } from "../lib/queries/publication";
+import { setImageSize } from "../lib/redux/slices/imagesize";
 
 const Home = ({ publication }) => {
     const router = useRouter()
-  
+    const dispatch = useDispatch();
+    
     const handleRemixMeme = () => {
       router.push(`/meme/${publication?.id}/edit`)
+      dispatch(setImageSize(false))
     }
   
     return <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />
