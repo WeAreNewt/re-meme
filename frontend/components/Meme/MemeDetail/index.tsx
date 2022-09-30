@@ -16,6 +16,7 @@ import { RootState } from "../../../lib/redux/store";
 import { useSelector } from "react-redux";
 import Image from "next/image";
 import reportImg from '../../../public/assets/icons/report.svg'
+import { BigNumber } from "ethers";
 
 type MemeDetailProps = {
     meme: PublicationData;
@@ -56,11 +57,11 @@ export const MemeDetail = ({ meme }: MemeDetailProps) => {
         if(collectModuleSettings.data) {
             const decodedData = collectModuleSettings.data
             return {
-                amount: decodedData[1],
-                currency: decodedData[2],
-                recipient: decodedData[3],
-                referralFee: decodedData[4],
-                followerOnly: decodedData[5]
+                amount: decodedData[1] as BigNumber,
+                currency: decodedData[2] as string,
+                recipient: decodedData[3] as string,
+                referralFee: decodedData[4] as number,
+                followerOnly: decodedData[5] as boolean
             }
         }
     }, [collectModuleSettings])
@@ -91,7 +92,7 @@ export const MemeDetail = ({ meme }: MemeDetailProps) => {
                         <RemixCount handleClick={() => setRemixesOpen(true)} count={commentsPageData?.publications.pageInfo.totalCount || 0} />
                         {
                             // enable when we want to add collect module
-                            selectedProfile?.id === meme.profile.id && initialModuleData && false && (
+                            (selectedProfile?.id === meme.profile.id) && initialModuleData && (
                                 <>
                                     <UpdateCollectButton onUpdateCollectClicked={handleUpdateSettings} />
                                     <UpdateCollectSettingsModal onSubmit={onSubmitModuleChanges} show={showCollectSettings} setShow={setShowCollectSettings} initialValues={initialModuleData} />
