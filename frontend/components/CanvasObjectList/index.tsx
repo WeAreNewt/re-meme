@@ -1,5 +1,8 @@
+import Image from "next/future/image";
 import { ChangeEvent } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
+import reorderIcon from '../../public/assets/icons/reorder.svg'
+import closeIcon from '../../public/assets/icons/close.svg'
 
 interface TextProps {
     object: fabric.Text
@@ -45,15 +48,17 @@ const DraggableImage: React.FC<ImageProps> = ({ object, index, onButtonClick }) 
     return (
         <Draggable draggableId={object.id} index={index}>
             {
-                provided => (
+                (provided, snapshot) => (
                     <div
                         ref={provided.innerRef}
                         { ...provided.draggableProps }
-                        { ...provided.dragHandleProps }
-                        className="flex justify-between w-full px-[16px] py-[12px] bg-neutral-200 rounded-[12px] mb-[16px]"
+                        className="group flex justify-between w-full px-[16px] py-[12px] bg-neutral-200 rounded-[12px] mb-[16px]"
                     >
                         <span>{`Image ${object.typeIndex + 1}`}</span>
-                        <button onClick={() => onButtonClick(index)}>
+                        <Image { ...provided.dragHandleProps } src={reorderIcon} alt="reorder" className={`icon-md hidden group-hover:flex ml-auto`} style={{
+                            ...(snapshot.isDragging && {display: 'flex' })
+                        }} />
+                        <button onClick={() => onButtonClick(index)} className="ml-[8px]">
                             <img src="/assets/icons/x.png"/>
                         </button>
                     </div>
@@ -74,16 +79,16 @@ const DraggableDrawing : React.FC<DrawingProps> = ({ index, onButtonClick, objec
     return (
         <Draggable draggableId={object.id} index={index}>
             {
-                provided => (
+                (provided, snapshot) => (
                     <div 
                         ref={provided.innerRef}
                         { ...provided.draggableProps }
                         { ...provided.dragHandleProps }
-                        className="flex justify-between w-full px-[16px] py-[12px] bg-neutral-200 rounded-[12px] mb-[16px]"
+                        className="group flex justify-between w-full px-[16px] py-[12px] bg-neutral-200 rounded-[12px] mb-[16px]"
                     >
                         <span>{`Drawing ${object.typeIndex + 1}`}</span>
-                        <button onClick={() => onButtonClick(index)}>
-                            <img  src="/assets/icons/x.png"/>
+                        <button onClick={() => onButtonClick(index)} className="icon-md ml-auto">
+                            <Image  src={closeIcon} alt="delete" />
                         </button>
                     </div>
                 )

@@ -2,7 +2,8 @@ import {
     ApolloClient,
     InMemoryCache,
     createHttpLink,
-    ApolloLink
+    ApolloLink,
+    NormalizedCacheObject
   } from "@apollo/client";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
@@ -68,21 +69,36 @@ const authLink = setContext(() => {
   })
 })
 
-const client = new ApolloClient({
-    link: ApolloLink.from([
-      apolloLogger,
-      authLink,
-      httpLink
-    ]),
-    cache: new InMemoryCache({
-      possibleTypes: result.possibleTypes,
-      typePolicies: {
-        PublicationsQueryRequest: {
-          queryType: true
-        }
-      }
+let _spaClient : ApolloClient<NormalizedCacheObject> | null = null
+
+export const generateApolloClient = () => {
+  if(isServer) {
+    return new ApolloClient({
+      ssrMode: true,
+      cache: new InMemoryCache({}),
+      link: ApolloLink.from([
+        httpLink
+      ])
     })
-});
+  } else {
+    if(_spaClient) return _spaClient
+    _spaClient = new ApolloClient({
+      link: ApolloLink.from([
+        authLink,
+        httpLink
+      ]),
+      cache: new InMemoryCache({
+        possibleTypes: result.possibleTypes,
+        typePolicies: {
+          PublicationsQueryRequest: {
+            queryType: true
+          }
+        }
+      })
+    });
+    return _spaClient
+  }
+}
 
 export const ssrClient = new ApolloClient({
     ssrMode: true,
@@ -92,5 +108,3 @@ export const ssrClient = new ApolloClient({
       httpLink
     ])
 })
-
-export default client;
