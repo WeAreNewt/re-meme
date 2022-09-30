@@ -358,8 +358,7 @@ const EditStep: React.FC<EditStepProps> = ({ publication, initialImage, onUpload
     const addImage: ChangeEventHandler<HTMLInputElement> = (input) => {
         if (input.target.files && input.target.files[0]) {
             
-            if (input.target.files[0].size > 1000000 ) {
-                console.log('file size over 1 mb')
+            if (input.target.files[0].size > 10000000 ) {
                 dispatch(setImageSize(true))
             } else {
                 dispatch(setImageSize(false))
