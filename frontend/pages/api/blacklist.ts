@@ -16,7 +16,7 @@ export default async function handler (_req: NextApiRequest, res: NextApiRespons
         res);
     case 'GET':
       const { postId } = _req.query;
-      return handleGet(String(postId), now, res);
+      return handleGet(String(postId), res);
     default:
       res.status(405);
   }
@@ -44,29 +44,35 @@ const handlePost = async (postId: string, option: string, info: string, unixtime
   }
 };
 
-const handleGet = async (postId: string, unixtime: number, res: NextApiResponse) => {
+export const getBlacklistedFromDb = async (postId: string) => {
   const params = {
     TableName: 'Memixer',
     Key: {
       postId,
     },
   };
-
-  try {
-    const result = await dynamodb.get(params).promise();
+  return dynamodb.get(params).promise().then(result => {
+    const unixtime = new Date().getTime();
     if (unixtime - result.Item?.unixtime > 1000 * 60 * 10) {
-      res.status(200).json({
+      return {
         postId: postId,
         date: result.Item?.unixtime,
         blacklisted: true,
-      }); // blacklist
+      } // blacklisted
     } else {
-      res.status(200).json({
+      return {
         postId: postId,
         date: result.Item?.unixtime,
         blacklisted: false,
-      }); // no blacklist
+      }; // no blacklist
     }
+  });
+}
+
+const handleGet = async (postId: string, res: NextApiResponse) => {
+  try {
+    const result = await getBlacklistedFromDb(postId);
+    res.status(200).json(result)
   } catch (error) {
     return res.status(404);
   }

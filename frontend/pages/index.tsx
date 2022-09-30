@@ -7,6 +7,7 @@ import { selectedEnvironment } from "../lib/config/environments";
 import { ExplorePublicationsData, ExplorePublicationsParams } from "../lib/models/Publication/publication.model";
 import { EXPLORE_PUBLICATIONS } from "../lib/queries/publication";
 import { setImageSize } from "../lib/redux/slices/imagesize";
+import { getBlacklistedFromDb } from "./api/blacklist";
 
 const Home = ({ publication }) => {
     const router = useRouter()
@@ -39,17 +40,13 @@ export const getServerSideProps = async () => {
       }
     }
   })
-  const blackListed = async (id) => {
-    const response = await axios.get(`/api/blacklist/`, {params: {postId: id}}).then((response) => response.data.blacklisted)
-    return response
-  }
   const itemsLength = data.explorePublications.items.length
   let selectedPublication = data.explorePublications.items[getRandomNumber(itemsLength)]
   if(!process.env.NEXT_PUBLIC_BLACKLIST_OFF) {
-    let isBlacklisted = await blackListed(selectedPublication.id)
-    while(isBlacklisted) {
+    let isBlacklisted = await getBlacklistedFromDb(selectedPublication.id)
+    while(isBlacklisted.blacklisted) {
       selectedPublication = data.explorePublications.items[getRandomNumber(itemsLength)]
-      isBlacklisted = await blackListed(selectedPublication.id)
+      isBlacklisted = await getBlacklistedFromDb(selectedPublication.id)
     }
   }
   return { props: {
