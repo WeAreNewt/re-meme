@@ -3,6 +3,7 @@ import { ChangeEvent } from "react";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import reorderIcon from '../../public/assets/icons/reorder.svg'
 import closeIcon from '../../public/assets/icons/close.svg'
+import settingsIcon from '../../public/assets/icons/settings.svg'
 
 interface TextProps {
     object: fabric.Text
@@ -15,22 +16,33 @@ const DraggableText : React.FC<TextProps> = ({ object, index, onChange, onButton
     return (
         <Draggable draggableId={object.id} index={index}>
             {
-                provided => (
+                (provided, snapshot) => (
                     <div
                         ref={provided.innerRef}
                         { ...provided.draggableProps }
                         { ...provided.dragHandleProps }
-                        className="border-2 border-black border-solid rounded-xl mb-[16px] flex p-2 gap-2 w-full bg-white"
+                        className="w-full flex"
                     >
-                        <input
-                            onChange={e => onChange(e, index)}
-                            className="w-full focus:outline-none"
-                            placeholder={`Text #${object.typeIndex + 1}`}
-                            value={object.text}
-                        />
-                        <button className="w-4 flex items-center" onClick={() => onButtonClick(index)}>
-                            <img src="/assets/icons/settings.svg" />
-                        </button>
+                        <div
+                            className={`group border-[2px] border-black border-solid rounded-xl mb-[16px] flex p-[10px] pr-[16px] w-full bg-white ${snapshot.isDragging ? 'border-[2px] border-alert-green p-[10px] pr-[14px] -rotate-6 w-[100px] ml-auto' : ''} `}
+                        >
+                            <input
+                                onChange={e => onChange(e, index)}
+                                className="w-full focus:outline-none"
+                                placeholder={`Text #${object.typeIndex + 1}`}
+                                value={object.text}
+                            />
+                            {
+                                !snapshot.isDragging && (
+                                    <>
+                                        <Image { ...provided.dragHandleProps } src={reorderIcon} alt="reorder" className={`icon-md hidden group-hover:flex ml-auto`} />
+                                        <button className="ml-[8px] icon-md" onClick={() => onButtonClick(index)}>
+                                            <Image src={settingsIcon} alt="text settings" />
+                                        </button>
+                                    </>
+                                )
+                            }
+                        </div>
                     </div>
                 )
             }
@@ -52,15 +64,24 @@ const DraggableImage: React.FC<ImageProps> = ({ object, index, onButtonClick }) 
                     <div
                         ref={provided.innerRef}
                         { ...provided.draggableProps }
-                        className="group flex justify-between w-full px-[16px] py-[12px] bg-neutral-200 rounded-[12px] mb-[16px]"
+                        className="w-full flex" 
                     >
-                        <span>{`Image ${object.typeIndex + 1}`}</span>
-                        <Image { ...provided.dragHandleProps } src={reorderIcon} alt="reorder" className={`icon-md hidden group-hover:flex ml-auto`} style={{
-                            ...(snapshot.isDragging && {display: 'flex' })
-                        }} />
-                        <button onClick={() => onButtonClick(index)} className="ml-[8px]">
-                            <img src="/assets/icons/x.png"/>
-                        </button>
+                        <div
+                            className={`group flex justify-between w-full p-[12px] pr-[16px] bg-neutral-200 rounded-[12px] mb-[16px] ${snapshot.isDragging ? 'border-[2px] border-alert-green p-[10px] pr-[14px] -rotate-6 w-auto ml-auto' : ''}`}
+                        >
+                            <span>{`Image ${object.typeIndex + 1}`}</span>
+                            {
+                                !snapshot.isDragging && (
+                                    <>
+                                        <Image { ...provided.dragHandleProps } src={reorderIcon} alt="reorder" className={`icon-md hidden group-hover:flex ml-auto`} />
+                                        <button onClick={() => onButtonClick(index)} className="ml-[8px] icon-md">
+                                            <Image  src={closeIcon} alt="delete" />
+                                        </button>
+                                    </>
+
+                                )
+                            }
+                        </div>
                     </div>
                 )
             }
@@ -84,12 +105,23 @@ const DraggableDrawing : React.FC<DrawingProps> = ({ index, onButtonClick, objec
                         ref={provided.innerRef}
                         { ...provided.draggableProps }
                         { ...provided.dragHandleProps }
-                        className="group flex justify-between w-full px-[16px] py-[12px] bg-neutral-200 rounded-[12px] mb-[16px]"
+                        className="w-full flex"
                     >
-                        <span>{`Drawing ${object.typeIndex + 1}`}</span>
-                        <button onClick={() => onButtonClick(index)} className="icon-md ml-auto">
-                            <Image  src={closeIcon} alt="delete" />
-                        </button>
+                        <div
+                            className={`group flex justify-between w-full px-[16px] py-[12px] bg-neutral-200 rounded-[12px] mb-[16px] ${snapshot.isDragging ? 'border-[2px] border-alert-green p-[10px] pr-[14px] -rotate-6 w-auto ml-auto' : ''}`}
+                        >
+                            <span>{`Drawing ${object.typeIndex + 1}`}</span>
+                            {
+                                !snapshot.isDragging && (
+                                    <>
+                                        <Image { ...provided.dragHandleProps } src={reorderIcon} alt="reorder" className={`icon-md hidden group-hover:flex ml-auto`} />
+                                        <button onClick={() => onButtonClick(index)} className="icon-md ml-[8px]">
+                                            <Image  src={closeIcon} alt="delete" />
+                                        </button>
+                                    </>
+                                )
+                            }
+                        </div>
                     </div>
                 )
             }
