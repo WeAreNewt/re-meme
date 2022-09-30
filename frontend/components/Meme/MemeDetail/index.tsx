@@ -90,7 +90,8 @@ export const MemeDetail = ({ meme }: MemeDetailProps) => {
                     <div className="flex gap-[16px]">
                         <RemixCount handleClick={() => setRemixesOpen(true)} count={commentsPageData?.publications.pageInfo.totalCount || 0} />
                         {
-                            selectedProfile?.id === meme.profile.id && initialModuleData && (
+                            // enable when we want to add collect module
+                            selectedProfile?.id === meme.profile.id && initialModuleData && false && (
                                 <>
                                     <UpdateCollectButton onUpdateCollectClicked={handleUpdateSettings} />
                                     <UpdateCollectSettingsModal onSubmit={onSubmitModuleChanges} show={showCollectSettings} setShow={setShowCollectSettings} initialValues={initialModuleData} />
