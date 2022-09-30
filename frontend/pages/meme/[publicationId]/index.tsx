@@ -7,6 +7,7 @@ import { generateApolloClient } from "../../../lib/config/apollo";
 import { GET_PUBLICATION } from "../../../lib/queries/publication";
 import { GetPublicationData, GetPublicationParams } from "../../../lib/models/Publication/publication.model";
 import axios from "axios";
+import { getBlacklistedFromDb } from "../../api/blacklist";
 
 const MemePage = ({ publication }) => {
     const router = useRouter()
@@ -33,15 +34,10 @@ export const getServerSideProps = async (context) => {
 
   const { publicationId } = context.query
 
-  const blackListed = async (id) => {
-    const response = await axios.get(`/api/blacklist/`, {params: {postId: id}}).then((response) => response.data.blacklisted)
-    return response
-  }
-
   if(!process.env.NEXT_PUBLIC_BLACKLIST_OFF) {
     try {
-      const isBlacklisted = await blackListed(publicationId)
-      if(isBlacklisted) return { notFound: true }
+      const isBlacklisted = await getBlacklistedFromDb(publicationId)
+      if(isBlacklisted.blacklisted) return { notFound: true }
     } catch {
       return { notFound: true }
     }
