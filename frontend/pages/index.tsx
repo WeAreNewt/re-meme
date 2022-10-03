@@ -1,51 +1,57 @@
-import { NextPage } from "next"
+import axios from "axios";
 import { useRouter } from "next/router";
-import { Col, Container, Row } from "react-bootstrap";
-import { TailSpin } from "react-loader-spinner";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import CreateFromPublicationStep from "../components/CreateFromPublicationStep";
-import { ConnectionBox } from "../components/Layout/ConnectionBox";
-import Loader from "../components/Loader";
-import { useRandomMeme } from "../hooks/useMeme";
-import { RootState } from "../store/store";
+import { generateApolloClient } from "../lib/config/apollo";
+import { selectedEnvironment } from "../lib/config/environments";
+import { ExplorePublicationsData, ExplorePublicationsParams } from "../lib/models/Publication/publication.model";
+import { EXPLORE_PUBLICATIONS } from "../lib/queries/publication";
+import { setImageSize } from "../lib/redux/slices/imagesize";
+import { getBlacklistedFromDb } from "./api/blacklist";
 
-const Home : NextPage = () => {
+const Home = ({ publication }) => {
     const router = useRouter()
-    const { publication, loading } = useRandomMeme()
-    const user = useSelector((state: RootState) => state.user.selectedUser);
-  
+    const dispatch = useDispatch();
+    
     const handleRemixMeme = () => {
       router.push(`/meme/${publication?.id}/edit`)
+      dispatch(setImageSize(false))
     }
   
-    return (
-      <Container fluid="md" className='h-full'>
-        <Row className='mt-auto'>
-          <Col>
-            <article className='space-y-10'>
-              {
-                !user && (
-                  <header className="hidden lg:block">
-                    <ConnectionBox />
-                  </header>
-                )
-              }
-              <Row>
-                {
-                  loading ? (
-                    <div className="h-20 flex w-full items-center justify-center">
-                      <Loader />
-                    </div>
-                  ) : (
-                    publication && <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />
-                  )
-                }
-              </Row>
-            </article>
-          </Col>
-        </Row>
-      </Container>
-    )
+    return <CreateFromPublicationStep publication={publication} handleRemixMeme={handleRemixMeme} />
+}
+
+export const getServerSideProps = async () => {
+
+  const client = generateApolloClient()
+
+  const getRandomNumber = (max: number) => Math.floor(Math.random() * max)
+  const sortCriterias = ['TOP_COMMENTED', 'TOP_COLLECTED', 'LATEST']
+
+  const { data } = await client.query<ExplorePublicationsData, ExplorePublicationsParams>({
+    query: EXPLORE_PUBLICATIONS,
+    variables: {
+      request: {
+        sortCriteria: sortCriterias[getRandomNumber(sortCriterias.length)],
+        sources: [selectedEnvironment.appId],
+        limit: 50,
+        timestamp: selectedEnvironment.startMemesTimestamp,
+        publicationTypes: ['COMMENT', 'POST']
+      }
+    }
+  })
+  const itemsLength = data.explorePublications.items.length
+  let selectedPublication = data.explorePublications.items[getRandomNumber(itemsLength)]
+  if(!process.env.NEXT_PUBLIC_BLACKLIST_OFF) {
+    let isBlacklisted = await getBlacklistedFromDb(selectedPublication.id)
+    while(isBlacklisted.blacklisted) {
+      selectedPublication = data.explorePublications.items[getRandomNumber(itemsLength)]
+      isBlacklisted = await getBlacklistedFromDb(selectedPublication.id)
+    }
+  }
+  return { props: {
+    publication: selectedPublication
+  }}
 }
 
 export default Home;

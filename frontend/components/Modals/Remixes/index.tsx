@@ -1,4 +1,4 @@
-import { PublicationData } from "../../../models/Publication/publication.model";
+import { PublicationData } from "../../../lib/models/Publication/publication.model";
 import { ProfileCard } from "../../ProfileCard";
 import moment from 'moment'
 import { useRouter } from "next/router";

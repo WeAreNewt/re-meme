@@ -2,9 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'JetBrains Mono' !important;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+* {
+    box-sizing: border-box;
+}
+
 @layer base {
+
     body {
         @apply text-neutral-black
+    }
+      
+    .home-bg {
+        background-image: url("/assets/layout/background-1.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+      
+    .profile-bg {
+        background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     /* TYPOGRAPHY */
@@ -64,6 +93,22 @@
     
     .bg-memixer-gradient-dark {
         background: linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), linear-gradient(135deg, #CFA8F7 0%, #FCBBBB 51.82%, #D4F26C 100%);
+    }
+
+    .create-btn-gradient {
+        background: linear-gradient(135deg, #D2A6FF 0%, #D8F968 100%);
+      }
+      
+      .create-btn-gradient-transparent {
+        background: linear-gradient(135deg, #D2A6FFE6 0%, #D8F968E6 100%);
+      }
+      
+      .bg-share-gradient {
+        background: linear-gradient(90deg, rgba(100, 203, 172, 0.8) 0%, rgba(239, 185, 105, 0.8) 22.92%, rgba(235, 116, 156, 0.8) 49.48%, rgba(102, 167, 228, 0.8) 76.56%, rgba(157, 122, 201, 0.8) 100%), #FFFFFF;
+      }
+      
+    .bg-gradient-default-transparent {
+        background: linear-gradient(135deg, rgba(207, 168, 247, 0.94) 0%, rgba(252, 187, 187, 0.94) 51.82%, rgba(212, 242, 108, 0.94) 100%);
     }
 
     /* MISCELLANEOUS */

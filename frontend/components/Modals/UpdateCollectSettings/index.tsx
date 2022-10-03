@@ -1,8 +1,8 @@
 import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { ChangeEventHandler, useEffect, useState } from "react";
-import useLensModuleEnabledCurrencies from "../../../hooks/useLensModuleEnabledCurrencies";
-import { Currency } from "../../../models/Module/module.mode";
+import useLensModuleEnabledCurrencies from "../../../lib/hooks/useLensModuleEnabledCurrencies";
+import { Currency } from "../../../lib/models/Module/module.mode";
 
 export interface FormData {
     amount: BigNumber,
@@ -73,12 +73,12 @@ export const UpdateCollectSettingsModal = ({ show, setShow, initialValues, onSub
 
     return (
         <div onMouseDown={() => setShow(false)} className={`${show ? "block" : "hidden"} fixed h-screen w-screen z-20 flex items-center justify-center create-btn-gradient-transparent px-4 lg:px-0 top-0 left-0`}>
-            <div onMouseDown={(e) => e.stopPropagation()} className="main-container items-stretch w-full lg:w-[570px]">
+            <div onMouseDown={(e) => e.stopPropagation()} className="main-container items-stretch w-full lg:w-[570px] flex">
                 <h2 className="text-subtitle-2 mb-[10px]">Update collect settings</h2>
                 <p className="text-description-regular mb-[36px]">Allow users to collect your meme for a listed amount and currency. Specify which users can collect your meme. You can update and disable/enable any parameter at anytime</p>
 
                 <label className="mb-[8px] text-body-2-medium">Currency</label>
-                <div className="flex items-start gap-[8px] mb-4">
+                <div className="flex items-start gap-[8px] mb-4 flex-wrap">
                     {
                         currencies.map(currentCurrency => (
                             <button
