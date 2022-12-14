@@ -37,3 +37,13 @@ export interface RefreshDataParams {
         refreshToken: string
     }
 }
+
+export interface VerifyData {
+    verify: boolean
+}
+
+export interface VerifyParams {
+    request: {
+        accessToken: string
+    }
+}

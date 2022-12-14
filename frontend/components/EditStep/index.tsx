@@ -28,6 +28,9 @@ import { DropResult } from "react-beautiful-dnd";
 import { useDispatch, useSelector } from "react-redux";
 import { setImageSize } from "../../lib/redux/slices/imagesize";
 import { RootState } from "../../lib/redux/store";
+import { create } from "ipfs-http-client";
+import axios from "axios";
+import { invariant } from "@apollo/client/utilities/globals";
 
 interface PathEvent {
     path?: fabric.Path
@@ -76,36 +79,6 @@ const DEFAULT_TEXT_CONFIG = {
     shadow: new fabric.Shadow("0px 0px 6px rgb(256,256,256)")
 }
 
-const uploadImageAndMetadata = (image: string, canvasJson: string) => {
-    const prunedInitialData = image.replace('data:image/jpeg;base64,', '')
-    const decodedImage = base64.decode(prunedInitialData)
-    const imageBlob = new Blob([decodedImage], { type: 'image/jpeg' })
-    const imageFile = new File([imageBlob], 'meme')
-    const canvasJsonBlob = new Blob([canvasJson], { type: 'application/json' })
-    const canvasJsonFile = new File([canvasJsonBlob], 'canvas_state.json')
-    return web3StorageClient.put([imageFile, canvasJsonFile]).then(cid => {
-        const metadata: PublicationMetadata = {
-            version: '1.0.0',
-            metadata_id: uuidv4(),
-            name: 'Created in re:meme',
-            attributes: [],
-            image: `ipfs://${cid}/meme`,
-            imageMimeType: 'image/jpeg',
-            media: [
-                {
-                    item: `ipfs://${cid}/meme`,
-                    type: 'image/jpeg'
-                }
-            ],
-            appId: selectedEnvironment.appId
-        }
-        const jsonMetadata = JSON.stringify(metadata)
-        const metadataBlob = new Blob([jsonMetadata], { type: 'application/json' })
-        const metadataFile = new File([metadataBlob], 'meme-metadata.json')
-        return web3StorageClient.put([metadataFile], { wrapWithDirectory: false })
-    })
-}
-
 const disableMiddleResizeButtons = (object: fabric.Object) => {
     object.setControlsVisibility({
         mt: false, // middle top disable
@@ -135,6 +108,19 @@ const EditStep: React.FC<EditStepProps> = ({ publication, initialImage, onUpload
         index: 0
     })
 
+    const auth = useSelector((state: RootState) => state.auth)
+    const uploadImageAndMetadata = async (image: string, canvasJson: string) => {
+        return axios.post('/api/createPostMetadata',
+        {
+            meme: image,
+            canvasState: canvasJson
+        },
+        {
+            headers: {
+                authorization: `Bearer ${auth.accessToken}`
+            }
+        })
+    }
 
     const { currencies } = useLensModuleEnabledCurrencies()
 
@@ -218,11 +204,13 @@ const EditStep: React.FC<EditStepProps> = ({ publication, initialImage, onUpload
         setShowConfirm(false)
         setLoading(true)
         const jpegMeme = canvas?.toDataURL({ format: 'jpeg' })
+        const jsonCanvas = canvas?.toJSON(['width', 'height'])
+        invariant(jsonCanvas, 'The canvas should be able to export the canvas in json format')
         if (jpegMeme && selectedProfile) {
-            uploadImageAndMetadata(jpegMeme, JSON.stringify(canvas?.toJSON(['width', 'height']))).then(metadataResult => {
+            uploadImageAndMetadata(jpegMeme, jsonCanvas).then(metadataResult => {
                 const mutationPostParams = {
                     profileId: selectedProfile.id || '',
-                    contentURI: `ipfs://${metadataResult}`,
+                    contentURI: `ipfs://${metadataResult.data}`,
                     collectModule: {
                         unknownCollectModule: {
                             contractAddress: selectedEnvironment.collectModuleAddress,
@@ -353,11 +341,23 @@ const EditStep: React.FC<EditStepProps> = ({ publication, initialImage, onUpload
     }
 
     const imagesize = useSelector((state: RootState) => state.imagesize.selectedImageSize);
-    const dispatch = useDispatch();  
+    const dispatch = useDispatch();
+
+    const resizeImage = (image: HTMLImageElement) => {
+        const fabricImage = new fabric.Image(image, {
+            top: 0,
+            left: 0
+        })
+        if (fabricImage.getScaledWidth() > fabricImage.getScaledHeight()) {
+            fabricImage.scaleToWidth(400)
+        } else {
+            fabricImage.scaleToHeight(400)
+        }
+        return fabricImage.toDataURL({})
+    }
 
     const addImage: ChangeEventHandler<HTMLInputElement> = (input) => {
         if (input.target.files && input.target.files[0]) {
-            
             if (input.target.files[0].size > 10000000 ) {
                 dispatch(setImageSize(true))
             } else {
@@ -369,19 +369,19 @@ const EditStep: React.FC<EditStepProps> = ({ publication, initialImage, onUpload
                     img.src = e.target.result?.toString()
                     img.onload = () => {
                         if (containerRef.current && canvas) {
-                            const fabricImage = new fabric.Image(img, {
-                                top: 0,
-                                left: 0,
+                            const resizedImageDataURI = resizeImage(img)
+                            fabric.Image.fromURL(resizedImageDataURI, (fabricImage) => {
+                                invariant(containerRef.current, 'the canvas should exists')
+                                fabricImage.id = `image_${fabricObjects.length}`
+                                fabricImage.typeIndex = fabricObjects.length
+                                if (fabricImage.getScaledWidth() > fabricImage.getScaledHeight()) {
+                                    fabricImage.scaleToWidth(containerRef.current.clientWidth / 2 >> 0)
+                                } else {
+                                    fabricImage.scaleToHeight(containerRef.current.clientHeight / 2 >> 0)
+                                }
+                                canvas.add(fabricImage)
+                                setFabricObjects(images => images.concat([fabricImage]))
                             })
-                            fabricImage.id = `image_${fabricObjects.length}`
-                            fabricImage.typeIndex = fabricObjects.length
-                            if (fabricImage.getScaledWidth() > fabricImage.getScaledHeight()) {
-                                fabricImage.scaleToWidth(containerRef.current.clientWidth / 2 >> 0)
-                            } else {
-                                fabricImage.scaleToHeight(containerRef.current.clientHeight / 2 >> 0)
-                            }
-                            canvas.add(fabricImage)
-                            setFabricObjects(images => images.concat([fabricImage]))
                         }
                     }
                 };

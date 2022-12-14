@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import CreateFromPublicationStep from "../components/CreateFromPublicationStep";

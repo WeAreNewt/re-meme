@@ -6,7 +6,6 @@ import { parseIpfs } from "../../../lib/utils/link";
 import { generateApolloClient } from "../../../lib/config/apollo";
 import { GET_PUBLICATION } from "../../../lib/queries/publication";
 import { GetPublicationData, GetPublicationParams } from "../../../lib/models/Publication/publication.model";
-import axios from "axios";
 import { getBlacklistedFromDb } from "../../api/blacklist";
 
 const MemePage = ({ publication }) => {
