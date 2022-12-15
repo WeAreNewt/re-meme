@@ -14,6 +14,7 @@ import { setContext } from "@apollo/client/link/context";
 import result from "../models/lensApi.model";
 import { store } from "../redux/store";
 import apolloLogger from 'apollo-link-logger'
+import { setTokens } from "../redux/slices/auth";
 
 
 const isServer = typeof window === 'undefined'
@@ -52,7 +53,7 @@ const authLink = setContext(() => {
     }, { headers: { 'Content-Type': 'application/json' } })
     .then(data => {
       if(window) {
-        window.localStorage.setItem("auth", JSON.stringify(data.data.data.refresh))
+        store.dispatch(setTokens(data.data.data.refresh))
         accessToken = data.data.data.refresh.accessToken
       }
       return {
@@ -74,9 +75,9 @@ let _spaClient : ApolloClient<NormalizedCacheObject> | null = null
 export const generateApolloClient = () => {
   if(isServer) {
     return new ApolloClient({
-      ssrMode: true,
       cache: new InMemoryCache({}),
       link: ApolloLink.from([
+        apolloLogger,
         httpLink
       ])
     })
@@ -99,12 +100,3 @@ export const generateApolloClient = () => {
     return _spaClient
   }
 }
-
-export const ssrClient = new ApolloClient({
-    ssrMode: true,
-    cache: new InMemoryCache({}),
-    link: ApolloLink.from([
-      apolloLogger,
-      httpLink
-    ])
-})

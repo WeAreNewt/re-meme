@@ -23,3 +23,9 @@ export const REFRESH_AUTHENTICATION = `
     }
  }
 `;
+
+export const VERIFY = gql`
+  query($request: VerifyRequest!) {
+    verify(request: $request)
+  }
+`;
