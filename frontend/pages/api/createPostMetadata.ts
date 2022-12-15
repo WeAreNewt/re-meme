@@ -2,11 +2,9 @@ import { create } from "ipfs-http-client";
 import { NextApiRequest, NextApiResponse } from "next";
 import { v4 as uuidv4 } from 'uuid'
 import { selectedEnvironment } from "../../lib/config/environments";
-import { createRouter, NextHandler } from 'next-connect';
+import { createRouter } from 'next-connect';
 import { base64 } from "ethers/lib/utils";
-import { generateApolloClient } from "../../lib/config/apollo";
-import { VERIFY } from "../../lib/queries/auth";
-import { VerifyData, VerifyParams } from "../../lib/models/Auth/auth.model";
+import { verifyToken } from "../../lib/middleware/verifyToken";
 
 const auth =
 'Basic ' + Buffer.from(process.env.IPFS_PROJECT_ID + ':' + process.env.IPFS_API_KEY_SECRET).toString('base64')
@@ -22,29 +20,6 @@ type ExtendedRequest  = {
     canvasState: string
     meme: string
 } & NextApiRequest
-
-const verifyToken = async (req: ExtendedRequest, res: NextApiResponse, next: NextHandler) => {
-    const apolloClient = generateApolloClient()
-    const jwt = req.headers.authorization
-    if(!jwt) {
-        res.status(401).send('UNAUTHORIZED')
-        return;
-    }
-    const accessToken = jwt?.split(' ')[1]
-    const { data } = await apolloClient.query<VerifyData, VerifyParams>({
-        query: VERIFY,
-        variables: {
-            request: {
-                accessToken
-            }
-        },
-    })
-    if(data.verify) {
-        next()
-        return;
-    }
-    res.status(401).send('UNAUTHORIZED')
-}
 
 const dataURItoUInt8Array = (data: string, type: string) => {
     const prunedInitialData = data.replace(`data:${type};base64,`, '')
